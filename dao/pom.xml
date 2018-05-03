@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>simplenet</artifactId>
@@ -11,5 +11,28 @@
 
     <artifactId>dao</artifactId>
 
+    <properties>
+        <common.ver>1.0-SNAPSHOT</common.ver>
+        <h2.ver>1.4.197</h2.ver>
+        <mysql.ver>8.0.11</mysql.ver>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.getjavajob</groupId>
+            <artifactId>common</artifactId>
+            <version>${common.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.ver}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
