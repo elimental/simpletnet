@@ -1,16 +1,13 @@
 package com.getjavajob.simplenet.dao;
 
-import com.getjavajob.simplenet.entity.Group;
+import com.getjavajob.simplenet.DBConnectionPool;
+import com.getjavajob.simplenet.common.entity.Group;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -21,24 +18,24 @@ public class GroupDAOTest {
 
     @Before
     public void setUp() throws Exception {
-        try {
-            Properties properties = new Properties();
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("h2.properties"));
-            String url = properties.getProperty("database.url");
-            String user = properties.getProperty("database.user");
-            String password = properties.getProperty("database.password");
-            connection = DriverManager.getConnection(url, user, password);
-            connection.setAutoCommit(false);
-            groupDAO = new GroupDAO(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.connection = DBConnectionPool.getInstance().getConnection();
+        connection.createStatement().executeUpdate("CREATE TABLE groupp (" +
+                "  groupId INT NOT NULL AUTO_INCREMENT," +
+                "  groupName VARCHAR(45) NOT NULL," +
+                "  groupOwner INT NOT NULL," +
+                "  PRIMARY KEY (groupId)," +
+                "  UNIQUE INDEX groupId_UNIQUE (groupId ASC));");
+        connection.createStatement().executeUpdate("INSERT INTO groupp (groupName, groupOwner)" +
+                "  VALUES ('group1',1),('group2',2),('group3',3)");
+        connection.commit();
+        connection.close();
+        groupDAO = new GroupDAO();
     }
 
     @After
     public void tearDown() throws Exception {
+        connection.createStatement().executeUpdate("DROP TABLE groupp");
+        connection.commit();
         connection.close();
     }
 

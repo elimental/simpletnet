@@ -1,36 +1,31 @@
 package com.getjavajob.simplenet.dao;
 
-import com.getjavajob.simplenet.DBConnector;
-import com.getjavajob.simplenet.entity.Group;
+import com.getjavajob.simplenet.DBConnectionPool;
+import com.getjavajob.simplenet.common.entity.Group;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 
-public class GroupDAO implements AbstractDAO<Group> {
+public class GroupDAO extends AbstractDAO<Group> {
     private static final String DELETE_BY_ID = "DELETE FROM groupp WHERE groupId = ?";
     private static final String INSERT_GROUP = "INSERT INTO groupp (groupName, groupOwner) VALUES (?, ?)";
     private static final String SELECT_BY_ID = "SELECT * FROM groupp WHERE groupId = ?";
     private static final String SELECT_ALL = "SELECT * FROM groupp";
-    private Connection connection;
+    private DBConnectionPool connectionPool;
+    private Connection rollback;
 
     public GroupDAO() {
-        this.connection = DBConnector.getConnection();
-    }
-
-    public GroupDAO(Connection connection) {
-        this.connection = connection;
+        this.connectionPool = DBConnectionPool.getInstance();
     }
 
     @Override
     public List<Group> getAll() {
-        try (ResultSet rs = this.connection.createStatement().executeQuery(SELECT_ALL)) {
+        try (Connection connection = connectionPool.getConnection();
+             ResultSet rs = connection.createStatement().executeQuery(SELECT_ALL)) {
             List<Group> groups = new ArrayList<>();
             while (rs.next()) {
                 groups.add(createGroupFromResult(rs));
@@ -44,7 +39,8 @@ public class GroupDAO implements AbstractDAO<Group> {
 
     @Override
     public Group getById(int id) {
-        try (PreparedStatement ps = this.connection.prepareStatement(SELECT_BY_ID)) {
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_BY_ID)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -59,8 +55,11 @@ public class GroupDAO implements AbstractDAO<Group> {
     }
 
     @Override
-    public void add(Group group) {
-        try (PreparedStatement ps = this.connection.prepareStatement(INSERT_GROUP)) {
+    public int add(Group group) {
+        int generatedKey = 0;
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS)) {
+            this.rollback = connection;
             String groupName = group.getGroupName();
             if (groupName == null) {
                 ps.setNull(1, VARCHAR);
@@ -74,29 +73,37 @@ public class GroupDAO implements AbstractDAO<Group> {
                 ps.setInt(2, groupOwner);
             }
             ps.executeUpdate();
-            this.connection.commit();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            generatedKey = rs.getInt(1);
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                this.connection.rollback();
+                this.rollback.rollback();
+                this.rollback = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+        return generatedKey;
     }
 
     @Override
     public void delete(int id) {
-        try (PreparedStatement ps = this.connection.prepareStatement(DELETE_BY_ID)) {
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_BY_ID)) {
+            this.rollback = connection;
             ps.setInt(1, id);
             ps.executeUpdate();
-            this.connection.commit();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                this.connection.rollback();
+                this.rollback.rollback();
+                this.rollback = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }

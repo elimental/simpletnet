@@ -1,4 +1,4 @@
-package com.getjavajob.simplenet.entity;
+package com.getjavajob.simplenet.common.entity;
 
 import java.sql.Date;
 import java.util.List;
@@ -14,8 +14,8 @@ public class Account extends BaseEntity {
     private String icq;
     private String skype;
     private String additionalInfo;
-    private List<String> homePhones;
-    private List<String> workPhones;
+    private List<Phone> homePhones;
+    private List<Phone> workPhones;
 
     public String getFirstName() {
         return firstName;
@@ -97,19 +97,19 @@ public class Account extends BaseEntity {
         this.additionalInfo = additionalInfo;
     }
 
-    public List<String> getHomePhones() {
+    public List<Phone> getHomePhones() {
         return homePhones;
     }
 
-    public void setHomePhones(List<String> homePhones) {
+    public void setHomePhones(List<Phone> homePhones) {
         this.homePhones = homePhones;
     }
 
-    public List<String> getWorkPhones() {
+    public List<Phone> getWorkPhones() {
         return workPhones;
     }
 
-    public void setWorkPhones(List<String> workPhones) {
+    public void setWorkPhones(List<Phone> workPhones) {
         this.workPhones = workPhones;
     }
 

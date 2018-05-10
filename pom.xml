@@ -11,11 +11,15 @@
     <modules>
         <module>common</module>
         <module>dao</module>
+        <module>service</module>
     </modules>
 
     <properties>
         <junit.ver>4.12</junit.ver>
         <java.ver>1.8</java.ver>
+        <h2.ver>1.4.197</h2.ver>
+        <mysql.ver>8.0.11</mysql.ver>
+        <mockito.ver>2.18.3</mockito.ver>
     </properties>
 
     <dependencies>

@@ -1,15 +1,15 @@
 package com.getjavajob.simplenet.dao;
 
-import com.getjavajob.simplenet.entity.BaseEntity;
+import com.getjavajob.simplenet.common.entity.BaseEntity;
 
 import java.util.List;
 
-public interface AbstractDAO<T extends BaseEntity> {
-    List<T> getAll();
+public abstract class AbstractDAO<T extends BaseEntity> {
+    public abstract List<T> getAll();
 
-    T getById(int id);
+    public abstract T getById(int id);
 
-    void add(T account);
+    public abstract int add(T t);
 
-    void delete(int id);
+    public abstract void delete(int id);
 }

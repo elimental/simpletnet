@@ -1,4 +1,4 @@
-package com.getjavajob.simplenet.entity;
+package com.getjavajob.simplenet.common.entity;
 
 public class BaseEntity {
     protected int id;

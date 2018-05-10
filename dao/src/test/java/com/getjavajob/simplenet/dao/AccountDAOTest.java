@@ -1,17 +1,14 @@
 package com.getjavajob.simplenet.dao;
 
-import com.getjavajob.simplenet.entity.Account;
+import com.getjavajob.simplenet.DBConnectionPool;
+import com.getjavajob.simplenet.common.entity.Account;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -22,24 +19,36 @@ public class AccountDAOTest {
 
     @Before
     public void setUp() throws Exception {
-        try {
-            Properties properties = new Properties();
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("h2.properties"));
-            String url = properties.getProperty("database.url");
-            String user = properties.getProperty("database.user");
-            String password = properties.getProperty("database.password");
-            connection = DriverManager.getConnection(url, user, password);
-            connection.setAutoCommit(false);
-            accountDAO = new AccountDAO(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.connection = DBConnectionPool.getInstance().getConnection();
+        connection.createStatement().executeUpdate("CREATE TABLE account (" +
+                "  userId INT NOT NULL AUTO_INCREMENT," +
+                "  firstName VARCHAR(45) NOT NULL," +
+                "  lastName VARCHAR(45) NOT NULL," +
+                "  patronymicName VARCHAR(45) NOT NULL," +
+                "  birthDay DATE NOT NULL," +
+                "  homeAddress VARCHAR(45) NULL," +
+                "  workAddress VARCHAR(45) NULL," +
+                "  email VARCHAR(45) NOT NULL," +
+                "  icq VARCHAR(45) NULL," +
+                "  skype VARCHAR(45) NULL," +
+                "  additionalInfo VARCHAR(1000) NULL," +
+                "  PRIMARY KEY (userId)," +
+                "  UNIQUE INDEX id_UNIQUE (userId ASC))");
+        connection.createStatement().executeUpdate("INSERT INTO account (firstName, lastName, patronymicName, birthDay," +
+                " homeAddress, workAddress, email, icq, skype, additionalInfo)" +
+                "  VALUES ('Dima', 'Andreev', 'Borisovich', '1978-02-13', 'Spb', 'Spb', 'elimental@bk.ru', '49224940'," +
+                " 'elimetal13', 'adfasdfasdf'), ('Vasya','Petrov', 'Ivanovich', '1981-12-17', 'Msk', 'Msk'," +
+                " 'vasya@bk.ru', '49444940', 'vasya17', 'adfasdfasdf'), ('Petya','Ivanov', 'Petrovich', '1970-06-21'," +
+                " NULL, NULL, 'petya@bk.ru', '43444940', 'petya21', 'adfasdfasdf')");
+        connection.commit();
+        connection.close();
+        accountDAO = new AccountDAO();
     }
 
     @After
     public void tearDown() throws Exception {
+        connection.createStatement().executeUpdate("DROP TABLE account");
+        connection.commit();
         connection.close();
     }
 
@@ -84,6 +93,25 @@ public class AccountDAOTest {
         excepted.setAdditionalInfo("adfasdfasdf");
         accountDAO.add(excepted);
         Account actual = accountDAO.getById(4);
+        assertEquals(excepted.toString(), actual.toString());
+    }
+
+    @Test
+    public void update() {
+        Account excepted = new Account();
+        excepted.setId(1);
+        excepted.setFirstName("Dima");
+        excepted.setLastName("Andreev");
+        excepted.setPatronymicName("Borisovich");
+        excepted.setBirthDay(Date.valueOf("1978-02-13"));
+        excepted.setHomeAddress("Msk");
+        excepted.setWorkAddress("Msk");
+        excepted.setEmail("elimental@bk.ru");
+        excepted.setIcq("49224940");
+        excepted.setSkype("elimental13");
+        excepted.setAdditionalInfo("adfasdfasdf");
+        accountDAO.update(excepted);
+        Account actual = accountDAO.getById(1);
         assertEquals(excepted.toString(), actual.toString());
     }
 
