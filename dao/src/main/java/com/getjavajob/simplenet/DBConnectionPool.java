@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 public class DBConnectionPool {
-    private static final int INITIAL_CAPACITY = 50;
+    private static final int INITIAL_CAPACITY = 10;
     private static DBConnectionPool ourInstance = new DBConnectionPool();
     private LinkedList<Connection> poll;
     private String url;
@@ -18,8 +18,11 @@ public class DBConnectionPool {
     private DBConnectionPool() {
         Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("mysql.properties"));
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("db.properties"));
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         this.url = properties.getProperty("database.url");

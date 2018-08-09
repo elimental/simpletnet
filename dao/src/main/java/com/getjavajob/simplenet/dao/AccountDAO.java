@@ -7,18 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Types.DATE;
 import static java.sql.Types.VARCHAR;
 
 public class AccountDAO extends AbstractDAO<Account> {
     private static final String DELETE_BY_ID = "DELETE FROM account WHERE userId = ?";
     private static final String INSERT_ACCOUNT = "INSERT INTO account (firstName, lastName, patronymicName," +
-            " birthDay, homeAddress, workAddress, email, icq, skype, additionalInfo) VALUES (?, ?, ?, ?, ?," +
-            " ?, ?, ?, ?, ?)";
+            " birthDay, regDate, email, passHash, icq, skype, additionalInfo) VALUES (?, ?, ?, ?, ?, ?, ?," +
+            " ?, ?, ?)";
     private static final String SELECT_BY_ID = "SELECT * FROM account WHERE userId = ?";
+    private static final String SELECT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
     private static final String SELECT_ALL = "SELECT * FROM account";
     private static final String UPDATE_ACCOUNT = "UPDATE account SET firstName = ?, lastName = ?, patronymicName = ?," +
-            " birthDay = ?, homeAddress = ?, workAddress = ?, email = ?, icq = ?, skype = ?, additionalInfo = ?" +
-            " WHERE userID = ?";
+            " birthDay = ?, icq = ?, skype = ?, additionalInfo = ? WHERE userID = ?";
     private DBConnectionPool connectionPool;
     private Connection rollback;
 
@@ -84,23 +85,28 @@ public class AccountDAO extends AbstractDAO<Account> {
             }
             Date birthDay = account.getBirthDay();
             if (birthDay == null) {
-                ps.setNull(4, VARCHAR);
+                ps.setNull(4, DATE);
             } else {
                 ps.setDate(4, birthDay);
             }
-            String homeAddress = account.getHomeAddress();
-            if (homeAddress == null) {
-                ps.setNull(5, VARCHAR);
+            Date regDate = account.getRegDate();
+            if (regDate == null) {
+                ps.setNull(5, DATE);
             } else {
-                ps.setString(5, homeAddress);
+                ps.setDate(5, regDate);
             }
-            String workAddress = account.getWorkAddress();
-            if (workAddress == null) {
+            String email = account.getEmail();
+            if (email == null) {
                 ps.setNull(6, VARCHAR);
             } else {
-                ps.setString(6, workAddress);
+                ps.setString(6, email);
             }
-            ps.setString(7, account.getEmail());
+            String passHash = account.getPassHash();
+            if (passHash == null) {
+                ps.setNull(7, VARCHAR);
+            } else {
+                ps.setString(7, passHash);
+            }
             String icq = account.getIcq();
             if (icq == null) {
                 ps.setNull(8, VARCHAR);
@@ -161,7 +167,8 @@ public class AccountDAO extends AbstractDAO<Account> {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(UPDATE_ACCOUNT)) {
             this.rollback = connection;
-            ps.setInt(11, account.getId());
+            int id = account.getId();
+            ps.setInt(8, id);
             String firstName = account.getFirstName();
             if (firstName == null) {
                 ps.setNull(1, VARCHAR);
@@ -182,40 +189,27 @@ public class AccountDAO extends AbstractDAO<Account> {
             }
             Date birthDay = account.getBirthDay();
             if (birthDay == null) {
-                ps.setNull(4, VARCHAR);
+                ps.setNull(4, DATE);
             } else {
                 ps.setDate(4, birthDay);
             }
-            String homeAddress = account.getHomeAddress();
-            if (homeAddress == null) {
-                ps.setNull(5, VARCHAR);
-            } else {
-                ps.setString(5, homeAddress);
-            }
-            String workAddress = account.getWorkAddress();
-            if (workAddress == null) {
-                ps.setNull(6, VARCHAR);
-            } else {
-                ps.setString(6, workAddress);
-            }
-            ps.setString(7, account.getEmail());
             String icq = account.getIcq();
             if (icq == null) {
-                ps.setNull(8, VARCHAR);
+                ps.setNull(5, VARCHAR);
             } else {
-                ps.setString(8, icq);
+                ps.setString(5, icq);
             }
             String skype = account.getSkype();
             if (skype == null) {
-                ps.setNull(9, VARCHAR);
+                ps.setNull(6, VARCHAR);
             } else {
-                ps.setString(9, skype);
+                ps.setString(6, skype);
             }
             String additionalInfo = account.getAdditionalInfo();
             if (additionalInfo == null) {
-                ps.setNull(10, VARCHAR);
+                ps.setNull(7, VARCHAR);
             } else {
-                ps.setString(10, additionalInfo);
+                ps.setString(7, additionalInfo);
             }
             ps.executeUpdate();
             connection.commit();
@@ -231,6 +225,21 @@ public class AccountDAO extends AbstractDAO<Account> {
         }
     }
 
+    public Account getByEmail(String email) {
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_BY_EMAIL)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return createAccountFromResult(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
 
     private Account createAccountFromResult(ResultSet rs) throws SQLException {
         Account account = new Account();
@@ -239,9 +248,9 @@ public class AccountDAO extends AbstractDAO<Account> {
         account.setLastName(rs.getString("lastName"));
         account.setPatronymicName(rs.getString("patronymicName"));
         account.setBirthDay(rs.getDate("birthDay"));
-        account.setHomeAddress(rs.getString("homeAddress"));
-        account.setWorkAddress(rs.getString("workAddress"));
+        account.setRegDate(rs.getDate("regDate"));
         account.setEmail(rs.getString("email"));
+        account.setPassHash(rs.getString("passHash"));
         account.setIcq(rs.getString("icq"));
         account.setSkype(rs.getString("skype"));
         account.setAdditionalInfo(rs.getString("additionalInfo"));

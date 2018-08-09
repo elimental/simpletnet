@@ -12,6 +12,7 @@
         <module>common</module>
         <module>dao</module>
         <module>service</module>
+        <module>web</module>
     </modules>
 
     <properties>
@@ -40,6 +41,22 @@
                 <configuration>
                     <source>${java.ver}</source>
                     <target>${java.ver}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://simplenet.elimental.ru/manager/text</url>
+                    <update>true</update>
+                    <path>/</path>
+                    <username>deploy</username>
+                    <password>deploy</password>
                 </configuration>
             </plugin>
         </plugins>

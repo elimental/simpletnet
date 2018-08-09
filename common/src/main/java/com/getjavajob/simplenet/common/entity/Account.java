@@ -8,14 +8,13 @@ public class Account extends BaseEntity {
     private String lastName;
     private String patronymicName;
     private Date birthDay;
-    private String homeAddress;
-    private String workAddress;
+    private Date regDate;
     private String email;
+    private String passHash;
     private String icq;
     private String skype;
     private String additionalInfo;
-    private List<Phone> homePhones;
-    private List<Phone> workPhones;
+    private List<Phone> phones;
 
     public String getFirstName() {
         return firstName;
@@ -49,20 +48,20 @@ public class Account extends BaseEntity {
         this.birthDay = birthDay;
     }
 
-    public String getHomeAddress() {
-        return homeAddress;
+    public Date getRegDate() {
+        return regDate;
     }
 
-    public void setHomeAddress(String homeAddress) {
-        this.homeAddress = homeAddress;
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
     }
 
-    public String getWorkAddress() {
-        return workAddress;
+    public String getPassHash() {
+        return passHash;
     }
 
-    public void setWorkAddress(String workAddress) {
-        this.workAddress = workAddress;
+    public void setPassHash(String passHash) {
+        this.passHash = passHash;
     }
 
     public String getEmail() {
@@ -97,20 +96,12 @@ public class Account extends BaseEntity {
         this.additionalInfo = additionalInfo;
     }
 
-    public List<Phone> getHomePhones() {
-        return homePhones;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setHomePhones(List<Phone> homePhones) {
-        this.homePhones = homePhones;
-    }
-
-    public List<Phone> getWorkPhones() {
-        return workPhones;
-    }
-
-    public void setWorkPhones(List<Phone> workPhones) {
-        this.workPhones = workPhones;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     @Override
@@ -120,10 +111,10 @@ public class Account extends BaseEntity {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymicName='" + patronymicName + '\'' +
-                ", birthDay=" + birthDay +
-                ", homeAddress='" + homeAddress + '\'' +
-                ", workAddress='" + workAddress + '\'' +
+                ", birthDay=" + birthDay + '\'' +
+                ", regDate=" + regDate + '\'' +
                 ", email='" + email + '\'' +
+                ", passHash='" + passHash + '\'' +
                 ", icq='" + icq + '\'' +
                 ", skype='" + skype + '\'' +
                 ", additionalInfo='" + additionalInfo + '\'' +

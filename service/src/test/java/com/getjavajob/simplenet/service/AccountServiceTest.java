@@ -31,23 +31,15 @@ public class AccountServiceTest {
     public void addAccount() {
         AccountService accountService = new AccountService(accountDAO, phoneDAO, relationshipDAO);
         Account account = new Account();
-        Phone homePhone = new Phone();
-        List<Phone> homePhones = new ArrayList<>();
-        homePhones.add(homePhone);
-        Phone workPhone = new Phone();
-        List<Phone> workPhones = new ArrayList<>();
-        workPhones.add(workPhone);
-        account.setHomePhones(homePhones);
-        account.setWorkPhones(workPhones);
+        Phone phone = new Phone();
+        List<Phone> phones = new ArrayList<>();
+        phones.add(phone);
+        account.setPhones(phones);
         when(accountDAO.add(account)).thenReturn(1);
         accountService.addAccount(account);
-        homePhones = account.getHomePhones();
-        workPhones = account.getWorkPhones();
-        for (Phone phone : homePhones) {
-            assertEquals(1, phone.getPhoneOwner());
-        }
-        for (Phone phone : workPhones) {
-            assertEquals(1, phone.getPhoneOwner());
+        phones = account.getPhones();
+        for (Phone phone1 : phones) {
+            assertEquals(1, phone1.getPhoneOwner());
         }
     }
 }

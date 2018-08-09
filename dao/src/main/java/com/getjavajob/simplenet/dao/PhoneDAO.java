@@ -19,10 +19,7 @@ import static java.sql.Types.VARCHAR;
 public class PhoneDAO extends AbstractDAO<Phone> {
     private static final String DELETE_BY_OWNER_ID = "DELETE FROM phone WHERE phoneOwner = ?";
     private static final String INSERT_PHONE = "INSERT INTO phone (number, type, phoneOwner) VALUES (?, ?, ?)";
-    private static final String SELECT_HOME_NUMBERS_BY_OWNER_ID = "SELECT * FROM phone WHERE phoneOwner = ? AND " +
-            "type = 'home'";
-    private static final String SELECT_WORK_NUMBERS_BY_OWNER_ID = "SELECT * FROM phone WHERE phoneOwner = ? AND " +
-            "type = 'work'";
+    private static final String SELECT_PHONES_BY_OWNER_ID = "SELECT * FROM phone WHERE phoneOwner = ?";
     private DBConnectionPool connectionPool;
     private Connection rollback;
 
@@ -40,24 +37,10 @@ public class PhoneDAO extends AbstractDAO<Phone> {
         return null;
     }
 
-    public List<Phone> getHomeNumbersByOwnerId(int ownerId) {
-        return getPhones(ownerId, HOME);
-    }
-
-    public List<Phone> getWorkNumbersByOwnerId(int ownerId) {
-        return getPhones(ownerId, WORK);
-    }
-
-    private List<Phone> getPhones(int OwnerId, PhoneType phoneType) {
-        String sqlStatement = null;
-        if (phoneType == HOME) {
-            sqlStatement = SELECT_HOME_NUMBERS_BY_OWNER_ID;
-        } else {
-            sqlStatement = SELECT_WORK_NUMBERS_BY_OWNER_ID;
-        }
+    public List<Phone> getPhonesByOwnerId(int ownerId) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
-            ps.setInt(1, OwnerId);
+             PreparedStatement ps = connection.prepareStatement(SELECT_PHONES_BY_OWNER_ID)) {
+            ps.setInt(1, ownerId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Phone> phones = new ArrayList<>();
                 while (rs.next()) {

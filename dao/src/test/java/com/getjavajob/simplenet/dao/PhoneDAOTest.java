@@ -42,36 +42,25 @@ public class PhoneDAOTest {
     }
 
     @Test
-    public void getHomeNumbersByOwnerId() {
+    public void getPhonesByOwnerId() {
         List<Phone> excepted = new ArrayList<>();
         Phone phone1 = new Phone();
         phone1.setNumber("123456");
         phone1.setType(HOME);
         phone1.setPhoneOwner(2);
         Phone phone2 = new Phone();
-        phone2.setNumber("333444");
-        phone2.setType(HOME);
-        phone2.setPhoneOwner(2);
-        excepted.add(phone1);
-        excepted.add(phone2);
-        assertEquals(excepted, phoneDAO.getHomeNumbersByOwnerId(2));
-
-    }
-
-    @Test
-    public void getWorkNumbersByOwnerId() {
-        List<Phone> excepted = new ArrayList<>();
-        Phone phone1 = new Phone();
-        phone1.setNumber("234567");
-        phone1.setType(WORK);
-        phone1.setPhoneOwner(1);
-        Phone phone2 = new Phone();
-        phone2.setNumber("345678");
+        phone2.setNumber("234567");
         phone2.setType(WORK);
-        phone2.setPhoneOwner(1);
+        phone2.setPhoneOwner(2);
+        Phone phone3 = new Phone();
+        phone3.setNumber("333444");
+        phone3.setType(HOME);
+        phone3.setPhoneOwner(2);
         excepted.add(phone1);
         excepted.add(phone2);
-        assertEquals(excepted, phoneDAO.getWorkNumbersByOwnerId(1));
+        excepted.add(phone3);
+        assertEquals(excepted, phoneDAO.getPhonesByOwnerId(2));
+
     }
 
     @Test
@@ -81,16 +70,14 @@ public class PhoneDAOTest {
         excepted.setType(HOME);
         excepted.setPhoneOwner(5);
         phoneDAO.add(excepted);
-        Phone actual = phoneDAO.getHomeNumbersByOwnerId(5).get(0);
+        Phone actual = phoneDAO.getPhonesByOwnerId(5).get(0);
         assertEquals(excepted, actual);
     }
 
     @Test
     public void deleteByOwnerId() {
         phoneDAO.deleteByOwnerId(1);
-        List<Phone> exceptedHome = phoneDAO.getHomeNumbersByOwnerId(1);
-        List<Phone> exceptedWork = phoneDAO.getWorkNumbersByOwnerId(1);
-        assertTrue(exceptedHome.isEmpty());
-        assertTrue(exceptedWork.isEmpty());
+        List<Phone> excepted = phoneDAO.getPhonesByOwnerId(1);
+        assertTrue(excepted.isEmpty());
     }
 }
