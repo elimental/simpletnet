@@ -17,6 +17,8 @@ import org.apache.commons.io.FilenameUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +29,13 @@ import static com.getjavajob.simplenet.common.entity.PhoneType.HOME;
 import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 
-public class JSPHelper {
+public class ServletHelper {
     private AccountService accountService;
     private Map<String, String> param;
     private Picture picture;
     private HttpServletRequest request;
 
-    public JSPHelper(HttpServletRequest request) {
+    public ServletHelper(HttpServletRequest request) {
         this.accountService = new AccountService(new AccountDAO(), new PhoneDAO(), new PicturesDAO());
         this.request = request;
     }
@@ -61,6 +63,7 @@ public class JSPHelper {
 
     public void editProfile() {
         parsParam(request);
+        System.out.println(param.get("first_name"));
         Account account = createAccount(false);
         accountService.updateAccount(account);
         int userId = account.getId();
@@ -171,7 +174,7 @@ public class JSPHelper {
         }
         for (FileItem item : items) {
             if (item.isFormField()) {
-                param.put(item.getFieldName(), item.getString());
+                param.put(item.getFieldName(), convertIsoToUTF(item.getString()));
             } else {
                 if (!FilenameUtils.getName(item.getName()).equals("")) {
                     try (InputStream uploadedFile = item.getInputStream()) {
@@ -185,5 +188,15 @@ public class JSPHelper {
                 }
             }
         }
+    }
+
+    private static String convertIsoToUTF(String s) {
+        String result = "";
+        try {
+            result = new String(s.getBytes("ISO-8859-1"), Charset.forName("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
