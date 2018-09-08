@@ -203,7 +203,7 @@ public class AccountDAO extends AbstractDAO<Account> {
             if (skype == null) {
                 ps.setNull(6, VARCHAR);
             } else {
-                ps.setString(6, skype);
+                ps.setString(6, account.getSkype());
             }
             String additionalInfo = account.getAdditionalInfo();
             if (additionalInfo == null) {

@@ -1,14 +1,12 @@
-i = 0;
-
 function validatePassword() {
     var pass = register.password;
     var rpass = register.rpassword;
     if (pass.value.length == 0) {
-        alert("Enter password please!");
+        alert("Введите пароль!");
         return false;
     }
     if (pass.value != rpass.value) {
-        alert("Passwords don't match!");
+        alert("Пароли не совпадает!");
         return false;
     }
     return true;
@@ -35,7 +33,7 @@ function addPhoneLine(object) {
     var inputPhone = document.createElement("input");
     inputPhone.className = "w3-input w3-border";
     inputPhone.type = "tel";
-    inputPhone.name = "phone" + window.i;
+    inputPhone.name = "phone";
     inputPhone.pattern = "[0-9]+";
     divCellPhone.appendChild(inputPhone);
 
@@ -43,13 +41,13 @@ function addPhoneLine(object) {
     divTypePhone.className = "w3-container w3-cell";
     var selectPhoneType = document.createElement("select");
     selectPhoneType.className = "w3-select w3-border";
-    selectPhoneType.name = "phone_type" + window.i;
+    selectPhoneType.name = "phone_type";
     var homeOption = document.createElement("option");
     homeOption.value = "home";
-    homeOption.innerText = "Home";
+    homeOption.innerText = "Домашний";
     var workOption = document.createElement("option");
     workOption.value = "work";
-    workOption.innerText = "Work";
+    workOption.innerText = "Рабочий";
     divTypePhone.appendChild(selectPhoneType);
     selectPhoneType.appendChild(homeOption);
     selectPhoneType.appendChild(workOption);
@@ -74,7 +72,6 @@ function addPhoneLine(object) {
     divRow.appendChild(divRemoveButton);
 
     parent.appendChild(object);
-    window.i = window.i + 1;
 }
 
 function uploadPhoto() {

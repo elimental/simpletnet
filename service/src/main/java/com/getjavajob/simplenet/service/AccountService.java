@@ -61,7 +61,15 @@ public class AccountService {
     }
 
     public void updatePhoto(Picture picture) {
-        picturesDAO.update(picture);
+        int userId = picture.getUserId();
+        Picture pic = picturesDAO.getByUserId(userId);
+        if (pic == null) {
+            System.out.println("null");
+            picturesDAO.add(picture);
+        } else {
+            picturesDAO.update(picture);
+            System.out.println("nenull");
+        }
     }
 
     public Picture getPhoto(int userId) {

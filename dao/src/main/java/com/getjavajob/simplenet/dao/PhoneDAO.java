@@ -56,44 +56,39 @@ public class PhoneDAO extends AbstractDAO<Phone> {
 
     @Override
     public int add(Phone phone) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(INSERT_PHONE)) {
-            this.rollback = connection;
-            String number = phone.getNumber();
-            if (number == null) {
-                ps.setNull(1, VARCHAR);
-            } else {
-                ps.setString(1, number);
-            }
-            PhoneType phoneType = phone.getType();
-            if (phoneType == null) {
-                ps.setNull(2, INTEGER);
-            } else {
-                String type = null;
-                if (phoneType == HOME) {
-                    type = "home";
+        try (Connection connection = connectionPool.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(INSERT_PHONE)) {
+                String number = phone.getNumber();
+                if (number == null) {
+                    ps.setNull(1, VARCHAR);
                 } else {
-                    type = "work";
+                    ps.setString(1, number);
                 }
-                ps.setString(2, type);
+                PhoneType phoneType = phone.getType();
+                if (phoneType == null) {
+                    ps.setNull(2, INTEGER);
+                } else {
+                    String type = null;
+                    if (phoneType == HOME) {
+                        type = "home";
+                    } else {
+                        type = "work";
+                    }
+                    ps.setString(2, type);
+                }
+                int phoneOwner = phone.getPhoneOwner();
+                if (phoneOwner == 0) {
+                    ps.setNull(3, INTEGER);
+                } else {
+                    ps.setInt(3, phoneOwner);
+                }
+                ps.executeUpdate();
+                connection.commit();
+            } finally {
+                connection.rollback();
             }
-            int phoneOwner = phone.getPhoneOwner();
-            if (phoneOwner == 0) {
-                ps.setNull(3, INTEGER);
-            } else {
-                ps.setInt(3, phoneOwner);
-            }
-            ps.executeUpdate();
-            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                this.rollback.rollback();
-                this.rollback = null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return 0;
     }

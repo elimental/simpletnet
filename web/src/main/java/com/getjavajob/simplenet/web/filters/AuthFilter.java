@@ -16,15 +16,16 @@ public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         allowedPath = new HashSet<>();
-        allowedPath.add("/jsp/login.jsp");
-        allowedPath.add("/jsp/registration.jsp");
-        allowedPath.add("/regcheck");
-        allowedPath.add("/jsp/regerror.jsp");
-        allowedPath.add("/jsp/regaccept.jsp");
+        allowedPath.add("/login");
+        allowedPath.add("/loginCheck");
+        allowedPath.add("/loginError");
+        allowedPath.add("/registration");
+        allowedPath.add("/regError");
+        allowedPath.add("/regAccept");
+        allowedPath.add("/regCheck");
         allowedPath.add("/logout");
-        allowedPath.add("/jsp/loginerror.jsp");
-        allowedPath.add("/logincheck");
         allowedPath.add("/js/script.js");
+        allowedPath.add("/js/edit.js");
     }
 
     @Override
@@ -34,7 +35,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession(false);
         String requestPath = req.getRequestURI();
-        String loginURI = "/jsp/login.jsp";
+        String loginURI = "/login";
         boolean loggedIn = session != null && session.getAttribute("userId") != null;
         boolean allowedRequest = allowedPath.contains(requestPath);
         if (loggedIn || allowedRequest) {

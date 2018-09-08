@@ -1,6 +1,7 @@
 package com.getjavajob.simplenet.web.servlets;
 
-import com.getjavajob.simplenet.web.util.JSPHelper;
+import com.getjavajob.simplenet.web.util.ServletHelper;
+import com.sun.org.apache.xpath.internal.operations.String;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,20 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/regcheck")
+@WebServlet("/regCheck")
 public class RegCheck extends HttpServlet {
-
-    @Override
-    public void init() throws ServletException {
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JSPHelper jspHelper = new JSPHelper(req);
-        if (!jspHelper.registration()) {
-            resp.sendRedirect("/jsp/regerror.jsp");
+        ServletHelper servletHelper = new ServletHelper(req);
+        if (!servletHelper.registration()) {
+            resp.sendRedirect("/regError");
         } else {
-            resp.sendRedirect("/jsp/regaccept.jsp");
+            resp.sendRedirect("/regAccept");
         }
     }
 }

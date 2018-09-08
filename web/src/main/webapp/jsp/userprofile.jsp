@@ -1,18 +1,10 @@
-<%@ page import="com.getjavajob.simplenet.common.entity.Account" %>
-<%@ page import="com.getjavajob.simplenet.common.entity.Phone" %>
-<%@ page import="com.getjavajob.simplenet.common.entity.PhoneType" %>
-<%@ page import="com.getjavajob.simplenet.dao.AccountDAO" %>
-<%@ page import="com.getjavajob.simplenet.dao.PhoneDAO" %>
-<%@ page import="com.getjavajob.simplenet.dao.PicturesDAO" %>
-<%@ page import="com.getjavajob.simplenet.dao.RelationshipDAO" %>
-<%@ page import="com.getjavajob.simplenet.service.AccountService" %>
-<%@ page import="com.getjavajob.simplenet.web.util.JSPHelper" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>User profile</title>
+    <title>${account.firstName}</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         label {
@@ -21,59 +13,47 @@
     </style>
 </head>
 <body>
-<%
-    AccountService accountService = new AccountService(new AccountDAO(), new PhoneDAO(), new RelationshipDAO(), new PicturesDAO());
-    int userId = (Integer) session.getAttribute("userId");
-    Account account = accountService.getUserById(userId);
-    String imgSrc = "/getimage?userId=" + userId;
-%>
 <div class="w3-cell-row" style="width: 860px">
     <div class="w3-container w3-cell" style="width: 190px">
         <br>
         <br>
         <br>
-        <img src=<%=imgSrc%> class="w3-round" style="width: 188px">
+        <img src="/getImage" class="w3-round" style="width: 188px">
     </div>
     <div class="w3-container w3-cell" style="width: 670px">
         <br>
         <br>
         <div class="w3-container">
-            <h3 class="w3-text-blue"><%=JSPHelper.getFullUserName(account)%>
+            <h3 class="w3-text-blue">
+                <c:out value="${account.lastName}"/>
+                <c:out value="${account.firstName}"/>
+                <c:out value="${account.patronymicName}"/>
             </h3>
-            <%if (account.getBirthDay() != null) {%>
-            <label>Birthday: </label><%=account.getBirthDay()%><br>
-            <%}%>
-            <%if (account.getIcq() != null) {%>
-            <label>Icq: </label><%=account.getIcq()%><br>
-            <%}%>
-            <%if (account.getSkype() != null) {%>
-            <label>Skype: </label><%=account.getSkype()%><br>
-            <%}%>
-            <%if (account.getAdditionalInfo() != null) {%>
-            <label>Additional info: </label><%=account.getAdditionalInfo()%><br>
-            <%}%>
-            <%
-                List<Phone> phones = account.getPhones();
-                if (phones != null) {
-                    for (Phone phone : phones) {
-                        if (phone.getType() == PhoneType.HOME) {
-            %>
-            <label>Home phone: </label><%=phone.getNumber()%><br>
-            <%
-                    }
-                }
-                for (Phone phone : phones) {
-                    if (phone.getType() == PhoneType.WORK) {
-            %>
-            <label>Work phone: </label><%=phone.getNumber()%><br>
-            <%
-                        }
-                    }
-                }
-            %>
-            <label>Registration date: </label><%=account.getRegDate()%>
+            <c:if test="${not empty account.birthDay}">
+                <label>Дата рождения: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.birthDay}"/><br>
+            </c:if>
+            <c:if test="${not empty account.icq}">
+                <label>Icq: </label><c:out value="${account.icq}"/> <br>
+            </c:if>
+            <c:if test="${not empty account.skype}">
+                <label>Skype: </label><c:out value="${account.skype}"/> <br>
+            </c:if>
+            <c:if test="${not empty account.additionalInfo}">
+                <label>Дополнительная информация: </label><c:out value="${account.additionalInfo}"/> <br>
+            </c:if>
+            <c:forEach var="phone" items="${account.phones}">
+                <c:if test="${phone.type == 'HOME'}">
+                    <label>Домашний телефон: </label><c:out value="${phone.number}"/><br>
+                </c:if>
+            </c:forEach>
+            <c:forEach var="phone" items="${account.phones}">
+                <c:if test="${phone.type == 'WORK'}">
+                    <label>Рабочий телефон: </label><c:out value="${phone.number}"/><br>
+                </c:if>
+            </c:forEach>
+            <label>Дата регистрации: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.regDate}"/>
             <br>
-            <a href="/jsp/editprofile.jsp" class="w3-text-green">Edit profile</a>
+            <a href="/editProfile" class="w3-text-green">Редактировать профиль</a>
         </div>
 
     </div>

@@ -20,10 +20,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.getjavajob.simplenet.common.entity.PhoneType.HOME;
 import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
@@ -32,6 +29,7 @@ import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 public class ServletHelper {
     private AccountService accountService;
     private Map<String, String> param;
+    private List<Phone> phones;
     private Picture picture;
     private HttpServletRequest request;
 
@@ -63,7 +61,6 @@ public class ServletHelper {
 
     public void editProfile() {
         parsParam(request);
-        System.out.println(param.get("first_name"));
         Account account = createAccount(false);
         accountService.updateAccount(account);
         int userId = account.getId();
@@ -123,37 +120,6 @@ public class ServletHelper {
         if (!additionalInfo.equals("")) {
             account.setAdditionalInfo(additionalInfo);
         }
-        List<Phone> phones = new ArrayList<>();
-        if (param.get("phone") != null && !param.get("phone").equals("")) {
-            Phone phone = new Phone();
-            String phoneNumber = param.get("phone");
-            phone.setNumber(phoneNumber);
-            String phoneType = param.get("phone_type");
-            if (phoneType.equals("home")) {
-                phone.setType(HOME);
-            } else {
-                phone.setType(WORK);
-            }
-            phones.add(phone);
-        }
-        for (int i = 0; i < 50; i++) {
-            String attr = "phone" + i;
-            if (param.containsKey(attr)) {
-                String phoneNumber = param.get(attr);
-                if (!phoneNumber.equals("")) {
-                    Phone phone = new Phone();
-                    phone.setNumber(phoneNumber);
-                    String phoneTypeAttr = "phone_type" + i;
-                    String phoneType = param.get(phoneTypeAttr);
-                    if (phoneType.equals("home")) {
-                        phone.setType(HOME);
-                    } else {
-                        phone.setType(WORK);
-                    }
-                    phones.add(phone);
-                }
-            }
-        }
         if (!phones.isEmpty()) {
             account.setPhones(phones);
         } else {
@@ -166,15 +132,32 @@ public class ServletHelper {
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         param = new HashMap<>();
+        phones = new ArrayList<>();
         List<FileItem> items = null;
         try {
             items = upload.parseRequest(request);
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-        for (FileItem item : items) {
+        Iterator<FileItem> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            FileItem item = iterator.next();
             if (item.isFormField()) {
-                param.put(item.getFieldName(), convertIsoToUTF(item.getString()));
+                String fieldName = item.getFieldName();
+                String fieldValue = convertIsoToUTF(item.getString());
+                if (fieldName.equals("phone") && !fieldValue.trim().equals("")) {
+                    Phone phone = new Phone();
+                    phone.setNumber(fieldValue);
+                    item = iterator.next();
+                    String phoneType = item.getString();
+                    if (phoneType.equals("home")) {
+                        phone.setType(HOME);
+                    } else {
+                        phone.setType(WORK);
+                    }
+                    phones.add(phone);
+                }
+                param.put(fieldName, fieldValue);
             } else {
                 if (!FilenameUtils.getName(item.getName()).equals("")) {
                     try (InputStream uploadedFile = item.getInputStream()) {

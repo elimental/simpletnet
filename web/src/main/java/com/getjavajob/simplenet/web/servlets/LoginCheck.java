@@ -11,14 +11,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/logincheck")
+@WebServlet("/loginCheck")
 public class LoginCheck extends HttpServlet {
-    private AccountService accountService;
-
-    @Override
-    public void init() throws ServletException {
-        this.accountService = new AccountService(new AccountDAO());
-    }
+    private AccountService accountService = new AccountService(new AccountDAO());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,9 +45,9 @@ public class LoginCheck extends HttpServlet {
                 resp.addCookie(emailCookie);
                 resp.addCookie(passCookie);
             }
-            resp.sendRedirect("/jsp/userprofile.jsp");
+            resp.sendRedirect("/userProfile");
         } else {
-            resp.sendRedirect("/jsp/loginerror.jsp");
+            resp.sendRedirect("/loginError");
         }
     }
 }
