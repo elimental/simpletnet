@@ -15,70 +15,40 @@ public class RelationshipDAO {
             "OR ((userOneId = ? AND userTwoId = ?))";
     private static final String SELECT_RELATION = "SELECT userTwoId FROM relationship WHERE userOneId = ? " +
             "UNION SELECT userOneId FROM relationship WHERE userTwoId = ?";
-    private DBConnectionPool connectionPool;
-    private Connection rollback;
+    private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
-    public RelationshipDAO() {
-        this.connectionPool = DBConnectionPool.getInstance();
+    public void add(int Id1, int Id2) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(INSERT_RELATION);
+        ps.setInt(1, Id1);
+        ps.setInt(2, Id2);
+        ps.executeUpdate();
     }
 
-    public void add(int Id1, int Id2) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(INSERT_RELATION)) {
-            this.rollback = connection;
-            ps.setInt(1, Id1);
-            ps.setInt(2, Id2);
-            ps.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                this.rollback.rollback();
-                this.rollback = null;
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    public void delete(int Id1, int Id2) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(DELETE_RELATION)) {
-            this.rollback = connection;
-            ps.setInt(1, Id1);
-            ps.setInt(2, Id2);
-            ps.setInt(3, Id2);
-            ps.setInt(4, Id1);
-            ps.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                this.rollback.rollback();
-                this.rollback = null;
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        }
+    public void delete(int Id1, int Id2) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(DELETE_RELATION);
+        ps.setInt(1, Id1);
+        ps.setInt(2, Id2);
+        ps.setInt(3, Id2);
+        ps.setInt(4, Id1);
+        ps.executeUpdate();
     }
 
     public List<Integer> getAll(int id) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(SELECT_RELATION)) {
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SELECT_RELATION);
             ps.setInt(1, id);
             ps.setInt(2, id);
-            List<Integer> ids = new ArrayList<>();
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ids.add(rs.getInt(1));
-                }
-                return ids;
+            List<Integer> friends = new ArrayList<>();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                friends.add(rs.getInt(1));
             }
+            return friends;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return null;
     }
 }

@@ -20,12 +20,7 @@ public class PhoneDAO extends AbstractDAO<Phone> {
     private static final String DELETE_BY_OWNER_ID = "DELETE FROM phone WHERE phoneOwner = ?";
     private static final String INSERT_PHONE = "INSERT INTO phone (number, type, phoneOwner) VALUES (?, ?, ?)";
     private static final String SELECT_PHONES_BY_OWNER_ID = "SELECT * FROM phone WHERE phoneOwner = ?";
-    private DBConnectionPool connectionPool;
-    private Connection rollback;
-
-    public PhoneDAO() {
-        this.connectionPool = DBConnectionPool.getInstance();
-    }
+    private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     @Override
     public List<Phone> getAll() {
@@ -38,8 +33,8 @@ public class PhoneDAO extends AbstractDAO<Phone> {
     }
 
     public List<Phone> getPhonesByOwnerId(int ownerId) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(SELECT_PHONES_BY_OWNER_ID)) {
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SELECT_PHONES_BY_OWNER_ID);
             ps.setInt(1, ownerId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Phone> phones = new ArrayList<>();
@@ -50,66 +45,48 @@ public class PhoneDAO extends AbstractDAO<Phone> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     @Override
-    public int add(Phone phone) {
-        try (Connection connection = connectionPool.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(INSERT_PHONE)) {
-                String number = phone.getNumber();
-                if (number == null) {
-                    ps.setNull(1, VARCHAR);
-                } else {
-                    ps.setString(1, number);
-                }
-                PhoneType phoneType = phone.getType();
-                if (phoneType == null) {
-                    ps.setNull(2, INTEGER);
-                } else {
-                    String type = null;
-                    if (phoneType == HOME) {
-                        type = "home";
-                    } else {
-                        type = "work";
-                    }
-                    ps.setString(2, type);
-                }
-                int phoneOwner = phone.getPhoneOwner();
-                if (phoneOwner == 0) {
-                    ps.setNull(3, INTEGER);
-                } else {
-                    ps.setInt(3, phoneOwner);
-                }
-                ps.executeUpdate();
-                connection.commit();
-            } finally {
-                connection.rollback();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public int add(Phone phone) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(INSERT_PHONE);
+        String number = phone.getNumber();
+        if (number == null) {
+            ps.setNull(1, VARCHAR);
+        } else {
+            ps.setString(1, number);
         }
+        PhoneType phoneType = phone.getType();
+        if (phoneType == null) {
+            ps.setNull(2, INTEGER);
+        } else {
+            String type = null;
+            if (phoneType == HOME) {
+                type = "home";
+            } else {
+                type = "work";
+            }
+            ps.setString(2, type);
+        }
+        int phoneOwner = phone.getPhoneOwner();
+        if (phoneOwner == 0) {
+            ps.setNull(3, INTEGER);
+        } else {
+            ps.setInt(3, phoneOwner);
+        }
+        ps.executeUpdate();
         return 0;
     }
 
-    public void deleteByOwnerId(int id) {
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(DELETE_BY_OWNER_ID)) {
-            this.rollback = connection;
-            ps.setInt(1, id);
-            ps.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                this.rollback.rollback();
-                this.rollback = null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+
+    public void deleteByOwnerId(int id) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(DELETE_BY_OWNER_ID);
+        ps.setInt(1, id);
+        ps.executeUpdate();
     }
 
     @Override

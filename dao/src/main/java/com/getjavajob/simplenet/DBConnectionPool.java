@@ -10,6 +10,7 @@ import java.util.Properties;
 public class DBConnectionPool {
     private static final int INITIAL_CAPACITY = 10;
     private static DBConnectionPool ourInstance = new DBConnectionPool();
+    private static final ThreadLocal<Connection> threadLocalConnection = new ThreadLocal<>();
     private LinkedList<Connection> poll;
     private String url;
     private String user;
@@ -20,9 +21,7 @@ public class DBConnectionPool {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             properties.load(this.getClass().getClassLoader().getResourceAsStream("db.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         this.url = properties.getProperty("database.url");
@@ -39,22 +38,33 @@ public class DBConnectionPool {
     }
 
     public synchronized Connection getConnection() {
-        if (poll.isEmpty()) {
-            poll.add(createConnection());
+        Connection connection = threadLocalConnection.get();
+        if (connection!=null) {
+            return connection;
         }
-        return poll.pop();
+        while (poll.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        connection = poll.pop();
+        threadLocalConnection.set(connection);
+        return connection;
     }
 
-    public synchronized void returnConnection(Connection connection) {
+    synchronized void returnConnection(Connection connection) {
+        threadLocalConnection.set(null);
         poll.push(connection);
+        notifyAll();
     }
 
     private Connection createConnection() {
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             connection.setAutoCommit(false);
-            DBConnection dbConnection = new DBConnection(connection, this);
-            return dbConnection;
+            return new DBConnection(connection, this);
         } catch (SQLException e) {
             e.printStackTrace();
         }

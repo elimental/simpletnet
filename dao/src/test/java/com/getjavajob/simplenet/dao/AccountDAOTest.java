@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -79,7 +80,7 @@ public class AccountDAOTest {
     }
 
     @Test
-    public void add() {
+    public void add() throws SQLException {
         Account excepted = new Account();
         excepted.setId(4);
         excepted.setFirstName("Vasya");
@@ -98,7 +99,7 @@ public class AccountDAOTest {
     }
 
     @Test
-    public void update() {
+    public void update() throws SQLException {
         Account excepted = new Account();
         excepted.setId(1);
         excepted.setFirstName("Sergey");
@@ -117,7 +118,7 @@ public class AccountDAOTest {
     }
 
     @Test
-    public void delete() {
+    public void delete() throws SQLException {
         accountDAO.delete(3);
         Account account = accountDAO.getById(3);
         assertNull(account);

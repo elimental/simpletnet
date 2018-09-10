@@ -41,15 +41,11 @@
             <c:if test="${not empty account.additionalInfo}">
                 <label>Дополнительная информация: </label><c:out value="${account.additionalInfo}"/> <br>
             </c:if>
-            <c:forEach var="phone" items="${account.phones}">
-                <c:if test="${phone.type == 'HOME'}">
+            <c:forEach var="phone" items="${homePhones}">
                     <label>Домашний телефон: </label><c:out value="${phone.number}"/><br>
-                </c:if>
             </c:forEach>
-            <c:forEach var="phone" items="${account.phones}">
-                <c:if test="${phone.type == 'WORK'}">
+            <c:forEach var="phone" items="${workPhones}">
                     <label>Рабочий телефон: </label><c:out value="${phone.number}"/><br>
-                </c:if>
             </c:forEach>
             <label>Дата регистрации: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.regDate}"/>
             <br>

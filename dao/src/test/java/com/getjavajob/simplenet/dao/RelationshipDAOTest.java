@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -35,14 +36,14 @@ public class RelationshipDAOTest {
     }
 
     @Test
-    public void add() {
+    public void add() throws SQLException {
         relationshipDAO.add(1, 7);
         List<Integer> exepted = relationshipDAO.getAll(1);
         assertTrue(exepted.contains(7));
     }
 
     @Test
-    public void delete() {
+    public void delete() throws SQLException {
         relationshipDAO.delete(1, 3);
         List<Integer> exepted = relationshipDAO.getAll(1);
         assertTrue(!exepted.contains(3));

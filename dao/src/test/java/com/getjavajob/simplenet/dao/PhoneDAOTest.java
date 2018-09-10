@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class PhoneDAOTest {
     }
 
     @Test
-    public void add() {
+    public void add() throws SQLException {
         Phone excepted = new Phone();
         excepted.setNumber("777888");
         excepted.setType(HOME);
@@ -75,7 +76,7 @@ public class PhoneDAOTest {
     }
 
     @Test
-    public void deleteByOwnerId() {
+    public void deleteByOwnerId() throws SQLException {
         phoneDAO.deleteByOwnerId(1);
         List<Phone> excepted = phoneDAO.getPhonesByOwnerId(1);
         assertTrue(excepted.isEmpty());

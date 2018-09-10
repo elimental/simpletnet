@@ -1,7 +1,7 @@
 package com.getjavajob.simplenet.web.servlets;
 
 import com.getjavajob.simplenet.common.entity.Picture;
-import com.getjavajob.simplenet.dao.PicturesDAO;
+import com.getjavajob.simplenet.dao.PictureDAO;
 import com.getjavajob.simplenet.service.AccountService;
 import org.apache.commons.io.FileUtils;
 
@@ -16,12 +16,7 @@ import java.io.IOException;
 
 @WebServlet("/getImage")
 public class GetImage extends HttpServlet {
-    private AccountService accountService;
-
-    @Override
-    public void init() throws ServletException {
-        this.accountService = new AccountService(new PicturesDAO());
-    }
+    private AccountService accountService = new AccountService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

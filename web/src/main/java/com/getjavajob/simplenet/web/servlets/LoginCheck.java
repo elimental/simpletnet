@@ -13,7 +13,7 @@ import java.util.Map;
 
 @WebServlet("/loginCheck")
 public class LoginCheck extends HttpServlet {
-    private AccountService accountService = new AccountService(new AccountDAO());
+    private AccountService accountService = new AccountService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

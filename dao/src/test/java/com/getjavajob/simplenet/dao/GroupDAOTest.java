@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -56,7 +57,7 @@ public class GroupDAOTest {
     }
 
     @Test
-    public void add() {
+    public void add() throws SQLException {
         Group excepted = new Group();
         excepted.setId(4);
         excepted.setGroupName("group4");
@@ -67,7 +68,7 @@ public class GroupDAOTest {
     }
 
     @Test
-    public void delete() {
+    public void delete() throws SQLException {
         groupDAO.delete(3);
         Group group = groupDAO.getById(3);
         assertNull(group);

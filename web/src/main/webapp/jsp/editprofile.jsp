@@ -37,45 +37,41 @@
         <textarea class="w3-input w3-border" rows="5" cols="50" name="addinfo">${account.additionalInfo}</textarea>
         <label class="w3-text-blue"><b>Телефоны</b></label>
         <div id="phones">
-            <c:forEach var="phone" items="${account.phones}">
-                <c:if test="${phone.type == 'HOME'}">
-                    <div class="w3-cell-row">
-                        <div class="w3-cell">
-                            <input class="w3-input w3-border" type="tel" name="phone" pattern="[0-9]+"
-                                   value=${phone.number}>
-                        </div>
-                        <div class="w3-container w3-cell">
-                            <select class="w3-select w3-border" name="phone_type">
-                                <option value="home">Домашний</option>
-                                <option value="work">Рабочий</option>
-                            </select>
-
-                        </div>
-                        <div class="w3-cell">
-                            <button class="w3-btn w3-blue" type="button" onclick="deletePhoneLine(this)">-</button>
-                        </div>
+            <c:forEach var="phone" items="${homePhones}">
+                <div class="w3-cell-row">
+                    <div class="w3-cell">
+                        <input class="w3-input w3-border" type="tel" name="phone" pattern="[0-9]+"
+                               value=${phone.number}>
                     </div>
-                </c:if>
+                    <div class="w3-container w3-cell">
+                        <select class="w3-select w3-border" name="phone_type">
+                            <option value="home">Домашний</option>
+                            <option value="work">Рабочий</option>
+                        </select>
+
+                    </div>
+                    <div class="w3-cell">
+                        <button class="w3-btn w3-blue" type="button" onclick="deletePhoneLine(this)">-</button>
+                    </div>
+                </div>
             </c:forEach>
-            <c:forEach var="phone" items="${account.phones}">
-                <c:if test="${phone.type == 'WORK'}">
-                    <div class="w3-cell-row">
-                        <div class="w3-cell">
-                            <input class="w3-input w3-border" type="tel" name="phone" pattern="[0-9]+"
-                                   value=${phone.number}>
-                        </div>
-                        <div class="w3-container w3-cell">
-                            <select class="w3-select w3-border" name="phone_type">
-                                <option value="home">Домашний</option>
-                                <option selected value="work">Рабочий</option>
-                            </select>
-
-                        </div>
-                        <div class="w3-cell">
-                            <button class="w3-btn w3-blue" type="button" onclick="deletePhoneLine(this)">-</button>
-                        </div>
+            <c:forEach var="phone" items="${workPhones}">
+                <div class="w3-cell-row">
+                    <div class="w3-cell">
+                        <input class="w3-input w3-border" type="tel" name="phone" pattern="[0-9]+"
+                               value=${phone.number}>
                     </div>
-                </c:if>
+                    <div class="w3-container w3-cell">
+                        <select class="w3-select w3-border" name="phone_type">
+                            <option value="home">Домашний</option>
+                            <option selected value="work">Рабочий</option>
+                        </select>
+
+                    </div>
+                    <div class="w3-cell">
+                        <button class="w3-btn w3-blue" type="button" onclick="deletePhoneLine(this)">-</button>
+                    </div>
+                </div>
             </c:forEach>
             <button class="w3-btn w3-blue" type="button" onclick="addPhoneLine(this)">Добавить телефон</button>
         </div>

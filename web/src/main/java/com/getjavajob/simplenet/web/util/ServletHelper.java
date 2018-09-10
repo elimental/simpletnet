@@ -3,9 +3,6 @@ package com.getjavajob.simplenet.web.util;
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.common.entity.Picture;
-import com.getjavajob.simplenet.dao.AccountDAO;
-import com.getjavajob.simplenet.dao.PhoneDAO;
-import com.getjavajob.simplenet.dao.PicturesDAO;
 import com.getjavajob.simplenet.service.AccountService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -27,24 +24,14 @@ import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 
 public class ServletHelper {
-    private AccountService accountService;
+    private AccountService accountService = new AccountService();
     private Map<String, String> param;
     private List<Phone> phones;
     private Picture picture;
     private HttpServletRequest request;
 
     public ServletHelper(HttpServletRequest request) {
-        this.accountService = new AccountService(new AccountDAO(), new PhoneDAO(), new PicturesDAO());
         this.request = request;
-    }
-
-    public static String getFullUserName(Account account) {
-        String firstName = account.getFirstName();
-        String lastName = account.getLastName();
-        String patronymicName = account.getPatronymicName();
-        String fullUserName = firstName + (patronymicName == null ? "" : " " + patronymicName) +
-                (lastName == null ? "" : " " + lastName);
-        return fullUserName;
     }
 
     public boolean registration() {
@@ -54,28 +41,14 @@ public class ServletHelper {
             return false;
         }
         Account account = createAccount(true);
-        int userId = accountService.addAccount(account);
-        createPicture(true, userId);
+        accountService.addAccount(account, picture);
         return true;
     }
 
     public void editProfile() {
         parsParam(request);
         Account account = createAccount(false);
-        accountService.updateAccount(account);
-        int userId = account.getId();
-        createPicture(false, userId);
-    }
-
-    private void createPicture(boolean ifReg, int userId) {
-        if (picture != null) {
-            picture.setUserId(userId);
-            if (ifReg) {
-                accountService.addPhoto(picture);
-            } else {
-                accountService.updatePhoto(picture);
-            }
-        }
+        accountService.updateAccount(account, picture);
     }
 
     private Account createAccount(boolean ifReg) {

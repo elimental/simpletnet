@@ -12,7 +12,7 @@ import java.io.IOException;
 @WebServlet("/editProfileCheck")
 public class EditProfileCeck extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletHelper servletHelper = new ServletHelper(req);
         servletHelper.editProfile();
         resp.sendRedirect("/userProfile");
