@@ -1,7 +1,6 @@
 package com.getjavajob.simplenet.web.servlets;
 
-import com.getjavajob.simplenet.common.entity.Picture;
-import com.getjavajob.simplenet.dao.PictureDAO;
+import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.service.AccountService;
 import org.apache.commons.io.FileUtils;
 
@@ -21,14 +20,15 @@ public class GetImage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (Integer) req.getSession().getAttribute("userId");
-        Picture picture = accountService.getPhoto(userId);
+        Account account = accountService.getUserById(userId);
+        byte[] photo = account.getPhoto();
         resp.setContentType("image/jpg");
         ServletOutputStream outputStream = resp.getOutputStream();
-        if (picture == null) {
+        if (photo == null) {
             String filePath = req.getServletContext().getRealPath("/pic/nophoto.jpg");
             outputStream.write(FileUtils.readFileToByteArray(new File(filePath)));
         } else {
-            outputStream.write(picture.getFileData());
+            outputStream.write(photo);
         }
         outputStream.close();
     }

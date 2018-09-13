@@ -14,6 +14,7 @@ public class Account extends BaseEntity {
     private String icq;
     private String skype;
     private String additionalInfo;
+    private byte[] photo;
     private List<Phone> phones;
 
     public String getFirstName() {
@@ -102,6 +103,14 @@ public class Account extends BaseEntity {
 
     public void setPhones(List<Phone> phones) {
         this.phones = phones;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override

@@ -26,6 +26,7 @@ public class AuthFilter implements Filter {
         allowedPath.add("/logout");
         allowedPath.add("/js/script.js");
         allowedPath.add("/js/edit.js");
+        allowedPath.add("/test");
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.List;
 import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 
-public class GroupDAO extends AbstractDAO<Group> {
+public class GroupDAO implements AbstractDAO<Group> {
     private static final String DELETE_BY_ID = "DELETE FROM groupp WHERE groupId = ?";
     private static final String INSERT_GROUP = "INSERT INTO groupp (groupName, groupOwner) VALUES (?, ?)";
     private static final String SELECT_BY_ID = "SELECT * FROM groupp WHERE groupId = ?";

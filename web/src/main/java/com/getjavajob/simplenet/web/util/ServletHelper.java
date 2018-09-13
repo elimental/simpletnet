@@ -2,7 +2,6 @@ package com.getjavajob.simplenet.web.util;
 
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
-import com.getjavajob.simplenet.common.entity.Picture;
 import com.getjavajob.simplenet.service.AccountService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -27,7 +26,7 @@ public class ServletHelper {
     private AccountService accountService = new AccountService();
     private Map<String, String> param;
     private List<Phone> phones;
-    private Picture picture;
+    private byte[] photo;
     private HttpServletRequest request;
 
     public ServletHelper(HttpServletRequest request) {
@@ -41,14 +40,14 @@ public class ServletHelper {
             return false;
         }
         Account account = createAccount(true);
-        accountService.addAccount(account, picture);
+        accountService.addAccount(account);
         return true;
     }
 
     public void editProfile() {
         parsParam(request);
         Account account = createAccount(false);
-        accountService.updateAccount(account, picture);
+        accountService.updateAccount(account);
     }
 
     private Account createAccount(boolean ifReg) {
@@ -93,6 +92,9 @@ public class ServletHelper {
         if (!additionalInfo.equals("")) {
             account.setAdditionalInfo(additionalInfo);
         }
+        if (photo != null) {
+            account.setPhoto(photo);
+        }
         if (!phones.isEmpty()) {
             account.setPhones(phones);
         } else {
@@ -134,10 +136,8 @@ public class ServletHelper {
             } else {
                 if (!FilenameUtils.getName(item.getName()).equals("")) {
                     try (InputStream uploadedFile = item.getInputStream()) {
-                        picture = new Picture();
-                        byte[] fileData = new byte[uploadedFile.available()];
-                        uploadedFile.read(fileData);
-                        picture.setFileData(fileData);
+                        photo = new byte[uploadedFile.available()];
+                        uploadedFile.read(photo);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -154,5 +154,17 @@ public class ServletHelper {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void preparePhones(List<Phone> phones, List<Phone> homePhones, List<Phone> workPhones) {
+        if (phones != null) {
+            for (Phone phone : phones) {
+                if (phone.getType() == HOME) {
+                    homePhones.add(phone);
+                } else {
+                    workPhones.add(phone);
+                }
+            }
+        }
     }
 }

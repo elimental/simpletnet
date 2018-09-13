@@ -37,7 +37,7 @@ public class AccountServiceTest {
         phones.add(phone);
         account.setPhones(phones);
         when(accountDAO.add(account)).thenReturn(1);
-        accountService.addAccount(account,null);
+        accountService.addAccount(account);
         phones = account.getPhones();
         for (Phone phone1 : phones) {
             assertEquals(1, phone1.getPhoneOwner());

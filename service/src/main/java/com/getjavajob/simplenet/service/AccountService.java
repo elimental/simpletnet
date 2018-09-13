@@ -3,10 +3,8 @@ package com.getjavajob.simplenet.service;
 import com.getjavajob.simplenet.DBConnectionPool;
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
-import com.getjavajob.simplenet.common.entity.Picture;
 import com.getjavajob.simplenet.dao.AccountDAO;
 import com.getjavajob.simplenet.dao.PhoneDAO;
-import com.getjavajob.simplenet.dao.PictureDAO;
 import com.getjavajob.simplenet.dao.RelationshipDAO;
 
 import java.sql.Connection;
@@ -17,11 +15,12 @@ import java.util.List;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
 
 public class AccountService {
+    private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
-    public void addAccount(Account account, Picture picture) {
+    public void addAccount(Account account) {
         Connection connection = null;
         try {
-            connection = DBConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             AccountDAO accountDAO = new AccountDAO();
             int userId = accountDAO.add(account);
             List<Phone> phones = account.getPhones();
@@ -31,11 +30,6 @@ public class AccountService {
                     phone.setPhoneOwner(userId);
                     phoneDAO.add(phone);
                 }
-            }
-            if (picture != null) {
-                PictureDAO pictureDAO = new PictureDAO();
-                picture.setUserId(userId);
-                pictureDAO.add(picture);
             }
             connection.commit();
         } catch (SQLException e) {
@@ -54,17 +48,16 @@ public class AccountService {
         }
     }
 
-    public Picture getPhoto(int userId) {
-        PictureDAO pictureDAO = new PictureDAO();
-        return pictureDAO.getByUserId(userId);
-    }
-
-    public void updateAccount(Account account, Picture picture) {
+    public void updateAccount(Account account) {
         Connection connection = null;
         try {
-            connection = DBConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             AccountDAO accountDAO = new AccountDAO();
             int userId = account.getId();
+            Account accountInDb = accountDAO.getById(userId);
+            if (account.getPhoto() == null && accountInDb.getPhoto() != null) {
+                account.setPhoto(accountInDb.getPhoto());
+            }
             accountDAO.update(account);
             PhoneDAO phoneDAO = new PhoneDAO();
             phoneDAO.deleteByOwnerId(userId);
@@ -73,16 +66,6 @@ public class AccountService {
                 for (Phone phone : phones) {
                     phone.setPhoneOwner(userId);
                     phoneDAO.add(phone);
-                }
-            }
-            if (picture != null) {
-                picture.setUserId(userId);
-                PictureDAO pictureDAO = new PictureDAO();
-                Picture pic = pictureDAO.getByUserId(userId);
-                if (pic == null) {
-                    pictureDAO.add(picture);
-                } else {
-                    pictureDAO.update(picture);
                 }
             }
             connection.commit();
@@ -105,12 +88,10 @@ public class AccountService {
     public void deleteAccount(Account account) {
         Connection connection = null;
         try {
-            connection = DBConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             int userId = account.getId();
             AccountDAO accountDAO = new AccountDAO();
             PhoneDAO phoneDAO = new PhoneDAO();
-            PictureDAO pictureDAO = new PictureDAO();
-            pictureDAO.delete(userId);
             phoneDAO.deleteByOwnerId(userId);
             accountDAO.delete(userId);
             connection.commit();
@@ -134,7 +115,7 @@ public class AccountService {
     public void addFriend(Account userOne, Account userTwo) {
         Connection connection = null;
         try {
-            connection = DBConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             RelationshipDAO relationshipDAO = new RelationshipDAO();
             relationshipDAO.add(userOne.getId(), userTwo.getId());
             connection.commit();
@@ -157,7 +138,7 @@ public class AccountService {
     public void deleteFriend(Account userOne, Account userTwo) {
         Connection connection = null;
         try {
-            connection = DBConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             RelationshipDAO relationshipDAO = new RelationshipDAO();
             relationshipDAO.delete(userOne.getId(), userTwo.getId());
             connection.commit();

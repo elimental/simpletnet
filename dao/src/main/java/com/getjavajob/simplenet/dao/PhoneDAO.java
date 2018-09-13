@@ -16,7 +16,7 @@ import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
 import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 
-public class PhoneDAO extends AbstractDAO<Phone> {
+public class PhoneDAO implements AbstractDAO<Phone> {
     private static final String DELETE_BY_OWNER_ID = "DELETE FROM phone WHERE phoneOwner = ?";
     private static final String INSERT_PHONE = "INSERT INTO phone (number, type, phoneOwner) VALUES (?, ?, ?)";
     private static final String SELECT_PHONES_BY_OWNER_ID = "SELECT * FROM phone WHERE phoneOwner = ?";

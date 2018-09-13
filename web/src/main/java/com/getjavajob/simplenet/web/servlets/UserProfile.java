@@ -3,6 +3,7 @@ package com.getjavajob.simplenet.web.servlets;
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.service.AccountService;
+import com.getjavajob.simplenet.web.util.ServletHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.simplenet.common.entity.PhoneType.HOME;
+import static com.getjavajob.simplenet.web.util.ServletHelper.preparePhones;
 
 @WebServlet("/userProfile")
 public class UserProfile extends HttpServlet {
@@ -28,13 +30,7 @@ public class UserProfile extends HttpServlet {
         List<Phone> phones = account.getPhones();
         List<Phone> homePhones = new ArrayList<>();
         List<Phone> workPhones = new ArrayList<>();
-        for (Phone phone : phones) {
-            if (phone.getType() == HOME) {
-                homePhones.add(phone);
-            } else {
-                workPhones.add(phone);
-            }
-        }
+        preparePhones(phones,homePhones,workPhones);
         req.setAttribute("account", account);
         req.setAttribute("homePhones", homePhones);
         req.setAttribute("workPhones", workPhones);

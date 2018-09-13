@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.simplenet.common.entity.PhoneType.HOME;
+import static com.getjavajob.simplenet.web.util.ServletHelper.preparePhones;
 
 @WebServlet("/editProfile")
 public class EditProfile extends HttpServlet {
@@ -28,13 +29,7 @@ public class EditProfile extends HttpServlet {
         List<Phone> phones = account.getPhones();
         List<Phone> homePhones = new ArrayList<>();
         List<Phone> workPhones = new ArrayList<>();
-        for (Phone phone : phones) {
-            if (phone.getType() == HOME) {
-                homePhones.add(phone);
-            } else {
-                workPhones.add(phone);
-            }
-        }
+        preparePhones(phones,homePhones,workPhones);
         req.setAttribute("account", account);
         req.setAttribute("homePhones", homePhones);
         req.setAttribute("workPhones", workPhones);
