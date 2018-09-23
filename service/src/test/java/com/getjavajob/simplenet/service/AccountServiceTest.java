@@ -6,7 +6,6 @@ import com.getjavajob.simplenet.dao.AccountDAO;
 import com.getjavajob.simplenet.dao.PhoneDAO;
 import com.getjavajob.simplenet.dao.RelationshipDAO;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class AccountServiceTest {
         this.relationshipDAO = mock(RelationshipDAO.class);
     }
 
- //   @Test
+    //   @Test
     public void addAccount() throws SQLException {
         AccountService accountService = new AccountService();
         Account account = new Account();

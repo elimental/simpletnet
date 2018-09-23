@@ -22,7 +22,7 @@ public class AccountDAOTest {
     public void setUp() throws Exception {
         this.connection = DBConnectionPool.getInstance().getConnection();
         connection.createStatement().executeUpdate("CREATE TABLE account (" +
-                "  userId INT NOT NULL AUTO_INCREMENT," +
+                "  id INT NOT NULL AUTO_INCREMENT," +
                 "  firstName VARCHAR(45) NULL," +
                 "  lastName VARCHAR(45) NULL," +
                 "  patronymicName VARCHAR(45) NULL," +
@@ -33,16 +33,17 @@ public class AccountDAOTest {
                 "  additionalInfo VARCHAR(1000) NULL," +
                 "  passHash VARCHAR(200) NULL," +
                 "  regDate DATE NULL," +
-                "  photo VARCHAR(45) NULL," +
-                "  PRIMARY KEY (userId)," +
-                "  UNIQUE INDEX id_UNIQUE (userId ASC))");
+                "  photo LONGBLOB NULL," +
+                "  userRole INT NULL," +
+                "  PRIMARY KEY (id)," +
+                "  UNIQUE INDEX id_UNIQUE (id ASC))");
         connection.createStatement().executeUpdate("INSERT INTO account (firstName, lastName, patronymicName, " +
-                "birthDay, regDate, email, passHash, icq, skype, additionalInfo)" +
+                "birthDay, regDate, email, passHash, icq, skype, additionalInfo, userRole)" +
                 "  VALUES ('Dima', 'Andreev', 'Borisovich', '1978-02-13', '2017-02-02', 'elimental@bk.ru'," +
-                "  'DGFDGSDGDSGDGSWEWETR', '49224940', 'elimetal13', 'adfasdfasdf'), ('Vasya','Petrov'," +
+                "  'DGFDGSDGDSGDGSWEWETR', '49224940', 'elimetal13', 'adfasdfasdf', 1), ('Vasya','Petrov'," +
                 " 'Ivanovich', '1981-12-17', '2015-10-13', 'vasya@bk.ru', 'DSGFSDGF%@#%@#ASDFASFS', '49444940'," +
-                " 'vasya17', 'adfasdfasdf'), ('Petya','Ivanov', 'Petrovich', '1970-06-21'," +
-                " '2016-12-15', 'petya@bk.ru', 'ASDFASDAFD','43444940', 'petya21', 'adfasdfasdf')");
+                " 'vasya17', 'adfasdfasdf', 1), ('Petya','Ivanov', 'Petrovich', '1970-06-21'," +
+                " '2016-12-15', 'petya@bk.ru', 'ASDFASDAFD','43444940', 'petya21', 'adfasdfasdf', 1)");
         connection.commit();
         connection.close();
         accountDAO = new AccountDAO();
@@ -75,12 +76,12 @@ public class AccountDAOTest {
         expected.setIcq("49444940");
         expected.setSkype("vasya17");
         expected.setAdditionalInfo("adfasdfasdf");
+        expected.setRole(1);
         Account actual = accountDAO.getById(2);
         assertEquals(expected.toString(), actual.toString());
-
     }
 
- //   @Test
+    //   @Test
     public void add() throws SQLException {
         Account excepted = new Account();
         excepted.setId(4);
@@ -99,7 +100,7 @@ public class AccountDAOTest {
         assertEquals(excepted.toString(), actual.toString());
     }
 
-  //  @Test
+    //  @Test
     public void update() throws SQLException {
         Account excepted = new Account();
         excepted.setId(1);
@@ -139,6 +140,7 @@ public class AccountDAOTest {
         expected.setIcq("49444940");
         expected.setSkype("vasya17");
         expected.setAdditionalInfo("adfasdfasdf");
+        expected.setRole(1);
         Account actual = accountDAO.getByEmail("vasya@bk.ru");
         assertEquals(expected.toString(), actual.toString());
     }

@@ -16,6 +16,7 @@ public class Account extends BaseEntity {
     private String additionalInfo;
     private byte[] photo;
     private List<Phone> phones;
+    private int role;
 
     public String getFirstName() {
         return firstName;
@@ -113,20 +114,30 @@ public class Account extends BaseEntity {
         this.photo = photo;
     }
 
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
-                "userId='" + id + '\'' +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymicName='" + patronymicName + '\'' +
-                ", birthDay=" + birthDay + '\'' +
-                ", regDate=" + regDate + '\'' +
+                ", birthDay=" + birthDay +
+                ", regDate=" + regDate +
                 ", email='" + email + '\'' +
                 ", passHash='" + passHash + '\'' +
                 ", icq='" + icq + '\'' +
                 ", skype='" + skype + '\'' +
                 ", additionalInfo='" + additionalInfo + '\'' +
+                ", phones=" + phones +
+                ", role=" + role +
+                ", id=" + id +
                 '}';
     }
 }

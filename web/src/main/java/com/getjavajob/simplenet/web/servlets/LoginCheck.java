@@ -1,7 +1,6 @@
 package com.getjavajob.simplenet.web.servlets;
 
 import com.getjavajob.simplenet.common.entity.Account;
-import com.getjavajob.simplenet.dao.AccountDAO;
 import com.getjavajob.simplenet.service.AccountService;
 
 import javax.servlet.ServletException;
@@ -45,7 +44,7 @@ public class LoginCheck extends HttpServlet {
                 resp.addCookie(emailCookie);
                 resp.addCookie(passCookie);
             }
-            resp.sendRedirect("/userProfile");
+            resp.sendRedirect("/userProfile?id=" + userId);
         } else {
             resp.sendRedirect("/loginError");
         }

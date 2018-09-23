@@ -24,10 +24,10 @@ INSERT INTO account (firstName, lastName, patronymicName, birthDay, homeAddress,
 
 CREATE TABLE groupp (
   groupId INT NOT NULL AUTO_INCREMENT,
-  groupName VARCHAR(45) NOT NULL,
-  groupOwner INT NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  owner INT NOT NULL,
   PRIMARY KEY (groupId),
   UNIQUE INDEX groupId_UNIQUE (groupId ASC));
   
-INSERT INTO groupp (groupName, groupOwner)
+INSERT INTO groupp (name, owner)
   VALUES ('group1',1),('group2',2),('group3',3)

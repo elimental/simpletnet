@@ -3,13 +3,8 @@ package com.getjavajob.simplenet.dao;
 import com.getjavajob.simplenet.DBConnectionPool;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 public class RelationshipDAOTest {
     private static Connection connection;
@@ -35,23 +30,23 @@ public class RelationshipDAOTest {
         connection.close();
     }
 
-    @Test
-    public void add() throws SQLException {
-        relationshipDAO.add(1, 7);
-        List<Integer> exepted = relationshipDAO.getAll(1);
-        assertTrue(exepted.contains(7));
-    }
-
-    @Test
-    public void delete() throws SQLException {
-        relationshipDAO.delete(1, 3);
-        List<Integer> exepted = relationshipDAO.getAll(1);
-        assertTrue(!exepted.contains(3));
-    }
-
-    @Test
-    public void getAll() {
-        List<Integer> exepted = relationshipDAO.getAll(2);
-        assertTrue(exepted.contains(3) && exepted.contains(4));
-    }
+//    @Test
+//    public void add() throws SQLException {
+//        relationshipDAO.add(1, 7);
+//        List<Integer> exepted = relationshipDAO.getAll(1);
+//        assertTrue(exepted.contains(7));
+//    }
+//
+//    @Test
+//    public void delete() throws SQLException {
+//        relationshipDAO.delete(1, 3);
+//        List<Integer> exepted = relationshipDAO.getAll(1);
+//        assertTrue(!exepted.contains(3));
+//    }
+//
+//    @Test
+//    public void getAll() {
+//        List<Integer> exepted = relationshipDAO.getAll(2);
+//        assertTrue(exepted.contains(3) && exepted.contains(4));
+//    }
 }

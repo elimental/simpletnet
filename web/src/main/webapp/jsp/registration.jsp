@@ -45,7 +45,7 @@
         <textarea class="w3-input w3-border" rows="5" cols="50" name="addinfo"></textarea>
 
         <label class="w3-text-blue"><b>Фотография профиля</b></label>
-        <input class="w3-input w3-border" type="file" name="photo" accept="image/jpeg" id="photo"
+        <input class="w3-input w3-border" type="file" name="img" accept="image/jpeg" id="img"
                onchange="uploadPhoto()">
 
         <label class="w3-text-blue"><b>Телефоны</b></label>

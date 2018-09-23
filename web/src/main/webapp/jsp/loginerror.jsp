@@ -23,7 +23,7 @@
         <label>Запомнить меня</label>
 
     </form>
-    <a href="/jsp/registration.jsp" class="w3-text-green">Регистрация</a>
+    <a href="/registration" class="w3-text-green">Регистрация</a>
 </div>
 </body>
 </html>

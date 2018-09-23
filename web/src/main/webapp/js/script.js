@@ -75,7 +75,7 @@ function addPhoneLine(object) {
 }
 
 function uploadPhoto() {
-    var uploadField = document.getElementById("photo");
+    var uploadField = document.getElementById("img");
     if (uploadField.files[0].size > 5242880) {
         alert("Maximum size is 5Mb!");
         uploadField.value = "";

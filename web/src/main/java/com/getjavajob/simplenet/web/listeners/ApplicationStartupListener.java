@@ -1,6 +1,5 @@
 package com.getjavajob.simplenet.web.listeners;
 
-import com.getjavajob.simplenet.DBConnectionPool;
 import com.getjavajob.simplenet.DataSourceHolder;
 
 import javax.naming.Context;

@@ -3,10 +3,7 @@ package com.getjavajob.simplenet.dao;
 import com.getjavajob.simplenet.DBConnectionPool;
 import com.getjavajob.simplenet.common.entity.Account;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +11,16 @@ import java.util.List;
 import static java.sql.Types.*;
 
 public class AccountDAO implements AbstractDAO<Account> {
-    private static final String DELETE_BY_ID = "DELETE FROM account WHERE userId = ?";
+    private static final String DELETE_BY_ID = "DELETE FROM account WHERE id = ?";
     private static final String INSERT_ACCOUNT = "INSERT INTO account (firstName, lastName, patronymicName," +
-            " birthDay, regDate, email, passHash, icq, skype, additionalInfo, photo) VALUES (?, ?, ?, ?, ?, ?, ?," +
-            " ?, ?, ?, LOAD_FILE(?))";
-    private static final String SELECT_BY_ID = "SELECT * FROM account WHERE userId = ?";
+            " birthDay, regDate, email, passHash, icq, skype, additionalInfo, photo, userRole) VALUES (?, ?, ?, ?, " +
+            "?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_BY_ID = "SELECT * FROM account WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
     private static final String SELECT_ALL = "SELECT * FROM account";
     private static final String UPDATE_ACCOUNT = "UPDATE account SET firstName = ?, lastName = ?, patronymicName = ?," +
-            " birthDay = ?, icq = ?, skype = ?, additionalInfo = ?, photo = LOAD_FILE(?) WHERE userID = ?";
+            " birthDay = ?, icq = ?, skype = ?, additionalInfo = ?, photo = ?, userRole = ? WHERE id = ?";
+    private static final String UPDATE_USER_ROLE = "UPDATE account SET userRole = ? WHERE id = ?";
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     @Override
@@ -45,10 +43,9 @@ public class AccountDAO implements AbstractDAO<Account> {
         try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(SELECT_BY_ID);
             ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return createAccountFromResult(rs);
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return createAccountFromResult(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,7 +57,6 @@ public class AccountDAO implements AbstractDAO<Account> {
     public int add(Account account) throws SQLException {
         Connection connection = connectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
-        File tempFile = null;
         String firstName = account.getFirstName();
         if (firstName == null) {
             ps.setNull(1, VARCHAR);
@@ -125,13 +121,12 @@ public class AccountDAO implements AbstractDAO<Account> {
         if (photo == null) {
             ps.setNull(11, BLOB);
         } else {
-            tempFile = createTempFile(photo);
-            ps.setString(11, tempFile.getAbsolutePath());
+            ps.setBlob(11, new ByteArrayInputStream(photo));
+
         }
+        int role = account.getRole();
+        ps.setInt(12, role);
         ps.executeUpdate();
-        if (tempFile != null) {
-            tempFile.delete();
-        }
         ResultSet rs = ps.getGeneratedKeys();
         rs.next();
         return rs.getInt(1);
@@ -148,9 +143,8 @@ public class AccountDAO implements AbstractDAO<Account> {
     public void update(Account account) throws SQLException {
         Connection connection = connectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(UPDATE_ACCOUNT);
-        File tempFile = null;
         int id = account.getId();
-        ps.setInt(9, id);
+        ps.setInt(10, id);
         String firstName = account.getFirstName();
         if (firstName == null) {
             ps.setNull(1, VARCHAR);
@@ -197,13 +191,11 @@ public class AccountDAO implements AbstractDAO<Account> {
         if (photo == null) {
             ps.setNull(8, BLOB);
         } else {
-            tempFile = createTempFile(photo);
-            ps.setString(8, tempFile.getAbsolutePath());
+            ps.setBlob(8, new ByteArrayInputStream(photo));
         }
+        int role = account.getRole();
+        ps.setInt(9, role);
         ps.executeUpdate();
-        if (tempFile != null) {
-            tempFile.delete();
-        }
     }
 
     public Account getByEmail(String email) {
@@ -221,25 +213,17 @@ public class AccountDAO implements AbstractDAO<Account> {
         return null;
     }
 
-    private File createTempFile(byte[] fileData) {
-        File tempFile = null;
-        try {
-            File tempDir = new File("/var/lib/mysql-files/");
-            tempFile = File.createTempFile("pic-", ".jpg", tempDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            outputStream.write(fileData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tempFile;
+    public void updateUserRole(int id, int roleId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(UPDATE_USER_ROLE);
+        ps.setInt(1, roleId);
+        ps.setInt(2, id);
+        ps.executeUpdate();
     }
 
     private Account createAccountFromResult(ResultSet rs) throws SQLException {
         Account account = new Account();
-        account.setId(rs.getInt("userId"));
+        account.setId(rs.getInt("id"));
         account.setFirstName(rs.getString("firstName"));
         account.setLastName(rs.getString("lastName"));
         account.setPatronymicName(rs.getString("patronymicName"));
@@ -251,6 +235,7 @@ public class AccountDAO implements AbstractDAO<Account> {
         account.setSkype(rs.getString("skype"));
         account.setAdditionalInfo(rs.getString("additionalInfo"));
         account.setPhoto(rs.getBytes("photo"));
+        account.setRole(rs.getInt("userRole"));
         return account;
     }
 }

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 public class DBConnectionPool {
-    private static final int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 5;
     private static final ThreadLocal<Connection> threadLocalConnection = new ThreadLocal<>();
     private static DBConnectionPool ourInstance = new DBConnectionPool();
     private DataSource dataSource;

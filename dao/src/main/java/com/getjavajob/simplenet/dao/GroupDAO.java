@@ -3,18 +3,21 @@ package com.getjavajob.simplenet.dao;
 import com.getjavajob.simplenet.DBConnectionPool;
 import com.getjavajob.simplenet.common.entity.Group;
 
+import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.Types.INTEGER;
-import static java.sql.Types.VARCHAR;
+import static java.sql.Types.*;
 
 public class GroupDAO implements AbstractDAO<Group> {
-    private static final String DELETE_BY_ID = "DELETE FROM groupp WHERE groupId = ?";
-    private static final String INSERT_GROUP = "INSERT INTO groupp (groupName, groupOwner) VALUES (?, ?)";
-    private static final String SELECT_BY_ID = "SELECT * FROM groupp WHERE groupId = ?";
-    private static final String SELECT_ALL = "SELECT * FROM groupp";
+    private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
+    private static final String INSERT_GROUP = "INSERT INTO groups (name, owner, picture, createDate, " +
+            "description) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_GROUP = "UPDATE groups SET name = ?, picture = ?, " +
+            "description = ? WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM groups WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM groups";
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     @Override
@@ -30,7 +33,6 @@ public class GroupDAO implements AbstractDAO<Group> {
             e.printStackTrace();
         }
         return null;
-
     }
 
     @Override
@@ -53,22 +55,66 @@ public class GroupDAO implements AbstractDAO<Group> {
     public int add(Group group) throws SQLException {
         Connection connection = connectionPool.getConnection();
         PreparedStatement ps = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS);
-        String groupName = group.getGroupName();
-        if (groupName == null) {
+        String name = group.getName();
+        if (name == null) {
             ps.setNull(1, VARCHAR);
         } else {
-            ps.setString(1, groupName);
+            ps.setString(1, name);
         }
-        int groupOwner = group.getGroupOwner();
-        if (groupOwner == 0) {
+        int owner = group.getOwner();
+        if (owner == 0) {
             ps.setNull(2, INTEGER);
         } else {
-            ps.setInt(2, groupOwner);
+            ps.setInt(2, owner);
+        }
+        byte[] picture = group.getPicture();
+        if (picture == null) {
+            ps.setNull(3, BLOB);
+        } else {
+            ps.setBlob(3, new ByteArrayInputStream(picture));
+        }
+        Date createDate = group.getCreateDate();
+        if (createDate == null) {
+            ps.setNull(4, DATE);
+        } else {
+            ps.setDate(4, createDate);
+        }
+        String description = group.getDescription();
+        if (description == null) {
+            ps.setNull(5, VARCHAR);
+        } else {
+            ps.setString(5, description);
         }
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         rs.next();
         return rs.getInt(1);
+    }
+
+    public void update(Group group) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement ps = connection.prepareStatement(UPDATE_GROUP);
+        int id = group.getId();
+        ps.setInt(4, id);
+        String groupName = group.getName();
+        if (groupName == null) {
+            ps.setNull(1, VARCHAR);
+        } else {
+            ps.setString(1, groupName);
+        }
+        byte[] picture = group.getPicture();
+        if (picture == null) {
+            ps.setNull(2, BLOB);
+        } else {
+            ps.setBlob(2, new ByteArrayInputStream(picture));
+        }
+        String description = group.getDescription();
+        if (description == null) {
+            ps.setNull(3, VARCHAR);
+        } else {
+            ps.setString(3, description);
+        }
+        ps.executeUpdate();
     }
 
     @Override
@@ -81,9 +127,12 @@ public class GroupDAO implements AbstractDAO<Group> {
 
     private Group createGroupFromResult(ResultSet rs) throws SQLException {
         Group group = new Group();
-        group.setId(rs.getInt("groupId"));
-        group.setGroupName(rs.getString("groupName"));
-        group.setGroupOwner(rs.getInt("groupOwner"));
+        group.setId(rs.getInt("id"));
+        group.setName(rs.getString("name"));
+        group.setOwner(rs.getInt("owner"));
+        group.setPicture(rs.getBytes("picture"));
+        group.setCreateDate(rs.getDate("createDate"));
+        group.setDescription(rs.getString("description"));
         return group;
     }
 }

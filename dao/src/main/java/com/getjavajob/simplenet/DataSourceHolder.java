@@ -29,11 +29,11 @@ public class DataSourceHolder {
         setDataSource(dataSource);
     }
 
-    public static void setDataSource(DataSource dataSource) {
-        DataSourceHolder.dataSource = dataSource;
-    }
-
     public static DataSource getDataSource() {
         return dataSource;
+    }
+
+    public static void setDataSource(DataSource dataSource) {
+        DataSourceHolder.dataSource = dataSource;
     }
 }

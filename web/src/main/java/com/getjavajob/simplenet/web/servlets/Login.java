@@ -13,8 +13,9 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null && session.getAttribute("userId") != null) {
-            resp.sendRedirect("/userProfile");
-        } else  {
+            int userId = (Integer) session.getAttribute("userId");
+            resp.sendRedirect("/userProfile?id=" + userId);
+        } else {
             Cookie[] cookies = req.getCookies();
             if (cookies != null) {
                 Map<String, String> cookiesMap = new HashMap<>();

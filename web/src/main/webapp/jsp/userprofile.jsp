@@ -18,7 +18,7 @@
         <br>
         <br>
         <br>
-        <img src="/getImage" class="w3-round" style="width: 188px">
+        <img src="/getImage?type=user&id=${account.id}" class="w3-round" style="width: 188px">
     </div>
     <div class="w3-container w3-cell" style="width: 670px">
         <br>
@@ -28,6 +28,7 @@
                 <c:out value="${account.lastName}"/>
                 <c:out value="${account.firstName}"/>
                 <c:out value="${account.patronymicName}"/>
+                <c:if test="${admin}"> (Администратор)</c:if>
             </h3>
             <c:if test="${not empty account.birthDay}">
                 <label>Дата рождения: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.birthDay}"/><br>
@@ -42,14 +43,30 @@
                 <label>Дополнительная информация: </label><c:out value="${account.additionalInfo}"/> <br>
             </c:if>
             <c:forEach var="phone" items="${homePhones}">
-                    <label>Домашний телефон: </label><c:out value="${phone.number}"/><br>
+                <label>Домашний телефон: </label><c:out value="${phone.number}"/><br>
             </c:forEach>
             <c:forEach var="phone" items="${workPhones}">
-                    <label>Рабочий телефон: </label><c:out value="${phone.number}"/><br>
+                <label>Рабочий телефон: </label><c:out value="${phone.number}"/><br>
             </c:forEach>
             <label>Дата регистрации: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.regDate}"/>
             <br>
-            <a href="/editProfile" class="w3-text-green">Редактировать профиль</a>
+            <br>
+            <c:if test="${editAndDelete}">
+                <a href="/editProfile?id=${account.id}" class="w3-button w3-blue">Редактировать профиль</a>
+                <br>
+                <br>
+                <a href="/confirmDelete?type=user&id=${account.id}" class="w3-button w3-blue">Удалить профиль</a>
+            </c:if>
+            <br>
+            <br>
+            <c:if test="${allowMakeAdmin}">
+                <a href="/makeAdmin?id=${account.id}" class="w3-button w3-blue">Сделать администратором</a>
+            </c:if>
+            <br>
+            <br>
+            <c:if test="${showAddFriendButton}">
+                <a href="/friendRequest?id=${account.id}" class="w3-button w3-blue">Добавить в друзья</a>
+            </c:if>
         </div>
 
     </div>
