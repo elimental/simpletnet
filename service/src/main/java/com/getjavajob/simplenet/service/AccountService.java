@@ -17,7 +17,15 @@ import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
 
 public class AccountService {
+    private static AccountService ourInstance = new AccountService();
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
+
+    private AccountService() {
+    }
+
+    public static AccountService getInstance() {
+        return ourInstance;
+    }
 
     public void addAccount(Account account) {
         Connection connection = null;
@@ -139,7 +147,7 @@ public class AccountService {
         }
     }
 
-    public void acceptFriend(int whoAcceptsId, int whoAcceptedId) {
+    public void acceptFriendRequest(int whoAcceptsId, int whoAcceptedId) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -295,5 +303,10 @@ public class AccountService {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean ifAlreadyRequested(int userId, int requestedUserId) {
+        RelationshipDAO relationshipDAO = new RelationshipDAO();
+        return relationshipDAO.checkRequestToOtherUser(userId,requestedUserId);
     }
 }

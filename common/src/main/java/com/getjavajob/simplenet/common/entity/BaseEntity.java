@@ -3,13 +3,13 @@ package com.getjavajob.simplenet.common.entity;
 import java.util.Objects;
 
 public class BaseEntity {
-    protected int id;
+    protected Integer id;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

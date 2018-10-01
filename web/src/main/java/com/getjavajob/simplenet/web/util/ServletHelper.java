@@ -27,8 +27,8 @@ import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 
 public class ServletHelper {
-    private AccountService accountService = new AccountService();
-    private GroupService groupService = new GroupService();
+    private AccountService accountService = AccountService.getInstance();
+    private GroupService groupService = GroupService.getInstance();
     private Map<String, String> param;
     private List<Phone> phones;
     private byte[] img;

@@ -10,8 +10,8 @@ import java.io.IOException;
 
 @WebServlet("/delete")
 public class Delete extends HttpServlet {
-    private AccountService accountService = new AccountService();
-    private GroupService groupService = new GroupService();
+    private AccountService accountService = AccountService.getInstance();
+    private GroupService groupService = GroupService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

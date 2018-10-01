@@ -29,7 +29,7 @@ public class AccountServiceTest {
 
     //   @Test
     public void addAccount() throws SQLException {
-        AccountService accountService = new AccountService();
+        AccountService accountService = AccountService.getInstance();
         Account account = new Account();
         Phone phone = new Phone();
         List<Phone> phones = new ArrayList<>();

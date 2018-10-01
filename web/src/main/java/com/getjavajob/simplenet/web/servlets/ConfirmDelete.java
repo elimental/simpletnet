@@ -15,9 +15,9 @@ public class ConfirmDelete extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         req.setAttribute("id", id);
         if (type.equals("user")) {
-            req.getRequestDispatcher("/jsp/confirmdeleteuser.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/userprofile/confirmdeleteuser.jsp").forward(req, resp);
         } else {
-            req.getRequestDispatcher("/jsp/confirmdeletegroup.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/groups/confirmdeletegroup.jsp").forward(req, resp);
         }
     }
 }

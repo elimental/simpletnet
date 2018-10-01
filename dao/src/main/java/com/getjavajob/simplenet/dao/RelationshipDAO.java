@@ -32,6 +32,9 @@ public class RelationshipDAO {
     private static final String DELETE_USER = "DELETE FROM relationship WHERE userOneId = ? OR userTwoId = ?";
     private static final String DELETE_FRIEND = "DELETE FROM relationship WHERE (userOneId = ? " +
             "AND userTwoId = ?) OR (userTwoId = ? AND userOneId = ?)";
+    private static final String SELECT_CHECK_REQUEST = "SELECT * FROM relationship WHERE userOneId = ? AND " +
+            "userTwoId = ? AND status = ?";
+
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     public void deleteUser(int id) throws SQLException {
@@ -104,6 +107,20 @@ public class RelationshipDAO {
         ps.setInt(3, PENDING);
         ps.setInt(4, fromUserId);
         ps.executeUpdate();
+    }
+
+    public boolean checkRequestToOtherUser(int userFromId, int userToId) {
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SELECT_CHECK_REQUEST);
+            ps.setInt(1,userFromId);
+            ps.setInt(2,userToId);
+            ps.setInt(3,PENDING);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void acceptFriend(int whoAcceptsId, int whoAcceptedId) throws SQLException {
