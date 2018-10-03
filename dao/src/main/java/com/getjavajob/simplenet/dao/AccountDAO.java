@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.*;
 
 public class AccountDAO implements AbstractDAO<Account> {
@@ -21,6 +22,7 @@ public class AccountDAO implements AbstractDAO<Account> {
     private static final String UPDATE_ACCOUNT = "UPDATE account SET firstName = ?, lastName = ?, patronymicName = ?," +
             " birthDay = ?, icq = ?, skype = ?, additionalInfo = ?, photo = ?, userRole = ? WHERE id = ?";
     private static final String UPDATE_USER_ROLE = "UPDATE account SET userRole = ? WHERE id = ?";
+
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     @Override
@@ -56,7 +58,7 @@ public class AccountDAO implements AbstractDAO<Account> {
     @Override
     public int add(Account account) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        PreparedStatement ps = connection.prepareStatement(INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement(INSERT_ACCOUNT, RETURN_GENERATED_KEYS);
         String firstName = account.getFirstName();
         if (firstName == null) {
             ps.setNull(1, VARCHAR);

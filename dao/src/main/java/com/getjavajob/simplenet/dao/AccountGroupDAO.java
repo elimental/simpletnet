@@ -32,6 +32,7 @@ public class AccountGroupDAO {
     private static final String DELETE_FROM_GROUP = "DELETE FROM account_groups WHERE userId = ? AND groupId = ?";
     private static final String DELETE_USER = "DELETE FROM account_groups WHERE userId = ?";
     private static final String DELETE_GROUP = "DELETE FROM account_groups WHERE groupId = ?";
+
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     public List<Integer> getUserGroupsId(int userId) {

@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.*;
 
 public class GroupDAO implements AbstractDAO<Group> {
@@ -18,6 +19,7 @@ public class GroupDAO implements AbstractDAO<Group> {
             "description = ? WHERE id = ?";
     private static final String SELECT_BY_ID = "SELECT * FROM groups WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM groups";
+
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
     @Override
@@ -54,7 +56,7 @@ public class GroupDAO implements AbstractDAO<Group> {
     @Override
     public int add(Group group) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        PreparedStatement ps = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement(INSERT_GROUP, RETURN_GENERATED_KEYS);
         String name = group.getName();
         if (name == null) {
             ps.setNull(1, VARCHAR);

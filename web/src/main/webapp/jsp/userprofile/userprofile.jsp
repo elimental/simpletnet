@@ -10,17 +10,25 @@
         label {
             color: dimgray;
         }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: #66a3ff;
+            border-radius: 50%;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-<div class="w3-cell-row" style="width: 860px">
+<div class="w3-cell-row" style="width: 1160px">
     <div class="w3-container w3-cell" style="width: 190px">
         <br>
         <br>
         <br>
         <img src="/getImage?type=user&id=${account.id}" class="w3-round" style="width: 188px">
     </div>
-    <div class="w3-container w3-cell" style="width: 670px">
+    <div class="w3-container w3-cell" style="width: 470px">
         <br>
         <br>
         <div class="w3-container">
@@ -69,7 +77,23 @@
                 <a href="/friendRequest?id=${account.id}" class="w3-button w3-blue">Добавить в друзья</a>
             </c:if>
         </div>
-
+    </div>
+    <div class="w3-container w3-cell" style="width: 500px">
+        <br>
+        <br>
+        <br>
+        <form action="/sendWallMessage" name="wall" method="get">
+            <textarea class="w3-input w3-border" placeholder="Что нового?" rows="2" cols="50"
+                      name="wallmessage"></textarea>
+            <button class="w3-btn w3-blue" type="submit">Отправить</button>
+        </form>
+        <br>
+        <c:if test="${not empty wallMessages}">
+            <c:forEach var="message" items="${wallMessages}">
+                <p><span class="dot"></span>&#160&#160&#160${message.text}</p>
+                <br>
+            </c:forEach>
+        </c:if>
     </div>
 </div>
 </body>
