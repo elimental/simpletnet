@@ -82,12 +82,14 @@
         <br>
         <br>
         <br>
+        <c:if test="${owner}">
         <form action="/sendWallMessage" name="wall" method="get">
             <textarea class="w3-input w3-border" placeholder="Что нового?" rows="2" cols="50"
                       name="wallmessage"></textarea>
             <button class="w3-btn w3-blue" type="submit">Отправить</button>
         </form>
         <br>
+        </c:if>
         <c:if test="${not empty wallMessages}">
             <c:forEach var="message" items="${wallMessages}">
                 <p><span class="dot"></span>&#160&#160&#160${message.text}</p>

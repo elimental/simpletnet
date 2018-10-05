@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.getjavajob.simplenet.common.entity.Message.GROUP;
 import static com.getjavajob.simplenet.common.entity.Message.WALL;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -16,7 +17,7 @@ public class MessageDAO implements AbstractDAO<Message> {
             "VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_BY_ID = "DELETE FROM message WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM message";
-    private static final String SELECT_WALL_MESSAGES = "SELECT * FROM message WHERE destination = ? AND type = ?";
+    private static final String SELECT_MESSAGES_BY_DEST_AND_TYPE = "SELECT * FROM message WHERE destination = ? AND type = ?";
 
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
@@ -80,10 +81,21 @@ public class MessageDAO implements AbstractDAO<Message> {
 
     public List<Message> getWallMessages(int userId) {
         List<Message> messages = new ArrayList<>();
+        getMessages(userId, WALL, messages);
+        return messages;
+    }
+
+    public List<Message> getGroupMessages(int groupId) {
+        List<Message> messages = new ArrayList<>();
+        getMessages(groupId, GROUP, messages);
+        return messages;
+    }
+
+    private void getMessages(int id, int type, List<Message> messages) {
         try (Connection connection = connectionPool.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(SELECT_WALL_MESSAGES);
-            ps.setInt(1, userId);
-            ps.setInt(2, WALL);
+            PreparedStatement ps = connection.prepareStatement(SELECT_MESSAGES_BY_DEST_AND_TYPE);
+            ps.setInt(1, id);
+            ps.setInt(2, type);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 messages.add(createMessageFromResult(rs));
@@ -91,7 +103,6 @@ public class MessageDAO implements AbstractDAO<Message> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return messages;
     }
 
     private Message createMessageFromResult(ResultSet rs) throws SQLException {

@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
+import static com.getjavajob.simplenet.common.entity.Message.GROUP;
 import static com.getjavajob.simplenet.common.entity.Message.WALL;
 
 public class MessageService {
@@ -57,6 +58,42 @@ public class MessageService {
     public List<Message> getWallMessages(int userId) {
         MessageDAO messageDAO = new MessageDAO();
         List<Message> messages = messageDAO.getWallMessages(userId);
+        Collections.sort(messages);
+        return messages;
+    }
+
+    public void sendGroupMessage(int userId, int groupId, String text) {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            MessageDAO messageDAO = new MessageDAO();
+            Message message = new Message();
+            message.setText(text);
+            message.setCreateDate(new Timestamp(System.currentTimeMillis()));
+            message.setAuthor(userId);
+            message.setType(GROUP);
+            message.setDestination(groupId);
+            messageDAO.add(message);
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Message> getGroupMessages(int groupId) {
+        MessageDAO messageDAO = new MessageDAO();
+        List<Message> messages = messageDAO.getGroupMessages(groupId);
         Collections.sort(messages);
         return messages;
     }

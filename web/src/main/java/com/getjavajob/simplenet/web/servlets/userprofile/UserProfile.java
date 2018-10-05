@@ -46,6 +46,7 @@ public class UserProfile extends HttpServlet {
                 req.setAttribute("allowMakeAdmin", allowMakeAdmin);
                 boolean showAddFriendButton = ifAdminOpens && !ifFriend && !owner;
                 req.setAttribute("showAddFriendButton", showAddFriendButton);
+                req.setAttribute("owner", owner);
                 req.setAttribute("account", account);
                 List<Message> wallMessages = messageService.getWallMessages(userId);
                 req.setAttribute("wallMessages", wallMessages);

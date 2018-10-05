@@ -24,6 +24,6 @@ public class ShowFriends extends HttpServlet {
         req.setAttribute("requestedFriends", requestedFriends);
         List<Account> requestFromFriends = accountService.getRequestFromFriends(id);
         req.setAttribute("requestFromFriends", requestFromFriends);
-        req.getRequestDispatcher("/jsp/friends.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/friends/friends.jsp").forward(req, resp);
     }
 }

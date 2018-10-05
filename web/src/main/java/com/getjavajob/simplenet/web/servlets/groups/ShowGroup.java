@@ -2,8 +2,10 @@ package com.getjavajob.simplenet.web.servlets.groups;
 
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Group;
+import com.getjavajob.simplenet.common.entity.Message;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.GroupService;
+import com.getjavajob.simplenet.service.MessageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ShowGroup extends HttpServlet {
     private GroupService groupService = GroupService.getInstance();
     private AccountService accountService = AccountService.getInstance();
+    private MessageService messageService = MessageService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,6 +43,8 @@ public class ShowGroup extends HttpServlet {
         req.setAttribute("edit", edit);
         boolean showMakeRequestButton = admin && !owner;
         req.setAttribute("showMakeRequestButton", showMakeRequestButton);
+        List<Message> messages = messageService.getGroupMessages(groupId);
+        req.setAttribute("groupMessages", messages);
         Group group = groupService.getGroupById(groupId);
         req.setAttribute("group", group);
         req.getRequestDispatcher("/jsp/groups/group.jsp").forward(req, resp);

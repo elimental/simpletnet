@@ -37,7 +37,7 @@
             <c:forEach var="account" items="${requestFromFriends}">
                 <tr>
                     <td>${account.firstName} ${account.lastName}
-                        <a href="/acceptFriend?id=${account.id}" class="w3-text-green">Принять</a>
+                        <a href="/acceptFriendRequest?id=${account.id}" class="w3-text-green">Принять</a>
                         <a href="/deleteFriend?id=${account.id}" class="w3-text-green">Отклонить</a></td>
                 </tr>
             </c:forEach>
