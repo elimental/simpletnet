@@ -7,8 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.simplenet.common.entity.Message.GROUP;
-import static com.getjavajob.simplenet.common.entity.Message.WALL;
+import static com.getjavajob.simplenet.common.entity.Message.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class MessageDAO implements AbstractDAO<Message> {
@@ -17,7 +16,13 @@ public class MessageDAO implements AbstractDAO<Message> {
             "VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_BY_ID = "DELETE FROM message WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM message";
-    private static final String SELECT_MESSAGES_BY_DEST_AND_TYPE = "SELECT * FROM message WHERE destination = ? AND type = ?";
+    private static final String SELECT_MESSAGES_BY_DEST_AND_TYPE = "SELECT * FROM message WHERE destination = ? AND " +
+            "type = ?";
+    private static final String SELECT_CHAT_MESSAGES = "SELECT * FROM message WHERE ((author = ? AND destination = ?)" +
+            " OR (author = ? AND destination = ?)) AND type = ?";
+    private static final String SELECT_TALKERS = "(SELECT destination FROM message WHERE author = ? AND type = ?) " +
+            "UNION " +
+            "(SELECT author FROM message WHERE destination = ? AND type = ?)";
 
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
@@ -103,6 +108,43 @@ public class MessageDAO implements AbstractDAO<Message> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Integer> getTalkersId(int userId) {
+        List<Integer> talkersId = new ArrayList<>();
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SELECT_TALKERS);
+            ps.setInt(1, userId);
+            ps.setInt(2, PERSONAL);
+            ps.setInt(3, userId);
+            ps.setInt(4, PERSONAL);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                talkersId.add(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return talkersId;
+    }
+
+    public List<Message> getChatMessages(int userId, int secondTalkerId) {
+        List<Message> messages = new ArrayList<>();
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SELECT_CHAT_MESSAGES);
+            ps.setInt(1, userId);
+            ps.setInt(2, secondTalkerId);
+            ps.setInt(3, secondTalkerId);
+            ps.setInt(4, userId);
+            ps.setInt(5, PERSONAL);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                messages.add(createMessageFromResult(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
     }
 
     private Message createMessageFromResult(ResultSet rs) throws SQLException {

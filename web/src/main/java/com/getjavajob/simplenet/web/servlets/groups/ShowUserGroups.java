@@ -13,7 +13,7 @@ import java.util.List;
 
 @WebServlet("/groups")
 public class ShowUserGroups extends HttpServlet {
-    private GroupService groupService = GroupService.getInstance(); // todo service should be a singleton
+    private GroupService groupService = GroupService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

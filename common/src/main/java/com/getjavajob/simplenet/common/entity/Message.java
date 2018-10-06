@@ -1,6 +1,5 @@
 package com.getjavajob.simplenet.common.entity;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Message extends BaseEntity implements Comparable<Message> {

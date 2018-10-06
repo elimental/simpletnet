@@ -9,7 +9,6 @@
         label {
             color: dimgray;
         }
-
         .dot {
             height: 10px;
             width: 10px;
@@ -100,8 +99,7 @@
         <c:if test="${not empty groupMessages}">
             <c:forEach var="message" items="${groupMessages}">
                 <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
-                <b class="w3-text-blue">${userName}</b>
-                <br>
+                <b class="w3-text-blue">${userName}&#160</b>
                 <label style="font-size: smaller"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
                                                                   value="${message.createDate}"/></label>
                 <p><c:out value="${message.text}"/></p>

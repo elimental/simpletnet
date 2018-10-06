@@ -5,20 +5,18 @@ import com.getjavajob.simplenet.common.entity.Message;
 import com.getjavajob.simplenet.dao.MessageDAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
-import static com.getjavajob.simplenet.common.entity.Message.GROUP;
-import static com.getjavajob.simplenet.common.entity.Message.WALL;
+import static com.getjavajob.simplenet.common.entity.Message.*;
 
 public class MessageService {
     private static MessageService ourInstance = new MessageService();
     private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
-    private MessageService(){
+    private MessageService() {
     }
 
     public static MessageService getInstance() {
@@ -27,32 +25,7 @@ public class MessageService {
 
 
     public void sendWallMessage(int userId, String text) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            MessageDAO messageDAO = new MessageDAO();
-            Message message = new Message();
-            message.setText(text);
-            message.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            message.setAuthor(userId);
-            message.setType(WALL);
-            message.setDestination(userId);
-            messageDAO.add(message);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        sendMessage(userId, userId, text, WALL);
     }
 
     public List<Message> getWallMessages(int userId) {
@@ -63,6 +36,21 @@ public class MessageService {
     }
 
     public void sendGroupMessage(int userId, int groupId, String text) {
+        sendMessage(userId, groupId, text, GROUP);
+    }
+
+    public List<Message> getGroupMessages(int groupId) {
+        MessageDAO messageDAO = new MessageDAO();
+        List<Message> messages = messageDAO.getGroupMessages(groupId);
+        Collections.sort(messages);
+        return messages;
+    }
+
+    public void sendPersonalMessage(int userFromId, int userToId, String text) {
+        sendMessage(userFromId, userToId, text, PERSONAL);
+    }
+
+    private void sendMessage(int author, int destination, String text, int type) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -70,9 +58,9 @@ public class MessageService {
             Message message = new Message();
             message.setText(text);
             message.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            message.setAuthor(userId);
-            message.setType(GROUP);
-            message.setDestination(groupId);
+            message.setAuthor(author);
+            message.setType(type);
+            message.setDestination(destination);
             messageDAO.add(message);
             connection.commit();
         } catch (SQLException e) {
@@ -91,10 +79,13 @@ public class MessageService {
         }
     }
 
-    public List<Message> getGroupMessages(int groupId) {
+    public List<Message> getChatMessages(int userId, int secondTalkerId) {
         MessageDAO messageDAO = new MessageDAO();
-        List<Message> messages = messageDAO.getGroupMessages(groupId);
-        Collections.sort(messages);
-        return messages;
+        return messageDAO.getChatMessages(userId, secondTalkerId);
+    }
+
+    public List<Integer> getTalkersId(int userId) {
+        MessageDAO messageDAO = new MessageDAO();
+        return messageDAO.getTalkersId(userId);
     }
 }

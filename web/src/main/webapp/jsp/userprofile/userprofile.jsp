@@ -27,6 +27,10 @@
         <br>
         <br>
         <img src="/getImage?type=user&id=${account.id}" class="w3-round" style="width: 188px">
+        <c:if test="${not owner}">
+            <br>
+            <a href="/chat?userId=${account.id}" class="w3-button w3-blue">Отправить сообщение</a>
+        </c:if>
     </div>
     <div class="w3-container w3-cell" style="width: 470px">
         <br>
