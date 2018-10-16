@@ -6,6 +6,7 @@ import com.getjavajob.simplenet.common.entity.Message;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.GroupService;
 import com.getjavajob.simplenet.service.MessageService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,9 +18,17 @@ import java.util.List;
 
 @WebServlet("/group")
 public class ShowGroup extends HttpServlet {
-    private GroupService groupService = GroupService.getInstance();
-    private AccountService accountService = AccountService.getInstance();
-    private MessageService messageService = MessageService.getInstance();
+
+    private GroupService groupService;
+    private AccountService accountService;
+    private MessageService messageService;
+
+    @Override
+    public void init() throws ServletException {
+        this.groupService = ApplicationContextProvider.getApplicationContext().getBean(GroupService.class);
+        this.accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+        this.messageService = ApplicationContextProvider.getApplicationContext().getBean(MessageService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

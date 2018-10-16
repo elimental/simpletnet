@@ -3,6 +3,7 @@ package com.getjavajob.simplenet.web.servlets.userprofile;
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.service.AccountService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,13 @@ import static com.getjavajob.simplenet.web.util.ServletHelper.preparePhones;
 
 @WebServlet("/editProfile")
 public class EditProfile extends HttpServlet {
-    private AccountService accountService = AccountService.getInstance();
+
+    private AccountService accountService;
+
+    @Override
+    public void init() throws ServletException {
+        this.accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

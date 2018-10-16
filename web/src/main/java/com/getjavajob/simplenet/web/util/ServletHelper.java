@@ -22,17 +22,23 @@ import java.nio.charset.Charset;
 import java.sql.Date;
 import java.util.*;
 
-import static com.getjavajob.simplenet.common.entity.PhoneType.HOME;
-import static com.getjavajob.simplenet.common.entity.PhoneType.WORK;
+import static com.getjavajob.simplenet.common.entity.Phone.HOME;
+import static com.getjavajob.simplenet.common.entity.Phone.WORK;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 
 public class ServletHelper {
-    private AccountService accountService = AccountService.getInstance();
-    private GroupService groupService = GroupService.getInstance();
+
+    private static AccountService accountService;
+    private static GroupService groupService;
     private Map<String, String> param;
     private List<Phone> phones;
     private byte[] img;
     private HttpServletRequest request;
+
+    static {
+        accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+        groupService = ApplicationContextProvider.getApplicationContext().getBean(GroupService.class);
+    }
 
     public ServletHelper(HttpServletRequest request) {
         this.request = request;

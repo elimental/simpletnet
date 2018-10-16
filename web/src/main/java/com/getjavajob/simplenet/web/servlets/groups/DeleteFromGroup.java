@@ -2,6 +2,7 @@ package com.getjavajob.simplenet.web.servlets.groups;
 
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.GroupService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +13,15 @@ import java.io.IOException;
 
 @WebServlet("/deleteFromGroup")
 public class DeleteFromGroup extends HttpServlet {
-    private AccountService accountService = AccountService.getInstance();
-    private GroupService groupService = GroupService.getInstance();
+
+    private AccountService accountService;
+    private GroupService groupService;
+
+    @Override
+    public void init() throws ServletException {
+        this.accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+        this.groupService = ApplicationContextProvider.getApplicationContext().getBean(GroupService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/confirmDelete")
 public class ConfirmDelete extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String type = req.getParameter("type");

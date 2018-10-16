@@ -1,33 +1,29 @@
 package com.getjavajob.simplenet.service;
 
-import com.getjavajob.simplenet.DBConnectionPool;
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Group;
-import com.getjavajob.simplenet.dao.AccountDAO;
-import com.getjavajob.simplenet.dao.AccountGroupDAO;
-import com.getjavajob.simplenet.dao.GroupDAO;
+import com.getjavajob.simplenet.dao.dao.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.simplenet.common.entity.Role.GROUP_MODERATOR;
 
+@Service
 public class GroupService {
-    private static GroupService ourInstance = new GroupService();
-    private DBConnectionPool connectionPool = DBConnectionPool.getInstance();
 
-    private GroupService() {
-    }
-
-    public static GroupService getInstance() {
-        return ourInstance;
-    }
+    @Autowired
+    private AccountDAO accountDAO;
+    @Autowired
+    private AccountGroupDAO accountGroupDAO;
+    @Autowired
+    private GroupDAO groupDAO;
 
     public List<Group> getUserGroups(int userId) {
         List<Integer> groupsId = getUserGroupsId(userId);
-        GroupDAO groupDAO = new GroupDAO();
         List<Group> groups = new ArrayList<>();
         for (Integer i : groupsId) {
             groups.add(groupDAO.getById(i));
@@ -36,145 +32,50 @@ public class GroupService {
     }
 
     private List<Integer> getUserGroupsId(int userId) {
-        AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
         return accountGroupDAO.getUserGroupsId(userId);
     }
 
+    @Transactional
     public void addGroup(Group group) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            GroupDAO groupDAO = new GroupDAO();
-            int id = groupDAO.add(group);
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.addGroup(group.getOwner(), id);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        int id = groupDAO.add(group);
+        accountGroupDAO.addGroup(group.getOwner(), id);
     }
 
+    @Transactional
     public void updateGroup(Group group) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            GroupDAO groupDAO = new GroupDAO();
-            groupDAO.update(group);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        groupDAO.update(group);
     }
 
     public Group getGroupById(int groupId) {
-        GroupDAO groupDAO = new GroupDAO();
         return groupDAO.getById(groupId);
     }
 
+    @Transactional
     public void sendGroupRequest(int userId, int groupId) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.sendGroupRequest(userId, groupId);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        accountGroupDAO.sendGroupRequest(userId, groupId);
     }
 
+    @Transactional
     public void acceptGroupRequest(int userId, int groupId) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.acceptGroupRequest(userId, groupId);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        accountGroupDAO.acceptGroupRequest(userId, groupId);
     }
 
+
+    @Transactional
     public void rejectGroupRequest(int userId, int groupId) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.rejectGroupRequest(userId, groupId);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        accountGroupDAO.rejectGroupRequest(userId, groupId);
     }
 
     public List<Account> getCandidates(int groupId) {
-        AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-        AccountDAO accountDAO = new AccountDAO();
         List<Integer> candidatesIds = accountGroupDAO.getCandidatesIds(groupId);
         List<Account> candidates = new ArrayList<>();
-        for (Integer i:candidatesIds) {
+        for (Integer i : candidatesIds) {
             candidates.add(accountDAO.getById(i));
         }
         return candidates;
     }
 
     public boolean ifGroupOwner(int userId, int groupId) {
-        GroupDAO groupDAO = new GroupDAO();
         Group group = groupDAO.getById(groupId);
         return group.getOwner() == userId;
     }
@@ -185,7 +86,6 @@ public class GroupService {
     }
 
     public boolean ifGroupModerator(int userId, int groupId) {
-        AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
         int roleId = accountGroupDAO.getUserRoleInGroup(userId, groupId);
         if (roleId == 0) {
             return false;
@@ -194,95 +94,36 @@ public class GroupService {
     }
 
     public List<Group> getAllGroups() {
-        GroupDAO groupDAO = new GroupDAO();
         return groupDAO.getAll();
     }
 
+    @Transactional
     public void deleteGroup(int id) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            GroupDAO groupDAO = new GroupDAO();
-            groupDAO.delete(id);
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.deleteGroup(id);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        groupDAO.delete(id);
+        accountGroupDAO.deleteGroup(id);
     }
 
     public List<Account> getMembers(int groupId) {
-        AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-        AccountDAO accountDAO = new AccountDAO();
         List<Integer> userIds = accountGroupDAO.getMemberIds(groupId);
         List<Account> members = new ArrayList<>();
-        for (Integer i:userIds) {
+        for (Integer i : userIds) {
             members.add(accountDAO.getById(i));
         }
         return members;
     }
 
     public boolean ifAlreadyRequested(int userId, int groupId) {
-        AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
         List<Integer> candidates = accountGroupDAO.getCandidatesIds(groupId);
         return candidates.contains(userId);
     }
 
+    @Transactional
     public void makeModerator(int userId, int groupId) {
-         Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.makeModerator(userId, groupId);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        accountGroupDAO.makeModerator(userId, groupId);
     }
 
+    @Transactional
     public void deleteFromGroup(int userId, int groupId) {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            AccountGroupDAO accountGroupDAO = new AccountGroupDAO();
-            accountGroupDAO.deleteFromGroup(userId, groupId);
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        accountGroupDAO.deleteFromGroup(userId, groupId);
     }
 }

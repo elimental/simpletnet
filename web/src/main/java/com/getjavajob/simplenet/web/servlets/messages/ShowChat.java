@@ -2,6 +2,7 @@ package com.getjavajob.simplenet.web.servlets.messages;
 
 import com.getjavajob.simplenet.common.entity.Message;
 import com.getjavajob.simplenet.service.MessageService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +15,13 @@ import java.util.List;
 
 @WebServlet("/chat")
 public class ShowChat extends HttpServlet {
-    private MessageService messageService = MessageService.getInstance();
+
+    private MessageService messageService;
+
+    @Override
+    public void init() throws ServletException {
+        this.messageService = ApplicationContextProvider.getApplicationContext().getBean(MessageService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

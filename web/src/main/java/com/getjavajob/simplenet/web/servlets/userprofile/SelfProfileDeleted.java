@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/selfProfileDeleted")
 public class SelfProfileDeleted extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/jsp/userprofile/selfprofiledeleted.jsp").forward(req, resp);

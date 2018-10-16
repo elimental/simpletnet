@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/regAccept")
 public class RegAccept extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/jsp/registration/regaccept.jsp").forward(req, resp);

@@ -30,7 +30,7 @@
     <c:if test="${not empty chatMessages}">
         <c:forEach var="message" items="${chatMessages}">
             <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
-            <b class="w3-text-blue">${userName}&#160</b>
+            <b class="w3-text-blue">${userName} &#160 </b>
             <label style="font-size: smaller"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
                                                               value="${message.createDate}"/></label>
             <p><c:out value="${message.text}"/></p>

@@ -3,9 +3,13 @@ package com.getjavajob.simplenet.common.entity;
 import java.util.Objects;
 
 public class Phone extends BaseEntity {
+
+    public static final int HOME = 1;
+    public static final int WORK = 2;
+
     private String number;
-    private PhoneType type;
-    private int phoneOwner;
+    private int type;
+    private int owner;
 
     public String getNumber() {
         return number;
@@ -15,34 +19,28 @@ public class Phone extends BaseEntity {
         this.number = number;
     }
 
-    public PhoneType getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(PhoneType type) {
+    public void setType(int type) {
         this.type = type;
     }
 
-    public int getPhoneOwner() {
-        return phoneOwner;
+    public int getOwner() {
+        return owner;
     }
 
-    public void setPhoneOwner(int phoneOwner) {
-        this.phoneOwner = phoneOwner;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Phone phone = (Phone) o;
-        return getPhoneOwner() == phone.getPhoneOwner() &&
-                Objects.equals(getNumber(), phone.getNumber()) &&
-                getType() == phone.getType();
+    public void setOwner(int owner) {
+        this.owner = owner;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getNumber(), getType(), getPhoneOwner());
+    public String toString() {
+        return "Phone{" +
+                "number='" + number + '\'' +
+                ", type=" + type +
+                ", owner=" + owner +
+                '}';
     }
 }

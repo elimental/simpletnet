@@ -10,6 +10,7 @@ import java.io.IOException;
 
 @WebServlet("/editProfileCheck")
 public class EditProfileCheck extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletHelper servletHelper = new ServletHelper(req);

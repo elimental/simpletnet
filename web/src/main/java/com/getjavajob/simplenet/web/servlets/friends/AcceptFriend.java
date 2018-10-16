@@ -1,6 +1,7 @@
 package com.getjavajob.simplenet.web.servlets.friends;
 
 import com.getjavajob.simplenet.service.AccountService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +12,13 @@ import java.io.IOException;
 
 @WebServlet("/acceptFriendRequest")
 public class AcceptFriend extends HttpServlet {
-    private AccountService accountService = AccountService.getInstance();
+
+    private AccountService accountService;
+
+    @Override
+    public void init() throws ServletException {
+        this.accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -10,32 +10,35 @@
 <br>
 <br>
 <div class="w3-container" style="margin: 0 auto; width: 420px">
-        <table class="w3-table-all w3-hoverable">
-            <thead>
-            <tr class="w3-light-blue">
-                <th>Участники группы</th>
+    <table class="w3-table-all w3-hoverable">
+        <thead>
+        <tr class="w3-light-blue">
+            <th>Участники группы</th>
+        </tr>
+        </thead>
+        <c:forEach var="member" items="${adminsAndModerators}">
+            <tr>
+                <td><a href="/userProfile?id=${member.id}">${member.firstName} ${member.lastName}</a>
+                    <c:if test="${owner && member.id != userId}">
+                        <a href="/deleteFromGroup?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Удалить
+                            из группы</a>
+                    </c:if>
+                </td>
             </tr>
-            </thead>
-            <c:forEach var="member" items="${adminsAndModerators}">
-                <tr>
-                    <td><a href="/userProfile?id=${member.id}">${member.firstName} ${member.lastName}</a>
-                        <c:if test="${owner && member.id != userId}">
-                            <a href="/deleteFromGroup?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Удалить из группы</a>
-                        </c:if>
-                    </td>
-                </tr>
-            </c:forEach>
-            <c:forEach var="member" items="${simpleMembers}">
-                <tr>
-                    <td><a href="/userProfile?id=${member.id}">${member.firstName} ${member.lastName}</a>
-                        <c:if test="${delete}">
-                            <a href="/deleteFromGroup?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Удалить из группы</a>
-                            <a href="/makeModerator?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Сделать модератором</a>
-                        </c:if>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
+        </c:forEach>
+        <c:forEach var="member" items="${simpleMembers}">
+            <tr>
+                <td><a href="/userProfile?id=${member.id}">${member.firstName} ${member.lastName}</a>
+                    <c:if test="${delete}">
+                        <a href="/deleteFromGroup?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Удалить
+                            из группы</a>
+                        <a href="/makeModerator?userId=${member.id}&groupId=${groupId}" class="w3-text-green">Сделать
+                            модератором</a>
+                    </c:if>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 </div>
 </body>
 </html>

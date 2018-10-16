@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/regError")
 public class RegError extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/jsp/registration/regerror.jsp").forward(req, resp);

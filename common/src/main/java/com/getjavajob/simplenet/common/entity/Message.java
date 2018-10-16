@@ -3,6 +3,7 @@ package com.getjavajob.simplenet.common.entity;
 import java.sql.Timestamp;
 
 public class Message extends BaseEntity implements Comparable<Message> {
+
     public static final int WALL = 1;
     public static final int GROUP = 2;
     public static final int PERSONAL = 3;
@@ -56,5 +57,17 @@ public class Message extends BaseEntity implements Comparable<Message> {
     @Override
     public int compareTo(Message o) {
         return -createDate.compareTo(o.getCreateDate());
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "text='" + text + '\'' +
+                ", createDate=" + createDate +
+                ", author=" + author +
+                ", type=" + type +
+                ", destination=" + destination +
+                ", id=" + id +
+                '}';
     }
 }

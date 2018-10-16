@@ -9,6 +9,7 @@
         label {
             color: dimgray;
         }
+
         .dot {
             height: 10px;
             width: 10px;

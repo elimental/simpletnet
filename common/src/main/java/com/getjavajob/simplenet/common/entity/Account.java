@@ -135,7 +135,6 @@ public class Account extends BaseEntity {
                 ", icq='" + icq + '\'' +
                 ", skype='" + skype + '\'' +
                 ", additionalInfo='" + additionalInfo + '\'' +
-                ", phones=" + phones +
                 ", role=" + role +
                 ", id=" + id +
                 '}';

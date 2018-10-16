@@ -4,6 +4,7 @@ import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Group;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.GroupService;
+import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
@@ -20,8 +21,14 @@ public class GetImage extends HttpServlet {
     private static final String USER_DEFAULT_IMAGE_PATH = "/pic/nophoto.jpg";
     private static final String GROUP_DEFAULT_IMAGE_PATH = "/pic/group_no_photo.jpg";
 
-    private AccountService accountService = AccountService.getInstance();
-    private GroupService groupService = GroupService.getInstance();
+    private AccountService accountService;
+    private GroupService groupService;
+
+    @Override
+    public void init() throws ServletException {
+        this.accountService = ApplicationContextProvider.getApplicationContext().getBean(AccountService.class);
+        this.groupService = ApplicationContextProvider.getApplicationContext().getBean(GroupService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
