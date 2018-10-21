@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @WebServlet("/getImage")
 public class GetImage extends HttpServlet {
-    private static final String USER_DEFAULT_IMAGE_PATH = "/pic/nophoto.jpg";
+    private static final String USER_DEFAULT_IMAGE_PATH = "/pic/avatar_big.png";
     private static final String GROUP_DEFAULT_IMAGE_PATH = "/pic/group_no_photo.jpg";
 
     private AccountService accountService;

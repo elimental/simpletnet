@@ -3,12 +3,21 @@
 <html>
 <head>
     <title>Удаление группы</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-<div class="w3-display-container w3-display-middle">
-    <h2 class="w3-text-blue">Группа удалена</h2><br>
-    <a href="/groups" class="w3-btn w3-blue">Продолжить</a>
+<div class="w3-container w3-content w3-display-middle">
+    <div class="w3-col m12">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <div class="w3-container w3-center">
+                    <p><label>Группа удалена</label><p>
+                    <hr>
+                    <a href="/groups" class="w3-button w3-theme">Продолжить</a>
+                    <p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

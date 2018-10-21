@@ -24,7 +24,7 @@ public class SendPersonalMessage extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userFromId = (Integer) req.getSession().getAttribute("userId");
         int userToId = Integer.parseInt(req.getParameter("secondTalkerId"));
-        String text = req.getParameter("chatMessage");
+        String text = req.getParameter("message");
         messageService.sendPersonalMessage(userFromId, userToId, text);
         resp.sendRedirect("/chat?userId=" + userToId);
     }

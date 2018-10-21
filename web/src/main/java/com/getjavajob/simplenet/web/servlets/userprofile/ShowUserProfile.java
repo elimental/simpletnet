@@ -19,7 +19,7 @@ import java.util.List;
 import static com.getjavajob.simplenet.web.util.ServletHelper.*;
 
 @WebServlet("/userProfile")
-public class UserProfile extends HttpServlet {
+public class ShowUserProfile extends HttpServlet {
 
     private AccountService accountService;
     private MessageService messageService;
@@ -46,13 +46,13 @@ public class UserProfile extends HttpServlet {
             if (!owner && !ifAdminOpens && !ifFriend) {
                 req.getRequestDispatcher("/profileAccessDenied?id=" + userId).forward(req, resp);
             } else {
-                boolean editAndDelete = ifAdminOpens || owner;
-                req.setAttribute("editAndDelete", editAndDelete);
-                boolean ifAdminsProfile = accountService.ifAdmin(userId);
-                req.setAttribute("admin", ifAdminsProfile);
-                boolean allowMakeAdmin = ifAdminOpens && !owner && !ifAdminsProfile;
-                req.setAttribute("allowMakeAdmin", allowMakeAdmin);
-                boolean showAddFriendButton = ifAdminOpens && !ifFriend && !owner;
+                boolean showMakeAdminButton = !accountService.ifAdmin(userId);
+                req.setAttribute("showMakeAdminButton", showMakeAdminButton);
+                boolean showAdminContent = ifAdminOpens && !owner;
+                req.setAttribute("showAdminContent", showAdminContent);
+                boolean ifAdmin = accountService.ifAdmin(userId);
+                req.setAttribute("admin", ifAdmin);
+                boolean showAddFriendButton = !ifFriend;
                 req.setAttribute("showAddFriendButton", showAddFriendButton);
                 req.setAttribute("owner", owner);
                 req.setAttribute("account", account);

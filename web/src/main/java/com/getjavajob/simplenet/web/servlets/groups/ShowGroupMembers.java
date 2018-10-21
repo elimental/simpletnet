@@ -29,28 +29,32 @@ public class ShowGroupMembers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int groupId = Integer.parseInt(req.getParameter("groupId"));
+        req.setAttribute("groupId", groupId);
         int userId = (Integer) req.getSession().getAttribute("userId");
+        req.setAttribute("userId", userId);
         boolean admin = accountService.ifAdmin(userId);
         boolean moderator = groupService.ifGroupModerator(userId, groupId);
         boolean delete = admin || moderator;
         boolean owner = groupService.ifGroupOwner(userId, groupId);
+        req.setAttribute("owner", owner);
+        boolean showCandidates = admin || moderator;
+        req.setAttribute("showCandidates", showCandidates);
         req.setAttribute("delete", delete);
         List<Account> members = groupService.getMembers(groupId);
-        List<Account> adminsAndModerators = new ArrayList<>();
+        List<Account> candidates = groupService.getCandidates(groupId);
+        req.setAttribute("candidates", candidates);
+        List<Account> moderators = new ArrayList<>();
         List<Account> simpleMembers = new ArrayList<>();
         for (Account account : members) {
             int id = account.getId();
-            if (accountService.ifAdmin(id) || groupService.ifGroupModerator(id, groupId)) {
-                adminsAndModerators.add(account);
+            if (groupService.ifGroupModerator(id, groupId) || accountService.ifAdmin(id)) {
+                moderators.add(account);
             } else {
                 simpleMembers.add(account);
             }
         }
-        req.setAttribute("userId", userId);
-        req.setAttribute("owner", owner);
-        req.setAttribute("adminsAndModerators", adminsAndModerators);
+        req.setAttribute("moderators", moderators);
         req.setAttribute("simpleMembers", simpleMembers);
-        req.setAttribute("groupId", groupId);
         req.getRequestDispatcher("/jsp/groups/groupmembers.jsp").forward(req, resp);
     }
 }

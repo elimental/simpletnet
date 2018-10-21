@@ -23,7 +23,7 @@ public class SendGroupMessage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (Integer) req.getSession().getAttribute("userId");
-        String text = req.getParameter("groupMessage");
+        String text = req.getParameter("message");
         int groupId = Integer.parseInt(req.getParameter("groupId"));
         messageService.sendGroupMessage(userId, groupId, text);
         resp.sendRedirect("/group?id=" + groupId);

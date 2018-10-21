@@ -1,29 +1,47 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="../header.jsp" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>SIMPLENET Вход</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        label {
+            color: darkslategrey;
+        }
+    </style>
 </head>
 <body>
-<div class="w3-display-container w3-display-middle">
-    <label class="w3-text-red">Неверное имя пользователя или пароль</label><br>
-    <form action="/loginCheck" method="post">
-
-        <label class="w3-text-blue"><b>E-mail адрес</b></label>
-        <input class="w3-input w3-border" type="email" name="email" required>
-
-        <label class="w3-text-blue"><b>Пароль</b></label>
-        <input class="w3-input w3-border" type="password" name="password" required><br>
-
-        <button class="w3-btn w3-blue" type="submit">Вход</button>
-        <br>
-
-        <input class="w3-check" type="checkbox">
-        <label>Запомнить меня</label>
-
-    </form>
-    <a href="/registration" class="w3-text-green">Регистрация</a>
+<div class="w3-container w3-content w3-display-middle">
+    <div class="w3-col m12">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <div class="w3-container w3-center">
+                    <label>Вход в сеть</label>
+                </div>
+                <hr>
+                <form action="/loginCheck" method="post">
+                    <p class="w3-text-red">Неверное имя пользователя или пароль</p>
+                    <label>E-mail адрес</label>
+                    <input class="w3-input w3-border" type="email" name="email" required>
+                    <label>Пароль</label>
+                    <input class="w3-input w3-border" type="password" name="password" required>
+                    <hr>
+                    <div class="w3-container w3-center">
+                        <button class="w3-button w3-theme" type="submit" style="width:80%"><i class="fa fa-sign-in"></i> Вход</button><br>
+                        <input class="w3-check" type="checkbox" name="remember">
+                        запомнить меня
+                        <hr>
+                        <a href="/registration" class="w3-text-green">регистрация</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+
+
+
+
+

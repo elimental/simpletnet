@@ -104,7 +104,7 @@ public class GroupService {
     }
 
     public List<Account> getMembers(int groupId) {
-        List<Integer> userIds = accountGroupDAO.getMemberIds(groupId);
+        List<Integer> userIds = accountGroupDAO.getMembersId(groupId);
         List<Account> members = new ArrayList<>();
         for (Integer i : userIds) {
             members.add(accountDAO.getById(i));

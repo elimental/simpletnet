@@ -113,7 +113,7 @@ public class AccountGroupDAOTest {
         List<Integer> expectedMembers = new ArrayList<>();
         expectedMembers.add(1);
         expectedMembers.add(2);
-        List<Integer> actualMembers = accountGroupDAO.getMemberIds(4);
+        List<Integer> actualMembers = accountGroupDAO.getMembersId(4);
         assertEquals(expectedMembers, actualMembers);
     }
 

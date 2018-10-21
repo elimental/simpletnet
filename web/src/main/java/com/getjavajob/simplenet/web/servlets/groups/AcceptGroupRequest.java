@@ -25,6 +25,6 @@ public class AcceptGroupRequest extends HttpServlet {
         int userId = Integer.parseInt(req.getParameter("userId"));
         int groupId = Integer.parseInt(req.getParameter("groupId"));
         groupService.acceptGroupRequest(userId, groupId);
-        resp.sendRedirect("/group?id=" + groupId);
+        resp.sendRedirect("/groupMembers?groupId=" + groupId);
     }
 }

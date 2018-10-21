@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/selfProfileDeleted")
+@WebServlet("/selfProfileDelete")
 public class SelfProfileDeleted extends HttpServlet {
 
     @Override

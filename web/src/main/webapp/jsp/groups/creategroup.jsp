@@ -1,30 +1,35 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="../header.jsp" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Новая группа</title>
+    <title>Создание группы</title>
 </head>
-<script src="/js/script.js"></script>
 <body>
-<br>
-<br>
-<br>
-<div class="w3-container" style="margin: 0 auto; width: 420px">
-    <form action="/createGroupCheck" name="createGroup" enctype="multipart/form-data" method="post">
+<div class="w3-container w3-content" style="max-width:450px;margin-top:80px">
+    <div class="w3-col m12">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <form action="/createGroupCheck" name="createGroup" enctype="multipart/form-data" method="post">
 
-        <label class="w3-text-blue"><b>Название группы</b></label>
-        <input class="w3-input w3-border" type="text" name="name" required>
+                    <label>Название группы</label>
+                    <input class="w3-input w3-border" type="text" name="name" required>
 
-        <label class="w3-text-blue"><b>Описание</b></label>
-        <textarea class="w3-input w3-border" rows="5" cols="50" name="description"></textarea>
+                    <label>Описание</label>
+                    <textarea class="w3-input w3-border" rows="5" cols="50" name="description"></textarea>
 
-        <label class="w3-text-blue"><b>Картинка</b></label>
-        <input class="w3-input w3-border" type="file" name="img" accept="image/jpeg" id="img"
-               onchange="uploadPhoto()">
-        <br>
-        <button class="w3-btn w3-blue" type="submit">Создать</button>
-        <br>
-    </form>
+                    <label>Картинка</label>
+                    <input class="w3-input w3-border" type="file" name="img" accept="image/jpeg" id="img"
+                           onchange="uploadPhoto()">
+                    <br>
+                    <button class="w3-button w3-theme" type="submit">Создать</button>
+                    <br>
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+

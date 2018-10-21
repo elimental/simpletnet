@@ -55,7 +55,7 @@ function addPhoneLine(object) {
     var divRemoveButton = document.createElement("div");
     divRemoveButton.className = "w3-cell";
     var removeButton = document.createElement("button");
-    removeButton.className = "w3-btn w3-blue";
+    removeButton.className = "w3-button w3-theme";
     removeButton.type = "button";
     removeButton.onclick = function () {
         deletePhoneLine(this)
@@ -82,3 +82,52 @@ function uploadPhoto() {
     }
 }
 
+function confirmEdit(object) {
+    var form = object.parentNode;
+    if (confirm("Сохранить изменения?")) {
+        form.submit();
+    } else {
+        return false;
+    }
+}
+
+function submitMessageForm(object) {
+    var form = object.parentNode;
+    var message = document.getElementById("message").innerHTML;
+    message = message.replaceAll("&nbsp;", " ").trim();
+    if (message.length != 0) {
+        var hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "message";
+        hiddenInput.value = message;
+        form.appendChild(hiddenInput);
+        form.submit();
+    } else {
+        return false;
+    }
+}
+
+function submitPersonalMessageForm(object, num) {
+    var form = object.parentNode;
+    var message = document.getElementById("message").innerHTML;
+    message = message.replaceAll("&nbsp;", " ").trim();
+    if (message.length != 0) {
+        var hiddenInputMessage = document.createElement("input");
+        hiddenInputMessage.type = "hidden";
+        hiddenInputMessage.name = "message";
+        hiddenInputMessage.value = message;
+        form.appendChild(hiddenInputMessage);
+        var hiddenInputSecondTalkerId = document.createElement("input");
+        hiddenInputSecondTalkerId.type = "hidden";
+        hiddenInputSecondTalkerId.name = "secondTalkerId";
+        hiddenInputSecondTalkerId.value = num;
+        form.appendChild(hiddenInputSecondTalkerId);
+        form.submit();
+    } else {
+        return false;
+    }
+}
+
+String.prototype.replaceAll = function (target, replacement) {
+    return this.split(target).join(replacement);
+};

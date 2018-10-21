@@ -2,41 +2,47 @@
 <%@ include file="../header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Чат</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        label {
-            color: dimgray;
-        }
-    </style>
 </head>
 <body>
-<br>
-<br>
-<br>
-<div class="w3-container" style="margin: 0 auto; width: 420px">
-    <h3 class="w3-text-blue">
-        <c:import var="secondTalkerName" url="/getUserName?id=${secondTalkerId}"></c:import>
-        Чат с <c:out value="${secondTalkerName}"/>
-    </h3>
-    <form action="/sendPersonalMessage" method="get">
-        <input type="hidden" name="secondTalkerId" value="${secondTalkerId}">
-        <textarea class="w3-input w3-border" rows="2" cols="50" name="chatMessage"></textarea>
-        <button class="w3-btn w3-blue" type="submit">Отправить</button>
-    </form>
-    <br>
-    <c:if test="${not empty chatMessages}">
-        <c:forEach var="message" items="${chatMessages}">
-            <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
-            <b class="w3-text-blue">${userName} &#160 </b>
-            <label style="font-size: smaller"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
-                                                              value="${message.createDate}"/></label>
-            <p><c:out value="${message.text}"/></p>
+<div class="w3-container w3-content" style="max-width:600px;margin-top:80px">
+    <div class="w3-row">
+        <div class="w3-col m12">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                    <c:import var="secondTalkerName" url="/getUserName?id=${secondTalkerId}"></c:import>
+                    <p class="w3-center"><label>Чат с <c:out value="${secondTalkerName}"></c:out></label></p>
+                    <form action="/sendPersonalMessage" name="chat" method="get">
+                        <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
+                        <button type="button" class="w3-button w3-theme"
+                                onclick="submitPersonalMessageForm(this,${secondTalkerId})">
+                            <i class="fa fa-pencil"></i> Отправить
+                        </button>
+                    </form>
+                </div>
+            </div>
             <br>
-        </c:forEach>
-    </c:if>
+            <div class="w3-col m12">
+                <div class="w3-card w3-round w3-white">
+                    <c:forEach var="message" items="${chatMessages}">
+                        <div class="w3-container w3-padding"><br>
+                            <img src="/getImage?type=user&id=${message.author}" alt="Avatar"
+                                 class="w3-circle" style="height:30px;width:30px">
+                            <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
+                            <label style="font-size: small"><c:out value="${userName}"></c:out></label>
+                            <span class="w3-opacity w3-right" style="font-size: smaller"><fmt:formatDate
+                                    pattern="dd.MM.yyyy hh.mm"
+                                    value="${message.createDate}"/></span>
+                            <p><c:out value="${message.text}"></c:out></p>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

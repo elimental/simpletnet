@@ -2,105 +2,170 @@
 <%@ include file="../header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Профиль</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        label {
-            color: dimgray;
-        }
-
-        .dot {
-            height: 10px;
-            width: 10px;
-            background-color: #66a3ff;
-            border-radius: 50%;
-            display: inline-block;
-        }
-    </style>
 </head>
 <body>
-<div class="w3-cell-row" style="width: 1160px">
-    <div class="w3-container w3-cell" style="width: 190px">
-        <br>
-        <br>
-        <br>
-        <img src="/getImage?type=user&id=${account.id}" class="w3-round" style="width: 188px">
-        <c:if test="${not owner}">
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <!-- The Grid -->
+    <div class="w3-row">
+        <!-- Left Column -->
+        <div class="w3-col m3">
+            <!-- Profile -->
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <h4 class="w3-center">
+                        <c:out value="${account.firstName}"/>
+                        <c:out value="${account.lastName}"/>
+                        <c:if test="${admin}"> (Администратор)</c:if>
+                    </h4>
+                    <p class="w3-center"><img src="/getImage?type=user&id=${account.id}" class="w3-circle"
+                                              style="height:180px;width:180px" alt="Avatar"></p>
+                    <c:if test="${not owner}">
+                        <p class="w3-center">
+                            <a href="/chat?userId=${account.id}" class="w3-button w3-theme">Написать сообщение</a>
+                        </p>
+                    </c:if>
+                    <hr>
+                    <p class="w3-center"><label>В сети с: </label><fmt:formatDate pattern="dd MMMM yyyy"
+                                                                                  value="${account.regDate}"/></p>
+                </div>
+            </div>
             <br>
-            <a href="/chat?userId=${account.id}" class="w3-button w3-blue">Отправить сообщение</a>
-        </c:if>
-    </div>
-    <div class="w3-container w3-cell" style="width: 470px">
-        <br>
-        <br>
-        <div class="w3-container">
-            <h3 class="w3-text-blue">
-                <c:out value="${account.lastName}"/>
-                <c:out value="${account.firstName}"/>
-                <c:out value="${account.patronymicName}"/>
-                <c:if test="${admin}"> (Администратор)</c:if>
-            </h3>
-            <c:if test="${not empty account.birthDay}">
-                <label>Дата рождения: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.birthDay}"/><br>
-            </c:if>
-            <c:if test="${not empty account.icq}">
-                <label>Icq: </label><c:out value="${account.icq}"/> <br>
-            </c:if>
-            <c:if test="${not empty account.skype}">
-                <label>Skype: </label><c:out value="${account.skype}"/> <br>
-            </c:if>
-            <c:if test="${not empty account.additionalInfo}">
-                <label>Дополнительная информация: </label><c:out value="${account.additionalInfo}"/> <br>
-            </c:if>
-            <c:forEach var="phone" items="${homePhones}">
-                <label>Домашний телефон: </label><c:out value="${phone.number}"/><br>
-            </c:forEach>
-            <c:forEach var="phone" items="${workPhones}">
-                <label>Рабочий телефон: </label><c:out value="${phone.number}"/><br>
-            </c:forEach>
-            <label>Дата регистрации: </label><fmt:formatDate pattern="dd.MM.yyyy" value="${account.regDate}"/>
-            <br>
-            <br>
-            <c:if test="${editAndDelete}">
-                <a href="/editProfile?id=${account.id}" class="w3-button w3-blue">Редактировать профиль</a>
-                <br>
-                <br>
-                <a href="/confirmDelete?type=user&id=${account.id}" class="w3-button w3-blue">Удалить профиль</a>
-                <br>
-                <br>
-            </c:if>
 
-            <c:if test="${allowMakeAdmin}">
-                <a href="/makeAdmin?id=${account.id}" class="w3-button w3-blue">Сделать администратором</a>
-                <br>
-                <br>
-            </c:if>
-            <c:if test="${showAddFriendButton}">
-                <a href="/friendRequest?id=${account.id}" class="w3-button w3-blue">Добавить в друзья</a>
+            <!-- Contacts -->
+
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <p class="w3-center"><label>Мои контакты</label></p>
+                    <hr>
+                    <c:if test="${not empty account.birthDay}">
+                        <p><i class="fa fa-birthday-cake w3-margin-right w3-text-theme"></i>
+                            <fmt:formatDate pattern="dd MMM yyyy" value="${account.birthDay}"/></p>
+                    </c:if>
+
+                    <c:if test="${not empty account.skype}">
+                        <p><img src="/pic/skype_icon.jpeg" style="height: 19px;width: 19px">&#160&#160&#160&#160
+                            <c:out value="${account.skype}"/></p>
+                    </c:if>
+
+                    <c:if test="${not empty account.icq}">
+                        <p><img src="/pic/icq_icon.png" style="height: 19px;width: 19px">&#160&#160&#160&#160
+                            <c:out value="${account.icq}"/></p>
+                    </c:if>
+
+                    <c:forEach var="phone" items="${homePhones}">
+                        <p><img src="/pic/phone_icon.png" style="height: 16px;width: 16px">&#160&#160&#160&#160
+                            <c:out value="${phone.number}"/> дом.</p>
+                    </c:forEach>
+
+                    <c:forEach var="phone" items="${workPhones}">
+                        <p><img src="/pic/phone_icon.png" style="height: 16px;width: 16px">&#160&#160&#160&#160
+                            <c:out value="${phone.number}"/> раб.</p>
+                    </c:forEach>
+                </div>
+            </div>
+            <br>
+            <!-- Additional information -->
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <c:if test="${not empty account.additionalInfo}">
+                    <p class="w3-center"><label><b>Обо мне</b></label></p>
+                    <hr>
+                    <c:out value="${account.additionalInfo}"/>
+                    <p>
+                        </c:if>
+                </div>
+            </div>
+            <br>
+            <!-- Admin panel -->
+            <c:if test="${showAdminContent}">
+                <div class="w3-card w3-round w3-white">
+                    <div class="w3-container">
+                        <p class="w3-center"><label>Панель администратора</label></p>
+                        <hr>
+                        <p class="w3-center">
+                            <a href="/editProfile?id=${account.id}" class="w3-button w3-theme" style="width: 80%">Редактировать
+                                профиль</a>
+                        </p>
+                        <p class="w3-center">
+                            <a href="/confirmDelete?type=user&id=${account.id}" class="w3-button w3-theme"
+                               style="width: 80%">Удалить
+                                профиль</a>
+                        </p>
+                        <c:if test="${showMakeAdminButton}">
+                            <p class="w3-center">
+                                <a href="/makeAdmin?id=${account.id}" class="w3-button w3-theme" style="width: 80%">Сделать
+                                    администратором</a>
+                            </p>
+                        </c:if>
+                        <c:if test="${showAddFriendButton}">
+                            <p class="w3-center">
+                                <a href="/friendRequest?id=${account.id}" class="w3-button w3-theme" style="width: 80%">Добавить
+                                    в друзья</a>
+                            </p>
+                        </c:if>
+                    </div>
+                </div>
             </c:if>
         </div>
-    </div>
-    <div class="w3-container w3-cell" style="width: 500px">
-        <br>
-        <br>
-        <br>
-        <c:if test="${owner}">
-            <form action="/sendWallMessage" name="wall" method="get">
-            <textarea class="w3-input w3-border" placeholder="Что нового?" rows="2" cols="50"
-                      name="wallmessage" required></textarea>
-                <button class="w3-btn w3-blue" type="submit">Отправить</button>
-            </form>
-            <br>
-        </c:if>
-        <c:if test="${not empty wallMessages}">
-            <c:forEach var="message" items="${wallMessages}">
-                <p><span class="dot"></span> &#160 ${message.text}</p>
+        <!-- End Left Column -->
+        <!-- Right Column -->
+        <!-- Wall message form -->
+        <div class="w3-col m7">
+            <c:if test="${owner}">
+                <div class="w3-row-padding">
+                    <div class="w3-col m12">
+                        <div class="w3-card w3-round w3-white">
+                            <div class="w3-container w3-padding">
+                                <h6 class="w3-opacity">Чё ваще происходит?</h6>
+                                <form action="/sendWallMessage" name="wall" method="get">
+                                    <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
+                                    <button type="button" class="w3-button w3-theme" onclick="submitMessageForm(this)">
+                                        <i class="fa fa-pencil"></i>
+                                         Отправить
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br>
-            </c:forEach>
-        </c:if>
+            </c:if>
+            <!-- End Wall message form -->
+            <!-- Wall messages -->
+            <c:if test="${not empty wallMessages}">
+                <c:forEach var="message" items="${wallMessages}">
+                    <div class="w3-row-padding">
+                        <div class="w3-col m12">
+                            <div class="w3-card w3-round w3-white">
+                                <div class="w3-container w3-padding"><br>
+                                    <img src="/getImage?type=user&id=${account.id}" alt="Avatar"
+                                         class="w3-left w3-circle w3-margin-right" style="height:55px;width:55px">
+                                    <span class="w3-right w3-opacity"><fmt:formatDate pattern="dd MMM yyyy"
+                                                                                      value="${message.createDate}"/></span>
+                                    <h5>
+                                        <c:out value="${account.firstName}"/>
+                                        <c:out value="${account.lastName}"/>
+                                    </h5>
+                                    <hr class="w3-clear">
+                                    <p><c:out value="${message.text}"></c:out></p>
+                                    <a href="/deleteMessage?type=wall&messageId=${message.id}&returnId=${account.id}"
+                                       class="w3-button w3-theme-d1 w3-margin-bottom">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </c:forEach>
+            </c:if>
+        </div>
+        <!-- End right column -->
     </div>
 </div>
+<!-- End Page Container -->
 </body>
 </html>

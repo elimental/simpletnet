@@ -153,6 +153,7 @@ public class ServletHelper {
             account.setRegDate(regDate);
         }
         String firstName = param.get("first_name");
+        request.getSession().setAttribute("userName", firstName);
         account.setFirstName(firstName);
         String lastName = param.get("last_name");
         if (!lastName.equals("")) {

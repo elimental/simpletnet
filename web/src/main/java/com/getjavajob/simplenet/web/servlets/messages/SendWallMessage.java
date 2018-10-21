@@ -2,7 +2,6 @@ package com.getjavajob.simplenet.web.servlets.messages;
 
 import com.getjavajob.simplenet.service.MessageService;
 import com.getjavajob.simplenet.web.util.ApplicationContextProvider;
-import com.getjavajob.simplenet.web.util.ServletHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,8 +23,10 @@ public class SendWallMessage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (Integer) req.getSession().getAttribute("userId");
-        String text = req.getParameter("wallmessage");
-        messageService.sendWallMessage(userId, text);
+        String text = req.getParameter("message");
+        if (!text.trim().isEmpty()) {
+            messageService.sendWallMessage(userId, text);
+        }
         resp.sendRedirect("/userProfile?id=" + userId);
     }
 }

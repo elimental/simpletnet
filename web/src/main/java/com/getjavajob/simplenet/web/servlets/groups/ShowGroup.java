@@ -42,16 +42,14 @@ public class ShowGroup extends HttpServlet {
         boolean owner = groupService.ifGroupOwner(userId, groupId);
         req.setAttribute("owner", owner);
         boolean moderator = groupService.ifGroupModerator(userId, groupId);
-        if (moderator) {
-            List<Account> candidates = groupService.getCandidates(groupId);
-            req.setAttribute("candidates", candidates);
-        }
         boolean delete = admin || owner;
         req.setAttribute("delete", delete);
         boolean edit = delete || moderator;
         req.setAttribute("edit", edit);
         boolean showMakeRequestButton = admin && !owner;
         req.setAttribute("showMakeRequestButton", showMakeRequestButton);
+        boolean showModeratorContent = edit;
+        req.setAttribute("showModeratorContent", showModeratorContent);
         List<Message> messages = messageService.getGroupMessages(groupId);
         req.setAttribute("groupMessages", messages);
         Group group = groupService.getGroupById(groupId);

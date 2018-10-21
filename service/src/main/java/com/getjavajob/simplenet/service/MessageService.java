@@ -62,4 +62,9 @@ public class MessageService {
     public List<Integer> getTalkersId(int userId) {
         return messageDAO.getTalkersId(userId);
     }
+
+    @Transactional
+    public void deleteMessage(int messageId) {
+        messageDAO.delete(messageId);
+    }
 }

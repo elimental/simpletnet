@@ -1,33 +1,48 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="../header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Чаты</title>
+    <title>Список чатов</title>
 </head>
 <body>
-<br>
-<br>
-<br>
-<div class="w3-container" style="margin: 0 auto; width: 420px">
-    <c:if test="${empty talkersId}">
-        <h3 class="w3-text-blue">У Вас нет активных чатов</h3>
-    </c:if>
-    <c:if test="${not empty talkersId}">
-        <table class="w3-table-all w3-hoverable">
-            <thead>
-            <tr class="w3-light-blue">
-                <th>Чаты</th>
-            </tr>
-            </thead>
-            <c:forEach var="talkerId" items="${talkersId}">
-                <tr>
-                    <td><c:import var="talkerName" url="/getUserName?id=${talkerId}"></c:import>
-                        <a href="/chat?userId=${talkerId}" class="w3-text-green">${talkerName}</a></td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:if>
-</div>
+<div class="w3-container w3-content" style="max-width:400px;margin-top:80px">
+    <div class="w3-col m12">
+        <c:if test="${empty talkers}">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                    <p class="w3-center"><label>У Вас пока нет активных чатов</label></p>
+                </div>
+            </div>
+        </c:if>
+        <c:if test="${not empty talkers}">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <p class="w3-center"><label>Список собеседников</label></p>
+                <hr>
+                <c:forEach var="talker" items="${talkers}">
+                    <div class="w3-row">
+                        <div class="w3-col m3">
+                            <c:import var="talkerName" url="/getUserName?id=${talker}"></c:import>
+                            <a href="/chat?userId=${talker}">
+                                <img src="/getImage?type=user&id=${talker}" alt="Avatar"
+                                 class="w3-circle" style="height:55px;width:55px">
+                            </a>
+                        </div>
+                        <div class="w3-col m6">
+                            <h5>
+                                <a href="/chat?userId=${talker}" style="text-decoration: none">
+                                <c:out value="${talkerName}"></c:out>
+                                </a>
+                            </h5>
+                        </div>
+                    </div>
+                    <br>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+    </div>
 </body>
 </html>

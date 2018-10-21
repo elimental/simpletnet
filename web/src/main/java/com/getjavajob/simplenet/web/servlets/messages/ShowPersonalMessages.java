@@ -25,7 +25,7 @@ public class ShowPersonalMessages extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (Integer) req.getSession().getAttribute("userId");
         List<Integer> talkersId = messageService.getTalkersId(userId);
-        req.setAttribute("talkersId", talkersId);
+        req.setAttribute("talkers", talkersId);
         req.getRequestDispatcher("/jsp/messages/messages.jsp").forward(req, resp);
     }
 }

@@ -26,7 +26,11 @@ public class GetUserName extends HttpServlet {
         int userId = Integer.parseInt(req.getParameter("id"));
         Account account = accountService.getUserById(userId);
         StringBuilder userName = new StringBuilder();
-        userName.append(account.getFirstName()).append(" ").append(account.getLastName());
+        userName.append(account.getFirstName());
+        String lastName = account.getLastName();
+        if (lastName != null) {
+            userName.append(" ").append(lastName);
+        }
         resp.getWriter().append(userName.toString());
     }
 }

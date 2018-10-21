@@ -24,7 +24,7 @@ public class AuthFilter implements Filter {
         allowedPath.add("/regAccept");
         allowedPath.add("/regCheck");
         allowedPath.add("/logout");
-        allowedPath.add("/js/script.js");
+        allowedPath.add("/selfProfileDelete");
     }
 
     @Override
@@ -36,7 +36,8 @@ public class AuthFilter implements Filter {
         String requestPath = req.getRequestURI();
         String loginURI = "/login";
         boolean loggedIn = session != null && session.getAttribute("userId") != null;
-        boolean allowedRequest = allowedPath.contains(requestPath);
+        boolean allowedRequest = allowedPath.contains(requestPath) || requestPath.contains("/js/") ||
+                requestPath.contains("/pic/") || requestPath.contains("/css/");
         if (loggedIn || allowedRequest) {
             filterChain.doFilter(req, resp);
         } else {

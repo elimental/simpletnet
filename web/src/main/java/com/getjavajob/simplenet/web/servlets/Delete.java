@@ -44,6 +44,7 @@ public class Delete extends HttpServlet {
                     resp.addCookie(emailCookie);
                     resp.addCookie(passCookie);
                     session.invalidate();
+                    System.out.println("ASDFASDFASDFASDF");
                     resp.sendRedirect("/selfProfileDelete");
                 } else {
                     resp.sendRedirect("/profileDeleted");

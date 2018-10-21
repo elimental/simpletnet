@@ -25,7 +25,7 @@ public class AccountGroupDAO {
     private static final String SELECT_CANDIDATES_ID = "SELECT userId FROM account_groups WHERE groupId = ? AND " +
             "userRole = ?";
     private static final String SELECT_MEMBERS_ID = "SELECT userId FROM account_groups WHERE groupId = ? AND " +
-            "userRole = ? OR userRole = ?";
+            "(userRole = ? OR userRole = ?)";
     private static final String UPDATE_MAKE_MODERATOR = "UPDATE account_groups SET userRole = ? WHERE userId = ? " +
             "AND groupId = ?";
     private static final String DELETE_FROM_GROUP = "DELETE FROM account_groups WHERE userId = ? AND groupId = ?";
@@ -75,7 +75,7 @@ public class AccountGroupDAO {
                 (resultSet, i) -> resultSet.getInt("userId"));
     }
 
-    public List<Integer> getMemberIds(int groupId) {
+    public List<Integer> getMembersId(int groupId) {
         return jdbcTemplate.query(SELECT_MEMBERS_ID, new Object[]{groupId, GROUP_MEMBER, GROUP_MODERATOR},
                 (resultSet, i) -> resultSet.getInt("userId"));
     }
