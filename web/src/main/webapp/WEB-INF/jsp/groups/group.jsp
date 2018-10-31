@@ -113,7 +113,7 @@
                                          class="w3-left w3-circle w3-margin-right" style="height:55px;width:55px">
                                     <span class="w3-right w3-opacity"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
                                                                                       value="${message.createDate}"/></span>
-                                    <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
+                                    <c:import charEncoding="utf-8" var="userName" url="/getUserName?id=${message.author}"></c:import>
                                     <h5>
                                         <c:out value="${userName}"/>
                                     </h5>

@@ -2,7 +2,10 @@ package com.getjavajob.simplenet.web;
 
 import com.getjavajob.simplenet.web.config.AppConfig;
 import com.getjavajob.simplenet.web.config.WebConfig;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.Filter;
 
 public class SimpleNetWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -19,5 +22,13 @@ public class SimpleNetWebAppInitializer extends AbstractAnnotationConfigDispatch
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter =
+                new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        return new Filter[] { characterEncodingFilter };
     }
 }

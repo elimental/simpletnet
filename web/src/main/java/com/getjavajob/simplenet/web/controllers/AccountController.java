@@ -8,10 +8,7 @@ import com.getjavajob.simplenet.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -159,7 +156,8 @@ public class AccountController {
     }
 
     @GetMapping("/getUserName")
-    public void getUserName(int id, HttpServletResponse response) throws IOException {
+    @ResponseBody
+    public String getUserName(int id) throws IOException {
         Account account = accountService.getUserById(id);
         StringBuilder userName = new StringBuilder();
         userName.append(account.getFirstName());
@@ -167,7 +165,7 @@ public class AccountController {
         if (lastName != null) {
             userName.append(" ").append(lastName);
         }
-        response.getWriter().append(userName.toString());
+        return userName.toString();
     }
 
     @GetMapping("/makeAdmin")

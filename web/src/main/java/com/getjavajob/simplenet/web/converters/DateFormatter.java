@@ -1,4 +1,4 @@
-package com.getjavajob.simplenet.web.formatters;
+package com.getjavajob.simplenet.web.converters;
 
 import org.springframework.format.Formatter;
 

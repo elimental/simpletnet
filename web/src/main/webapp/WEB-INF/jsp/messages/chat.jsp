@@ -13,7 +13,7 @@
         <div class="w3-col m12">
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container w3-padding">
-                    <c:import var="secondTalkerName" url="/getUserName?id=${secondTalkerId}"></c:import>
+                    <c:import charEncoding="utf-8" var="secondTalkerName" url="/getUserName?id=${secondTalkerId}"></c:import>
                     <p class="w3-center"><label>Чат с <c:out value="${secondTalkerName}"></c:out></label></p>
                     <form action="/sendPersonalMessage" name="chat" method="get">
                         <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
@@ -31,7 +31,7 @@
                         <div class="w3-container w3-padding"><br>
                             <img src="/getImage?type=user&id=${message.author}" alt="Avatar"
                                  class="w3-circle" style="height:30px;width:30px">
-                            <c:import var="userName" url="/getUserName?id=${message.author}"></c:import>
+                            <c:import charEncoding="utf-8" var="userName" url="/getUserName?id=${message.author}"></c:import>
                             <label style="font-size: small"><c:out value="${userName}"></c:out></label>
                             <span class="w3-opacity w3-right" style="font-size: smaller"><fmt:formatDate
                                     pattern="dd.MM.yyyy hh.mm"
