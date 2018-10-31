@@ -1,7 +1,5 @@
 package com.getjavajob.simplenet.common.entity;
 
-import java.util.Objects;
-
 public class Phone extends BaseEntity {
 
     public static final int HOME = 1;

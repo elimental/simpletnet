@@ -1,6 +1,6 @@
 -- account
 
-INSERT INTO account (firstName, lastName, patronymicName, birthDay, email, icq, skype, additionalInfo, passHash,
+INSERT INTO account (firstName, lastName, patronymicName, birthDay, email, icq, skype, additionalInfo, password,
 regDate, photo, userRole)
 VALUES
 ('Dima', 'Andreev', 'Borisovich', '1978-02-13', 'elimental@bk.ru', '49224940', 'elimetal13', 'adfasdfasdf',

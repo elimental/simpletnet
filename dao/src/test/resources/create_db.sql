@@ -10,7 +10,7 @@ CREATE TABLE account (
   icq VARCHAR(45) NULL,
   skype VARCHAR(45) NULL,
   additionalInfo VARCHAR(1000) NULL,
-  passHash VARCHAR(200) NULL,
+  password VARCHAR(200) NULL,
   regDate DATE NULL,
   photo LONGBLOB NULL,
   userRole INT NULL,

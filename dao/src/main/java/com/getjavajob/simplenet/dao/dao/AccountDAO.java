@@ -22,7 +22,7 @@ public class AccountDAO implements AbstractDAO<Account> {
 
     private static final String DELETE_BY_ID = "DELETE FROM account WHERE id = ?";
     private static final String INSERT_ACCOUNT = "INSERT INTO account (firstName, lastName, patronymicName," +
-            " birthDay, regDate, email, passHash, icq, skype, additionalInfo, photo, userRole) VALUES (?, ?, ?, ?, " +
+            " birthDay, regDate, email, password, icq, skype, additionalInfo, photo, userRole) VALUES (?, ?, ?, ?, " +
             "?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_BY_ID = "SELECT * FROM account WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
@@ -56,7 +56,7 @@ public class AccountDAO implements AbstractDAO<Account> {
             ps.setDate(4, account.getBirthDay());
             ps.setDate(5, account.getRegDate());
             ps.setString(6, account.getEmail());
-            ps.setString(7, account.getPassHash());
+            ps.setString(7, account.getPassword());
             ps.setString(8, account.getIcq());
             ps.setString(9, account.getSkype());
             ps.setString(10, account.getAdditionalInfo());
@@ -71,7 +71,6 @@ public class AccountDAO implements AbstractDAO<Account> {
         }, keyHolder);
         return keyHolder.getKey().intValue();
     }
-
 
     @Override
     public void delete(int id) {
@@ -92,7 +91,6 @@ public class AccountDAO implements AbstractDAO<Account> {
                 account.getId()
         );
     }
-
 
     public Account getByEmail(String email) {
         List<Account> accounts = jdbcTemplate.query(SELECT_BY_EMAIL, new Object[]{email}, new AccountMapper());
@@ -115,7 +113,7 @@ public class AccountDAO implements AbstractDAO<Account> {
             account.setBirthDay(rs.getDate("birthDay"));
             account.setRegDate(rs.getDate("regDate"));
             account.setEmail(rs.getString("email"));
-            account.setPassHash(rs.getString("passHash"));
+            account.setPassword(rs.getString("password"));
             account.setIcq(rs.getString("icq"));
             account.setSkype(rs.getString("skype"));
             account.setAdditionalInfo(rs.getString("additionalInfo"));

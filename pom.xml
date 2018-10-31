@@ -16,7 +16,7 @@
     </modules>
 
     <properties>
-        <spring.ver>4.1.1.RELEASE</spring.ver>
+        <spring.ver>5.1.1.RELEASE</spring.ver>
         <junit.ver>4.12</junit.ver>
         <java.ver>1.8</java.ver>
         <h2.ver>1.4.197</h2.ver>

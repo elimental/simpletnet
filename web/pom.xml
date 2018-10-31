@@ -31,6 +31,26 @@
             <version>${jstl.ver}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+        <!-- Spring -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.ver}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
         <dependency>
             <groupId>commons-fileupload</groupId>

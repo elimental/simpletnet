@@ -2,7 +2,9 @@ package com.getjavajob.simplenet.service;
 
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Group;
-import com.getjavajob.simplenet.dao.dao.*;
+import com.getjavajob.simplenet.dao.dao.AccountDAO;
+import com.getjavajob.simplenet.dao.dao.AccountGroupDAO;
+import com.getjavajob.simplenet.dao.dao.GroupDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

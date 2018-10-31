@@ -132,7 +132,7 @@ public class AccountService {
         return account;
     }
 
-    public boolean ifEmailAlreadyPresent(String email) {
+    public boolean ifEmailAlreadyPresented(String email) {
         return accountDAO.getByEmail(email) != null;
     }
 
@@ -141,7 +141,7 @@ public class AccountService {
         if (account == null) {
             return false;
         } else {
-            String passHash = account.getPassHash();
+            String passHash = account.getPassword();
             return checkPass(password, passHash);
         }
     }

@@ -10,7 +10,7 @@ public class Account extends BaseEntity {
     private Date birthDay;
     private Date regDate;
     private String email;
-    private String passHash;
+    private String password;
     private String icq;
     private String skype;
     private String additionalInfo;
@@ -58,12 +58,12 @@ public class Account extends BaseEntity {
         this.regDate = regDate;
     }
 
-    public String getPassHash() {
-        return passHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassHash(String passHash) {
-        this.passHash = passHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -131,7 +131,7 @@ public class Account extends BaseEntity {
                 ", birthDay=" + birthDay +
                 ", regDate=" + regDate +
                 ", email='" + email + '\'' +
-                ", passHash='" + passHash + '\'' +
+                ", password='" + password + '\'' +
                 ", icq='" + icq + '\'' +
                 ", skype='" + skype + '\'' +
                 ", additionalInfo='" + additionalInfo + '\'' +

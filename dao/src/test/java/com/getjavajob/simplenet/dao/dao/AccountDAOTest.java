@@ -40,7 +40,7 @@ public class AccountDAOTest {
         expected.setIcq("49224940");
         expected.setSkype("elimental13");
         expected.setAdditionalInfo("adfasdfasdf");
-        expected.setPassHash("DSFGDSGFDSGFDSGFDSGFSASFASDF");
+        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
         expected.setRegDate(Date.valueOf("2018-01-01"));
         expected.setRole(2);
         expectedAccounts.add(expected);
@@ -55,7 +55,7 @@ public class AccountDAOTest {
         expected2.setIcq("12345678");
         expected2.setSkype("vasiliy44");
         expected2.setAdditionalInfo("agfsdgfdgfds");
-        expected2.setPassHash("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
+        expected2.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
         expected2.setRegDate(Date.valueOf("2018-02-02"));
         expected2.setRole(1);
         expectedAccounts.add(expected2);
@@ -75,7 +75,7 @@ public class AccountDAOTest {
         expected.setIcq("12345678");
         expected.setSkype("vasiliy44");
         expected.setAdditionalInfo("agfsdgfdgfds");
-        expected.setPassHash("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
+        expected.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
         expected.setRegDate(Date.valueOf("2018-02-02"));
         expected.setRole(1);
         Account actual = accountDAO.getById(2);
@@ -94,7 +94,7 @@ public class AccountDAOTest {
         expectedAccount.setIcq("12345678");
         expectedAccount.setSkype("manya33");
         expectedAccount.setAdditionalInfo("agfsdgfdgfds");
-        expectedAccount.setPassHash("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
+        expectedAccount.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
         expectedAccount.setRegDate(Date.valueOf("2018-02-02"));
         expectedAccount.setRole(1);
         Integer expectedId = 3;
@@ -123,7 +123,7 @@ public class AccountDAOTest {
         expected.setIcq("49224940");
         expected.setSkype("elimental13");
         expected.setAdditionalInfo("just human");
-        expected.setPassHash("DSFGDSGFDSGFDSGFDSGFSASFASDF");
+        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
         expected.setRegDate(Date.valueOf("2018-01-01"));
         expected.setRole(2);
         accountDAO.update(expected);
@@ -143,7 +143,7 @@ public class AccountDAOTest {
         expected.setIcq("12345678");
         expected.setSkype("vasiliy44");
         expected.setAdditionalInfo("agfsdgfdgfds");
-        expected.setPassHash("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
+        expected.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
         expected.setRegDate(Date.valueOf("2018-02-02"));
         expected.setRole(1);
         Account actual = accountDAO.getByEmail("vasya@bk.ru");
@@ -164,7 +164,7 @@ public class AccountDAOTest {
         expected.setIcq("49224940");
         expected.setSkype("elimental13");
         expected.setAdditionalInfo("adfasdfasdf");
-        expected.setPassHash("DSFGDSGFDSGFDSGFDSGFSASFASDF");
+        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
         expected.setRegDate(Date.valueOf("2018-01-01"));
         expected.setRole(1);
         accountDAO.updateUserRole(expected.getId(), expected.getRole());

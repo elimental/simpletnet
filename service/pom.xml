@@ -18,12 +18,14 @@
             <artifactId>dao</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.ver}</version>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
