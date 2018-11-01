@@ -116,6 +116,7 @@ public class AccountController {
         Account accountFromDb = accountService.getUserById(id);
         account.setEmail(accountFromDb.getEmail());
         account.setPassword(accountFromDb.getPassword());
+        account.setRole(accountFromDb.getRole());
         if (img.isEmpty()) {
             account.setPhoto(accountFromDb.getPhoto());
         } else {
