@@ -98,7 +98,7 @@ public class AccountDAO implements AbstractDAO<Account> {
     }
 
     public void updateUserRole(int id, int roleId) {
-        jdbcTemplate.update(UPDATE_USER_ROLE, id, roleId);
+        jdbcTemplate.update(UPDATE_USER_ROLE, roleId, id);
     }
 
     private static final class AccountMapper implements RowMapper<Account> {
