@@ -18,7 +18,7 @@
                         <div class="w3-row">
                             <div class="w3-col m3">
                                 <a href="/userProfile?id=${candidat.id}"><img
-                                        src="/getImage?type=user&id=${candidat.id}" alt="Avatar"
+                                        src="/getImage?type=account&id=${candidat.id}" alt="Avatar"
                                         class="w3-circle" style="height:55px;width:55px"></a>
                             </div>
                             <div class="w3-col m6">
@@ -53,7 +53,7 @@
                         <div class="w3-row">
                             <div class="w3-col m3">
                                 <a href="/userProfile?id=${moderator.id}"><img
-                                        src="/getImage?type=user&id=${moderator.id}" alt="Avatar"
+                                        src="/getImage?type=account&id=${moderator.id}" alt="Avatar"
                                         class="w3-circle" style="height:55px;width:55px"></a>
                             </div>
                             <div class="w3-col m6">
@@ -82,7 +82,7 @@
                         <div class="w3-row">
                             <div class="w3-col m3">
                                 <a href="/userProfile?id=${member.id}">
-                                    <img src="/getImage?type=user&id=${member.id}" alt="Avatar"
+                                    <img src="/getImage?type=account&id=${member.id}" alt="Avatar"
                                          class="w3-circle" style="height:55px;width:55px"></a>
                             </div>
                             <div class="w3-col m6">

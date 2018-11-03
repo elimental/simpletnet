@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +26,7 @@ import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 import static com.getjavajob.simplenet.web.util.WebUtils.*;
 
 @Controller
+@SessionAttributes("userId")
 public class AccountController {
 
     @Autowired
@@ -33,10 +35,9 @@ public class AccountController {
     private MessageService messageService;
 
     @GetMapping("/userProfile")
-    public ModelAndView showUserProfile(int id, HttpSession session) {
+    public ModelAndView showUserProfile(@SessionAttribute("userId") int userIdInSession, int id) {
         ModelAndView modelAndView = new ModelAndView("userprofile/userProfile");
         Account account = accountService.getUserById(id);
-        int userIdInSession = (Integer) session.getAttribute("userId");
         boolean owner = id == userIdInSession;
         boolean ifAdminOpens = accountService.ifAdmin(userIdInSession);
         boolean ifFriend = accountService.ifFriend(id, userIdInSession);
@@ -138,8 +139,8 @@ public class AccountController {
     }
 
     @GetMapping("/deleteUserProfile")
-    public String deleteUserProfile(int id, HttpSession session, HttpServletResponse response) {
-        int userIdInSession = (Integer) session.getAttribute("userId");
+    public String deleteUserProfile(@SessionAttribute("userId") int userIdInSession, int id, HttpSession session,
+                                    HttpServletResponse response) {
         boolean admin = accountService.ifAdmin(userIdInSession);
         boolean owner = id == userIdInSession;
         boolean allowDeleteUser = admin || owner;
@@ -160,18 +161,12 @@ public class AccountController {
     @ResponseBody
     public String getUserName(int id) throws IOException {
         Account account = accountService.getUserById(id);
-        StringBuilder userName = new StringBuilder();
-        userName.append(account.getFirstName());
-        String lastName = account.getLastName();
-        if (lastName != null) {
-            userName.append(" ").append(lastName);
-        }
-        return userName.toString();
+        return makeUserName(account);
     }
 
     @GetMapping("/makeAdmin")
-    public String makeAdmin(int id, HttpSession session) {
-        boolean admin = accountService.ifAdmin((Integer) session.getAttribute("userId"));
+    public String makeAdmin(@SessionAttribute("userId") int userIdInSession, int id, HttpSession session) {
+        boolean admin = accountService.ifAdmin(userIdInSession);
         if (!admin) {
             return "accessDenied";
         }

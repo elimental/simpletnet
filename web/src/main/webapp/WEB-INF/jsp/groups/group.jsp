@@ -24,8 +24,8 @@
                                               style="height:180px;width:180px" alt="Avatar"></p>
                     <p class="w3-center">
                         <a href="/groupMembers?id=${group.id}" class="w3-button w3-theme">Участники</a>
-                        <c:if test="${not owner}">
-                            <a title="Выйти из группы" href="/exitFromGroup?groupId=${group.id}"
+                        <c:if test="${showExitButton}">
+                            <a title="Выйти из группы" href="/exitFromGroup?id=${group.id}"
                                class="w3-button w3-theme"><i class="fa fa-close"></i></a>
                         </c:if>
                     </p>
@@ -109,7 +109,7 @@
                         <div class="w3-col m12">
                             <div class="w3-card w3-round w3-white">
                                 <div class="w3-container w3-padding"><br>
-                                    <img src="/getImage?type=user&id=${message.author}" alt="Avatar"
+                                    <img src="/getImage?type=account&id=${message.author}" alt="Avatar"
                                          class="w3-left w3-circle w3-margin-right" style="height:55px;width:55px">
                                     <span class="w3-right w3-opacity"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
                                                                                       value="${message.createDate}"/></span>

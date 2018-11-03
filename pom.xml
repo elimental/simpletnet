@@ -23,10 +23,13 @@
         <mysql.ver>8.0.11</mysql.ver>
         <mockito.ver>2.18.3</mockito.ver>
         <jstl.ver>1.2</jstl.ver>
-        <commons-fileupload.ver>1.3.3</commons-fileupload.ver>
         <servlet-api.ver>3.1.0</servlet-api.ver>
         <jbcrypt.ver>0.4</jbcrypt.ver>
         <apache-commons-dbcp2.ver>2.5.0</apache-commons-dbcp2.ver>
+        <apache-commons-lang3.ver>3.8.1</apache-commons-lang3.ver>
+        <apache-commons-fileupload.ver>1.3.3</apache-commons-fileupload.ver>
+        <jackson.ver>2.9.7</jackson.ver>
+        <jackson-databind.ver>2.9.7</jackson-databind.ver>
     </properties>
 
     <dependencies>

@@ -5,74 +5,94 @@
 <html>
 <head>
     <title>Результат поиска</title>
+    <script src="/js/search.js"></script>
 </head>
 <body>
-<div class="w3-container w3-content" style="max-width:600px;margin-top:80px">
-    <div class="w3-row">
-        <div class="w3-col s6">
-            <div class="w3-card w3-round w3-white">
-                <div class="w3-container">
-                    <p class="w3-center"><label>Пользователи</label></p>
-                    <hr>
-                    <c:if test="${empty accounts}">
-                        <p class="w3-center">Не найдено</p>
-                    </c:if>
-                    <c:if test="${not empty accounts}">
-                        <c:forEach var="account" items="${accounts}">
+<div class="w3-container w3-content" style="max-width:450px;margin-top:80px">
+    <div class="w3-col m12">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <p class="w3-center"><label>Пользователи</label></p>
+                <hr>
+                <c:if test="${accountPageQty == 0}">
+                    <p class="w3-center">Не найдено</p>
+                </c:if>
+                <c:if test="${accountPageQty != 0}">
+                    <div id="accountSearch">
+                        <c:forEach var="searchEntity" items="${accountSearchEntities}">
                             <div class="w3-row">
                                 <div class="w3-col m3">
-                                    <a href="/userProfile?id=${account.id}"><img
-                                            src="/getImage?type=user&id=${account.id}"
+                                    <a href="/userProfile?id=${searchEntity.id}"><img
+                                            src="/getImage?type=account&id=${searchEntity.id}"
                                             alt="Avatar" class="w3-circle"
                                             style="height:30px;width:30px"></a>
                                 </div>
                                 <div class="w3-col m6">
-                                    <a href="/userProfile?id=${account.id}" style="text-decoration: none">
-                                        <c:out value="${account.lastName}"></c:out>
-                                        <c:out value="${account.firstName}"></c:out>
+                                    <a href="/userProfile?id=${searchEntity.id}" style="text-decoration: none">
+                                        <c:out value="${searchEntity.name}"></c:out>
                                     </a>
                                 </div>
                             </div>
                             <br>
                         </c:forEach>
+                    </div>
+                    <c:if test="${accountPageQty > 1}">
+                        <hr>
+                        <div class="w3-center">
+                            <c:forEach var="index" begin="1" end="${accountPageQty}">
+                                <label type="account" class="page">
+                                    <a type="button" class="w3-theme" name="${index}">&nbsp;${index}&nbsp;</a></label>
+                                &nbsp;
+                            </c:forEach>
+                        </div>
                     </c:if>
-                </div>
+                </c:if>
             </div>
         </div>
-        <div class="w3-col s6">
-            <div class="w3-row-padding">
-                <div class="w3-col m12">
-                    <div class="w3-card w3-round w3-white">
-                        <div class="w3-container">
-                            <p class="w3-center"><label>Группы</label></p>
-                            <hr>
-                            <c:if test="${empty groups}">
-                                <p class="w3-center">Не найдено</p>
-                            </c:if>
-                            <c:if test="${not empty groups}">
-                                <c:forEach var="group" items="${groups}">
-                                    <div class="w3-row">
-                                        <div class="w3-col m3">
-                                            <a href="/group?id=${group.id}"><img
-                                                    src="/getImage?type=group&id=${group.id}"
-                                                    alt="Avatar" class="w3-circle"
-                                                    style="height:30px;width:30px"></a>
-                                        </div>
-                                        <div class="w3-col m6">
-                                            <a href="/group?id=${group.id}" style="text-decoration: none">
-                                                <c:out value="${group.name}"></c:out>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </c:forEach>
-                            </c:if>
-                        </div>
+        <br>
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <p class="w3-center"><label>Группы</label></p>
+                <hr>
+                <c:if test="${groupPageQty == 0}">
+                    <p class="w3-center">Не найдено</p>
+                </c:if>
+                <c:if test="${groupPageQty != 0}">
+                    <div id="groupSearch">
+                        <c:forEach var="searchEntity" items="${groupSearchEntities}">
+                            <div class="w3-row">
+                                <div class="w3-col m3">
+                                    <a href="/group?id=${searchEntity.id}"><img
+                                            src="/getImage?type=group&id=${searchEntity.id}"
+                                            alt="Avatar" class="w3-circle"
+                                            style="height:30px;width:30px"></a>
+                                </div>
+                                <div class="w3-col m6">
+                                    <a href="/group?id=${searchEntity.id}" style="text-decoration: none">
+                                        <c:out value="${searchEntity.name}"></c:out>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                        </c:forEach>
                     </div>
-                </div>
+                    <c:if test="${groupPageQty > 1}">
+                        <hr>
+                        <div class="w3-center">
+                            <c:forEach var="index" begin="1" end="${groupPageQty}">
+                                <label type="group" class="page">
+                                    <a type="button" class="w3-theme" name="${index}">&nbsp;${index}&nbsp;</a></label>
+                                &nbsp;
+                            </c:forEach>
+                        </div>
+                    </c:if>
+                </c:if>
             </div>
         </div>
     </div>
 </div>
+<div id="pattern" hidden>${pattern}</div>
+<div id="accountPageQty" hidden>${accountPageQty}</div>
+<div id="groupPageQty" hidden>${groupPageQty}</div>
 </body>
 </html>

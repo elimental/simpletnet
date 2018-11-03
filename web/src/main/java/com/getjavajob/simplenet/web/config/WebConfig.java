@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ViewResolver;
@@ -50,19 +51,9 @@ public class WebConfig implements WebMvcConfigurer {
         return new DateFormatter();
     }
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addFormatter(dateFormatter());
-    }
-
     @Bean
     public HandlerInterceptor securityInterceptor() {
         return new SecurityInterceptor();
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(securityInterceptor());
     }
 
     @Bean
@@ -73,9 +64,20 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(dateFormatter());
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(securityInterceptor());
+    }
+
+    @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(stringHttpMessageConverter());
         converters.add(new ByteArrayHttpMessageConverter());
+        converters.add(new MappingJackson2HttpMessageConverter());
     }
 
     @Override

@@ -24,7 +24,7 @@
                     <c:forEach var="account" items="${requestFromFriends}">
                         <div class="w3-row">
                             <div class="w3-col m3">
-                                <img src="/getImage?type=user&id=${account.id}" alt="Avatar"
+                                <img src="/getImage?type=account&id=${account.id}" alt="Avatar"
                                      class="w3-circle" style="height:55px;width:55px">
                             </div>
                             <div class="w3-col m6">
@@ -57,7 +57,7 @@
                     <c:forEach var="account" items="${requestedFriends}">
                         <div class="w3-row">
                             <div class="w3-col m3">
-                                <img src="/getImage?type=user&id=${account.id}" alt="Avatar"
+                                <img src="/getImage?type=account&id=${account.id}" alt="Avatar"
                                      class="w3-circle" style="height:55px;width:55px">
                             </div>
                             <div class="w3-col m6">
@@ -87,7 +87,7 @@
                     <c:forEach var="account" items="${friends}">
                         <div class="w3-row">
                             <div class="w3-col m3">
-                                <a href="/userProfile?id=${account.id}"><img src="/getImage?type=user&id=${account.id}"
+                                <a href="/userProfile?id=${account.id}"><img src="/getImage?type=account&id=${account.id}"
                                                                              alt="Avatar" class="w3-circle"
                                                                              style="height:55px;width:55px"></a>
                             </div>

@@ -29,7 +29,7 @@
                 <div class="w3-card w3-round w3-white">
                     <c:forEach var="message" items="${chatMessages}">
                         <div class="w3-container w3-padding"><br>
-                            <img src="/getImage?type=user&id=${message.author}" alt="Avatar"
+                            <img src="/getImage?type=account&id=${message.author}" alt="Avatar"
                                  class="w3-circle" style="height:30px;width:30px">
                             <c:import charEncoding="utf-8" var="userName" url="/getUserName?id=${message.author}"></c:import>
                             <label style="font-size: small"><c:out value="${userName}"></c:out></label>

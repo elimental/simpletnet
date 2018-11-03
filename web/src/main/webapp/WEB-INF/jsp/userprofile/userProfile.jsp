@@ -23,7 +23,7 @@
                         <c:out value="${account.lastName}"/>
                         <c:if test="${admin}"> (Администратор)</c:if>
                     </h4>
-                    <p class="w3-center"><img src="/getImage?type=user&id=${account.id}" class="w3-circle"
+                    <p class="w3-center"><img src="/getImage?type=account&id=${account.id}" class="w3-circle"
                                               style="height:180px;width:180px" alt="Avatar"></p>
                     <c:if test="${not owner}">
                         <p class="w3-center">
@@ -144,7 +144,7 @@
                         <div class="w3-col m12">
                             <div class="w3-card w3-round w3-white">
                                 <div class="w3-container w3-padding"><br>
-                                    <img src="/getImage?type=user&id=${account.id}" alt="Avatar"
+                                    <img src="/getImage?type=account&id=${account.id}" alt="Avatar"
                                          class="w3-left w3-circle w3-margin-right" style="height:55px;width:55px">
                                     <span class="w3-right w3-opacity"><fmt:formatDate pattern="dd MMM yyyy"
                                                                                       value="${message.createDate}"/></span>

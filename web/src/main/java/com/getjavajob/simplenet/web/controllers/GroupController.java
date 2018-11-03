@@ -9,10 +9,7 @@ import com.getjavajob.simplenet.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@SessionAttributes("userId")
 public class GroupController {
 
     @Autowired
@@ -33,18 +31,16 @@ public class GroupController {
     private AccountService accountService;
 
     @GetMapping("/groups")
-    public ModelAndView showUserGroups(HttpSession session) {
+    public ModelAndView showUserGroups(@SessionAttribute("userId") int userIdInSession) {
         ModelAndView modelAndView = new ModelAndView("groups/userGroups");
-        int userIdInSession = (Integer) session.getAttribute("userId");
         List<Group> groups = groupService.getUserGroups(userIdInSession);
         modelAndView.addObject("groups", groups);
         return modelAndView;
     }
 
     @GetMapping("/group")
-    public ModelAndView showGroupPage(int id, HttpSession session) {
+    public ModelAndView showGroupPage(@SessionAttribute("userId") int userIdInSession, int id) {
         ModelAndView modelAndView = new ModelAndView("groups/group");
-        int userIdInSession = (Integer) session.getAttribute("userId");
         boolean member = groupService.ifGroupMember(userIdInSession, id);
         boolean admin = accountService.ifAdmin(userIdInSession);
         if (!member && !admin) {
@@ -63,20 +59,21 @@ public class GroupController {
         boolean edit = delete || moderator;
         boolean showMakeRequestButton = admin && !owner;
         boolean showModeratorContent = edit;
+        boolean showExitButton = member && !owner;
         modelAndView.addObject("group", group);
         modelAndView.addObject("groupMessages", groupMessages);
-        modelAndView.addObject("owner", owner);
+        modelAndView.addObject("showExitButton", showExitButton);
         modelAndView.addObject("delete", delete);
         modelAndView.addObject("edit", edit);
+        modelAndView.addObject("member", member);
         modelAndView.addObject("showMakeRequestButton", showMakeRequestButton);
         modelAndView.addObject("showModeratorContent", showModeratorContent);
         return modelAndView;
     }
 
     @GetMapping("/groupMembers")
-    public ModelAndView showGroupMembers(int id, HttpSession session) {
+    public ModelAndView showGroupMembers(@SessionAttribute("userId") int userIdInSession, int id) {
         ModelAndView modelAndView = new ModelAndView("groups/groupMembers");
-        int userIdInSession = (Integer) session.getAttribute("userId");
         boolean admin = accountService.ifAdmin(userIdInSession);
         boolean moderator = groupService.ifGroupModerator(userIdInSession, id);
         boolean delete = admin || moderator;
@@ -111,13 +108,14 @@ public class GroupController {
     }
 
     @PostMapping("/checkCreateGroup")
-    public String checkCreateGroup(@RequestParam("img") MultipartFile img,
-                                   @ModelAttribute Group group, HttpSession session) throws IOException {
+    public String checkCreateGroup(@SessionAttribute("userId") int userIdInSession,
+                                   @RequestParam("img") MultipartFile img,
+                                   @ModelAttribute Group group) throws IOException {
         if (!img.isEmpty()) {
             group.setPicture(img.getBytes());
         }
         group.setCreateDate(new Date(System.currentTimeMillis()));
-        group.setOwner((Integer) session.getAttribute("userId"));
+        group.setOwner(userIdInSession);
         groupService.addGroup(group);
         return "redirect:/groups";
     }
@@ -152,8 +150,7 @@ public class GroupController {
     }
 
     @GetMapping("/deleteGroup")
-    public String deleteGroup(int id, HttpSession session) {
-        int userIdInSession = (Integer) session.getAttribute("userId");
+    public String deleteGroup(@SessionAttribute("userId") int userIdInSession, int id) {
         boolean admin = accountService.ifAdmin(userIdInSession);
         boolean moderator = groupService.ifGroupModerator(userIdInSession, id);
         boolean allowDeleteGroup = moderator || admin;
@@ -166,8 +163,8 @@ public class GroupController {
     }
 
     @GetMapping("/exitFromGroup")
-    public String exitFromGroup(int groupId, int userId) {
-        groupService.deleteFromGroup(userId, groupId);
+    public String exitFromGroup(@SessionAttribute("userId") int userIdInSession, int id) {
+        groupService.deleteFromGroup(userIdInSession, id);
         return "redirect:/groups";
     }
 
@@ -178,14 +175,13 @@ public class GroupController {
     }
 
     @GetMapping("/groupRequest")
-    public String sendRequestToGroup(int userId, int groupId) {
-        groupService.sendGroupRequest(userId, groupId);
+    public String sendRequestToGroup(@SessionAttribute("userId") int userIdInSession, int groupId) {
+        groupService.sendGroupRequest(userIdInSession, groupId);
         return "redirect:/groups";
     }
 
     @GetMapping("/makeModerator")
-    public String makeModerator(int groupId, int userId, HttpSession session) {
-        int adminOrModeratorId = (Integer) session.getAttribute("userId");
+    public String makeModerator(@SessionAttribute("userId") int adminOrModeratorId, int groupId, int userId) {
         boolean admin = accountService.ifAdmin(adminOrModeratorId);
         boolean moderator = groupService.ifGroupModerator(adminOrModeratorId, groupId);
         if (!admin && !moderator) {
@@ -203,30 +199,29 @@ public class GroupController {
     }
 
     @GetMapping("/acceptFriendRequest")
-    public String acceptFriendRequest(@RequestParam("id") int whoAcceptedId, HttpSession session) {
-        int whoAcceptsId = (Integer) session.getAttribute("userId");
+    public String acceptFriendRequest(@SessionAttribute("userId") int whoAcceptsId,
+                                      @RequestParam("id") int whoAcceptedId) {
         accountService.acceptFriendRequest(whoAcceptsId, whoAcceptedId);
         return "redirect:/friends";
     }
 
     @GetMapping("/deleteFriend")
-    public String deleteFriend(@RequestParam("id") int userTwoId, HttpSession session) {
-        int userOneId = (Integer) session.getAttribute("userId");
+    public String deleteFriend(@SessionAttribute("userId") int userOneId,
+                               @RequestParam("id") int userTwoId) {
         accountService.deleteFriend(userOneId, userTwoId);
         return "redirect:/friends";
     }
 
     @GetMapping("/friendRequest")
-    public String sendFriendRequest(@RequestParam("id") int toUserId, HttpSession session) {
-        int fromUserId = (Integer) session.getAttribute("userId");
+    public String sendFriendRequest(@SessionAttribute("userId") int fromUserId,
+                                    @RequestParam("id") int toUserId) {
         accountService.sendFriendRequest(fromUserId, toUserId);
         return "redirect:/friends";
     }
 
     @GetMapping("/friends")
-    public ModelAndView showFriends(HttpSession session) {
+    public ModelAndView showFriends(@SessionAttribute("userId") int userIdInSession) {
         ModelAndView modelAndView = new ModelAndView("friends/friends");
-        int userIdInSession = (Integer) session.getAttribute("userId");
         List<Account> friends = accountService.getFriends(userIdInSession);
         List<Account> requestedFriends = accountService.getRequestedFriends(userIdInSession);
         List<Account> requestFromFriends = accountService.getRequestFromFriends(userIdInSession);

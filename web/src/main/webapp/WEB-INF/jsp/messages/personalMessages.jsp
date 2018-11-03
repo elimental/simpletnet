@@ -26,7 +26,7 @@
                         <div class="w3-col m3">
                             <c:import charEncoding="utf-8" var="talkerName" url="/getUserName?id=${talker}"></c:import>
                             <a href="/chat?id=${talker}">
-                                <img src="/getImage?type=user&id=${talker}" alt="Avatar"
+                                <img src="/getImage?type=account&id=${talker}" alt="Avatar"
                                      class="w3-circle" style="height:55px;width:55px">
                             </a>
                         </div>
@@ -44,5 +44,6 @@
             </c:if>
         </div>
     </div>
+</div>
 </body>
 </html>
