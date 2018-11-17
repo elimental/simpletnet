@@ -55,7 +55,7 @@
                 class="fa fa-envelope"></i></a>
         <a href="/friends" class="w3-bar-item w3-button w3-padding-large w3-hover-green" title="Друзья"><i
                 class="fa fa-user"></i></a>
-        <a href="/groups" class="w3-bar-item w3-button w3-padding-large w3-hover-green" title="Группы"><i
+        <a href="/communities" class="w3-bar-item w3-button w3-padding-large w3-hover-green" title="Группы"><i
                 class="fa fa-globe"></i></a>
         <div class="w3-dropdown-hover w3-hide-small w3-right" style="float:right">
             <button class="w3-button w3-padding-large w3-hover-green" title="My Account"><img

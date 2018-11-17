@@ -1,9 +1,9 @@
 package com.getjavajob.simplenet.web.controllers;
 
 import com.getjavajob.simplenet.common.entity.Account;
-import com.getjavajob.simplenet.common.entity.Group;
+import com.getjavajob.simplenet.common.entity.Community;
 import com.getjavajob.simplenet.service.AccountService;
-import com.getjavajob.simplenet.service.GroupService;
+import com.getjavajob.simplenet.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +12,20 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.simplenet.web.util.WebUtils.makeUserName;
-
 @Controller
 @SessionAttributes("userId")
 public class SearchController {
 
     private static final int PAGE_SIZE = 3;
 
+    private final AccountService accountService;
+    private final CommunityService communityService;
+
     @Autowired
-    private AccountService accountService;
-    @Autowired
-    private GroupService groupService;
+    public SearchController(AccountService accountService, CommunityService communityService) {
+        this.accountService = accountService;
+        this.communityService = communityService;
+    }
 
     @GetMapping("/search")
     public ModelAndView search(@SessionAttribute("userId") int userIdInSession,
@@ -31,50 +33,46 @@ public class SearchController {
         ModelAndView modelAndView = new ModelAndView("searchResult");
         pattern = pattern.toLowerCase();
         int accountPageQty = getPageQty(accountSearch(pattern, userIdInSession));
-        int groupPageQty = getPageQty(groupSearch(pattern));
+        int communityPageQty = getPageQty(communitySearch(pattern));
         if (accountPageQty != 0) {
             List<SearchEntity> accountSearchEntities = getAccountSearchEntities(pattern, 1, userIdInSession);
             modelAndView.addObject("accountSearchEntities", accountSearchEntities);
-            System.out.println(accountSearchEntities);
         }
-        if (groupPageQty != 0) {
-            List<SearchEntity> groupSearchEntities = getGroupSearchEntities(pattern, 1);
-            modelAndView.addObject("groupSearchEntities", groupSearchEntities);
-            System.out.println(groupSearchEntities);
+        if (communityPageQty != 0) {
+            List<SearchEntity> communitySearchEntities = getCommunitySearchEntities(pattern, 1);
+            modelAndView.addObject("communitySearchEntities", communitySearchEntities);
         }
         modelAndView.addObject("pattern", pattern);
         modelAndView.addObject("accountPageQty", accountPageQty);
-        modelAndView.addObject("groupPageQty", groupPageQty);
-
-
+        modelAndView.addObject("communityPageQty", communityPageQty);
         return modelAndView;
     }
 
     @GetMapping("/searchPage")
     @ResponseBody
-    public List<SearchEntity> getSearchPage(@SessionAttribute("userId") int userIdInSession,
+    public List<SearchEntity> getSearchPage(@SessionAttribute("userId") long userIdInSession,
                                             String pattern, String type, int pageNumber) {
         if (type.equals("account")) {
             return getAccountSearchEntities(pattern, pageNumber, userIdInSession);
         } else {
-            return getGroupSearchEntities(pattern, pageNumber);
+            return getCommunitySearchEntities(pattern, pageNumber);
         }
     }
 
-    private List<SearchEntity> getAccountSearchEntities(String pattern, int pageNumber, int exceptUserId) {
+    private List<SearchEntity> getAccountSearchEntities(String pattern, int pageNumber, long exceptUserId) {
         List<Account> accounts = accountSearch(pattern, exceptUserId);
         List<SearchEntity> searchEntities = new ArrayList<>();
         for (Account account : accounts) {
-            searchEntities.add(new SearchEntity(account.getId(), makeUserName(account)));
+            searchEntities.add(new SearchEntity(account.getId(), account.getAccountFullName()));
         }
         return getPage(searchEntities, pageNumber);
     }
 
-    private List<SearchEntity> getGroupSearchEntities(String pattern, int pageNumber) {
-        List<Group> groups = groupSearch(pattern);
+    private List<SearchEntity> getCommunitySearchEntities(String pattern, int pageNumber) {
+        List<Community> communities = communitySearch(pattern);
         List<SearchEntity> searchEntities = new ArrayList<>();
-        for (Group group : groups) {
-            searchEntities.add(new SearchEntity(group.getId(), group.getName()));
+        for (Community community : communities) {
+            searchEntities.add(new SearchEntity(community.getId(), community.getName()));
         }
         return getPage(searchEntities, pageNumber);
     }
@@ -95,8 +93,8 @@ public class SearchController {
         return rest == 0 ? pageQty : pageQty + 1;
     }
 
-    private List<Account> accountSearch(String pattern, int exceptUserId) {
-        List<Account> accounts = accountService.getAllUsers();
+    private List<Account> accountSearch(String pattern, long exceptUserId) {
+        List<Account> accounts = accountService.getAllAccounts();
         List<Account> resultAccounts = new ArrayList<>();
         for (Account account : accounts) {
             String name = account.getFirstName() + account.getLastName();
@@ -104,36 +102,36 @@ public class SearchController {
                 resultAccounts.add(account);
             }
         }
-        resultAccounts.remove(accountService.getUserById(exceptUserId));
+        resultAccounts.remove(accountService.getAccountById(exceptUserId));
         return resultAccounts;
     }
 
-    private List<Group> groupSearch(String pattern) {
-        List<Group> groups = groupService.getAllGroups();
-        List<Group> resultGroups = new ArrayList<>();
-        for (Group group : groups) {
-            String name = group.getName();
+    private List<Community> communitySearch(String pattern) {
+        List<Community> communities = communityService.getAllCommunities();
+        List<Community> resultCommunities = new ArrayList<>();
+        for (Community community : communities) {
+            String name = community.getName();
             if (name.toLowerCase().contains(pattern)) {
-                resultGroups.add(group);
+                resultCommunities.add(community);
             }
         }
-        return resultGroups;
+        return resultCommunities;
     }
 
     public static class SearchEntity {
-        private int id;
+        private long id;
         private String name;
 
-        public SearchEntity(int id, String name) {
+        SearchEntity(long id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
 

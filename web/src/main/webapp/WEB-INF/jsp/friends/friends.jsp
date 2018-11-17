@@ -87,9 +87,10 @@
                     <c:forEach var="account" items="${friends}">
                         <div class="w3-row">
                             <div class="w3-col m3">
-                                <a href="/userProfile?id=${account.id}"><img src="/getImage?type=account&id=${account.id}"
-                                                                             alt="Avatar" class="w3-circle"
-                                                                             style="height:55px;width:55px"></a>
+                                <a href="/userProfile?id=${account.id}"><img
+                                        src="/getImage?type=account&id=${account.id}"
+                                        alt="Avatar" class="w3-circle"
+                                        style="height:55px;width:55px"></a>
                             </div>
                             <div class="w3-col m6">
                                 <h5>

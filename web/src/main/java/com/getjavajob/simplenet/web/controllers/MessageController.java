@@ -1,15 +1,16 @@
 package com.getjavajob.simplenet.web.controllers;
 
-import com.getjavajob.simplenet.common.entity.Message;
-import com.getjavajob.simplenet.service.MessageService;
+import com.getjavajob.simplenet.common.entity.PersonalMessage;
+import com.getjavajob.simplenet.service.AccountService;
+import com.getjavajob.simplenet.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,52 +18,61 @@ import java.util.List;
 @SessionAttributes("userId")
 public class MessageController {
 
+    private final AccountService accountService;
+    private final CommunityService communityService;
+
     @Autowired
-    private MessageService messageService;
+    public MessageController(AccountService accountService, CommunityService communityService) {
+        this.accountService = accountService;
+        this.communityService = communityService;
+    }
 
     @GetMapping("/messages")
-    public ModelAndView showPersonalMessages(@SessionAttribute("userId") int userIdInSession) {
+    public ModelAndView showPersonalMessages(@SessionAttribute("userId") long userIdInSession) {
         ModelAndView modelAndView = new ModelAndView("messages/personalMessages");
-        modelAndView.addObject("talkers", messageService.getTalkersId(userIdInSession));
+        modelAndView.addObject("talkers", accountService.getTalkersId(userIdInSession));
         return modelAndView;
     }
 
     @GetMapping("/chat")
-    public ModelAndView showChat(@SessionAttribute("userId") int userIdInSession, int id) {
+    public ModelAndView showChat(@SessionAttribute("userId") long userIdInSession, long id) {
         ModelAndView modelAndView = new ModelAndView("messages/chat");
-        List<Message> chatMessages = messageService.getChatMessages(userIdInSession, id);
+        List<PersonalMessage> chatMessages = accountService.getChatMessages(userIdInSession, id);
         Collections.sort(chatMessages);
         modelAndView.addObject("secondTalkerId", id);
         modelAndView.addObject("chatMessages", chatMessages);
         return modelAndView;
     }
 
-    @GetMapping("/deleteMessage")
-    public String deleteMessage(String type, int messageId, int returnId) {
-        messageService.deleteMessage(messageId);
-        if (type.equals("group")) {
-            return "redirect:/group?id=" + returnId;
-        } else {
-            return "redirect:/userProfile?id=" + returnId;
-        }
-    }
-
-    @GetMapping("/sendGroupMessage")
-    public String sendGroupMessage(@SessionAttribute("userId") int userIdInSession, String message, int groupId) {
-        messageService.sendGroupMessage(userIdInSession, groupId, message);
-        return "redirect:/group?id=" + groupId;
-    }
 
     @GetMapping("/sendPersonalMessage")
-    public String sendPersonalMessage(@SessionAttribute("userId") int userIdInSession, String message,
-                                      int secondTalkerId) {
-        messageService.sendPersonalMessage(userIdInSession, secondTalkerId, message);
+    public String sendPersonalMessage(@SessionAttribute("userId") long userIdInSession, String message,
+                                      long secondTalkerId) {
+        accountService.sendPersonalMessage(userIdInSession, secondTalkerId, message);
         return "redirect:/chat?id=" + secondTalkerId;
     }
 
     @GetMapping("/sendWallMessage")
-    public String sendWallMessage(@SessionAttribute("userId") int userIdInSession, String message) {
-        messageService.sendWallMessage(userIdInSession, message);
+    public String sendWallMessage(@SessionAttribute("userId") long userIdInSession, String message) {
+        accountService.sendWallMessage(userIdInSession, message);
         return "redirect:/userProfile?id=" + userIdInSession;
+    }
+
+    @GetMapping("/deleteWallMessage")
+    public String deleteWallMessage(long messageId, @RequestParam("returnId") long accountId) {
+        accountService.deleteWallMessage(messageId, accountId);
+        return "redirect:/userProfile?id=" + accountId;
+    }
+
+    @GetMapping("/sendCommunityMessage")
+    public String sendCommunityMessage(@SessionAttribute("userId") long userIdInSession, long groupId, String message) {
+        communityService.addCommunityMessage(groupId, userIdInSession, message);
+        return "redirect:/community?id=" + groupId;
+    }
+
+    @GetMapping("/deleteCommunityMessage")
+    public String deleteCommunityMessage(long messageId, @RequestParam("returnId") long groupId) {
+        communityService.deleteCommunityMessage(messageId, groupId);
+        return "redirect:/community?id=" + groupId;
     }
 }

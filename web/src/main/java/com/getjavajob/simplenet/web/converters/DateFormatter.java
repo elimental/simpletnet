@@ -2,9 +2,9 @@ package com.getjavajob.simplenet.web.converters;
 
 import org.springframework.format.Formatter;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatter implements Formatter<Date> {
@@ -13,7 +13,7 @@ public class DateFormatter implements Formatter<Date> {
 
     @Override
     public Date parse(String text, Locale locale) throws ParseException {
-        java.util.Date parsed = df.parse(text);
+        Date parsed = df.parse(text);
         return new Date(parsed.getTime());
     }
 

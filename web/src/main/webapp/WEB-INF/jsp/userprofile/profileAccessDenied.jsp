@@ -17,7 +17,7 @@
                     <hr>
                     <p>Просмотр данного профиля для Вас закрыт</p>
                     <c:if test="${alreadyRequested}">
-                        <p>Вы уже послали запрос на добавление в друзья</p>
+                        <p>Кто то из вас уже подал запрос на добавление в друзья</p>
                     </c:if>
                     <c:if test="${not alreadyRequested}">
                         <a href="/friendRequest?id=${requestedUserId}" class="w3-button w3-theme">Добавить в друзья</a>

@@ -11,12 +11,12 @@
         </div>
         <div class="w3-container w3-cell">
             <select class="w3-select w3-border" name="phones[{0}].type">
-                <option value="1">Домашний</option>
-                <option value="2">Рабочий</option>
+                <option value="HOME">Домашний</option>
+                <option value="WORK">Рабочий</option>
             </select>
         </div>
         <div class="w3-cell">
-            <button class="w3-button w3-theme" type="button" onclick="delPhoneLine(this)">-</button>
+            <button class="w3-button w3-theme delPhoneLine" type="button">-</button>
         </div>
     </div>
 </script>

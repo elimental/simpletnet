@@ -21,7 +21,8 @@
                         <p>Вы уже послали запрос на участие в группе</p>
                     </c:if>
                     <c:if test="${not alreadyRequested}">
-                        <a href="/groupRequest?groupId=${groupId}" class="w3-button w3-theme">Стать участником</a>
+                        <a href="/communityRequest?groupId=${communityId}" class="w3-button w3-theme">Стать
+                            участником</a>
                     </c:if>
                     <button class="w3-btn w3-theme" onclick="goBack()">Назад</button>
                     <p>

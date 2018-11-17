@@ -30,10 +30,10 @@
                                 </h5>
                             </div>
                             <div class="w3-col m3">
-                                <a href="/acceptGroupRequest?userId=${candidat.id}&groupId=${groupId}"
+                                <a href="/acceptCommunityRequest?userId=${candidat.id}&communityId=${communityId}"
                                    class="w3-button w3-theme"><i
                                         class="fa fa-check"></i></a>
-                                <a href="/rejectGroupRequest?userId=${candidat.id}&groupId=${groupId}"
+                                <a href="/rejectCommunityRequest?userId=${candidat.id}&communityId=${communityId}"
                                    class="w3-button w3-theme"><i
                                         class="fa fa-close"></i></a>
                             </div>
@@ -96,10 +96,10 @@
                             <div class="w3-col m3">
                                 <c:if test="${delete}">
                                     <a title="Сделать модератором"
-                                       href="/makeModerator?userId=${member.id}&groupId=${groupId}"
+                                       href="/makeModerator?userId=${member.id}&communityId=${communityId}"
                                        class="w3-button w3-theme"><i class="fa fa-eye"></i></a>
                                     <a title="Удалить пользователя"
-                                       href="/deleteFromGroup?userId=${member.id}&groupId=${groupId}"
+                                       href="/deleteFromCommunity?userId=${member.id}&communityId=${communityId}"
                                        class="w3-button w3-theme"><i class="fa fa-close"></i></a>
                                 </c:if>
                             </div>

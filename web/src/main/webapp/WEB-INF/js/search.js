@@ -1,5 +1,5 @@
 $(function () {
-    $('.page').click(function () {
+    $('.page').on('click', function () {
         var type = $(this).attr('type');
         var pageNumber = $(this).find('a').attr('name');
         var pattern = document.getElementById('pattern').innerHTML;
@@ -15,11 +15,11 @@ $(function () {
                     if (type === 'account') {
                         homeUrl = window.location.origin + '/userProfile?id=' + searchEntity.id;
                     } else {
-                        homeUrl = window.location.origin + '/group?id=' + searchEntity.id;
+                        homeUrl = window.location.origin + '/community?id=' + searchEntity.id;
                     }
                     $('#' + type + 'Search').append(
-                    '<div class="w3-row">'
-                    + '<div class="w3-col m3">'
+                        '<div class="w3-row">'
+                        + '<div class="w3-col m3">'
                         + '<a href="' + homeUrl + '"><img src="' + imgUrl + '"'
                         + 'alt="Avatar" class="w3-circle" style="height:30px;width:30px"></a></div>'
                         + '<div class="w3-col m6">'

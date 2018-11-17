@@ -19,7 +19,7 @@
                       method="post">
                     <p>
                     <div class="w3-container w3-content" style="width: 190px">
-                        <img src="/getImage?type=user&id=${account.id}" class="w3-circle"
+                        <img src="/getImage?type=account&id=${account.id}" class="w3-circle"
                              style="height:180px;width:180px">
                     </div>
                     <br>
@@ -32,9 +32,6 @@
                            required>
                     <label><b>Фамилия</b></label>
                     <input class="w3-input w3-border" type="text" name="lastName" value="${account.lastName}">
-                    <label><b>Отчество</b></label>
-                    <input class="w3-input w3-border" type="text" name="patronymicName"
-                           value="${account.patronymicName}">
                     <label><b>Дата рождения</b></label>
                     <fmt:formatDate value="${account.birthDay}" pattern="dd.MM.yyyy" var="birthDay"></fmt:formatDate>
                     <input class="w3-input w3-border" id="datepicker" name="birthDay" value="${birthDay}">
@@ -57,8 +54,8 @@
                                 </div>
                                 <div class="w3-container w3-cell">
                                     <select class="w3-select w3-border" name="phones[${i}].type">
-                                        <option value="1">Домашний</option>
-                                        <option value="2">Рабочий</option>
+                                        <option value="HOME">Домашний</option>
+                                        <option value="WORK">Рабочий</option>
                                     </select>
 
                                 </div>
@@ -79,8 +76,8 @@
                                 </div>
                                 <div class="w3-container w3-cell">
                                     <select class="w3-select w3-border" name="phones[${i}].type">
-                                        <option value="1">Домашний</option>
-                                        <option selected value="2">Рабочий</option>
+                                        <option value="HOME">Домашний</option>
+                                        <option selected value="WORK">Рабочий</option>
                                     </select>
 
                                 </div>

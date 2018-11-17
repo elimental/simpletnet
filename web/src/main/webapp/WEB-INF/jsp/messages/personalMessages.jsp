@@ -24,7 +24,8 @@
                 <c:forEach var="talker" items="${talkers}">
                     <div class="w3-row">
                         <div class="w3-col m3">
-                            <c:import charEncoding="utf-8" var="talkerName" url="/getUserName?id=${talker}"></c:import>
+                            <c:import charEncoding="utf-8" var="talkerName"
+                                      url="/getAccountFullName?id=${talker}"></c:import>
                             <a href="/chat?id=${talker}">
                                 <img src="/getImage?type=account&id=${talker}" alt="Avatar"
                                      class="w3-circle" style="height:55px;width:55px">

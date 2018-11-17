@@ -12,21 +12,21 @@
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-                <form action="/checkEditGroup" name="register" id="groupForm" enctype="multipart/form-data"
+                <form action="/checkCommunityEdit" name="register" id="groupForm" enctype="multipart/form-data"
                       method="post">
                     <p>
                     <div class="w3-container w3-content" style="width: 190px">
-                        <img src="/getImage?type=group&id=${group.id}" class="w3-circle" style="width: 180px">
+                        <img src="/getImage?type=community&id=${community.id}" class="w3-circle" style="width: 180px">
                     </div>
                     <br>
                     <label>Картинка</label>
-                    <input type="hidden" name="id" value="${group.id}">
+                    <input type="hidden" name="id" value="${community.id}">
                     <input class="w3-input w3-border" type="file" name="img" accept="image/jpeg" id="img5mb">
                     <label>Название</label>
-                    <input class="w3-input w3-border" type="text" name="name" value="${group.name}" required>
+                    <input class="w3-input w3-border" type="text" name="name" value="${community.name}" required>
                     <label>Описание</label>
                     <textarea class="w3-input w3-border" style="resize: none" rows="5" cols="50"
-                              name="description">${group.description}</textarea>
+                              name="description">${community.description}</textarea>
                     <br>
                     <button class="w3-button w3-theme" type="button" id="confirmEdit" style="width: 50%">Сохранить
                     </button>

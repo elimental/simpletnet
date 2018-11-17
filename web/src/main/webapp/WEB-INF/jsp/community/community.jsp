@@ -14,36 +14,36 @@
     <div class="w3-row">
         <!-- Left Column -->
         <div class="w3-col m3">
-            <!-- Group profile -->
+            <!-- Community profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
                     <h4 class="w3-center">
-                        <c:out value="${group.name}"/>
+                        <c:out value="${community.name}"/>
                     </h4>
-                    <p class="w3-center"><img src="/getImage?type=group&id=${group.id}" class="w3-circle"
+                    <p class="w3-center"><img src="/getImage?type=community&id=${community.id}" class="w3-circle"
                                               style="height:180px;width:180px" alt="Avatar"></p>
                     <p class="w3-center">
-                        <a href="/groupMembers?id=${group.id}" class="w3-button w3-theme">Участники</a>
+                        <a href="/communityMembers?id=${community.id}" class="w3-button w3-theme">Участники</a>
                         <c:if test="${showExitButton}">
-                            <a title="Выйти из группы" href="/exitFromGroup?id=${group.id}"
+                            <a title="Выйти из группы" href="/exitFromCommunity?id=${community.id}"
                                class="w3-button w3-theme"><i class="fa fa-close"></i></a>
                         </c:if>
                     </p>
                     <hr>
                     <p class="w3-center"><label>Создана: </label><fmt:formatDate pattern="dd MMMM yyyy"
-                                                                                 value="${group.createDate}"/></p>
+                                                                                 value="${community.createDate}"/></p>
                 </div>
             </div>
             <br>
 
-            <!-- Group description -->
+            <!-- Community description -->
 
-            <c:if test="${not empty group.description}">
+            <c:if test="${not empty community.description}">
                 <div class="w3-card w3-round w3-white">
                     <div class="w3-container">
                         <p class="w3-center"><label><b>Описание группы</b></label></p>
                         <hr>
-                        <c:out value="${group.description}"/>
+                        <c:out value="${community.description}"/>
                         <p>
                     </div>
                 </div>
@@ -59,19 +59,21 @@
                         <hr>
                         <c:if test="${edit}">
                             <p class="w3-center">
-                                <a href="/editGroup?id=${group.id}" class="w3-button w3-theme" style="width: 80%">Редактировать
+                                <a href="/editCommunity?id=${community.id}" class="w3-button w3-theme"
+                                   style="width: 80%">Редактировать
                                     группу</a>
                             </p>
                         </c:if>
                         <c:if test="${delete}">
                             <p class="w3-center">
-                                <a href="/confirmDeleteGroup?id=${group.id}" class="w3-button w3-theme"
+                                <a href="/confirmDeleteCommunity?id=${community.id}" class="w3-button w3-theme"
                                    style="width: 80%">Удалить группу</a>
                             </p>
                         </c:if>
                         <c:if test="${showMakeRequestButton}">
                             <p class="w3-center">
-                                <a href="/groupRequest?=${group.id}" class="w3-button w3-theme" style="width: 80%">Стать
+                                <a href="/communityRequest?=${community.id}" class="w3-button w3-theme"
+                                   style="width: 80%">Стать
                                     участником</a>
                             </p>
                         </c:if>
@@ -88,8 +90,8 @@
                     <div class="w3-card w3-round w3-white">
                         <div class="w3-container w3-padding">
                             <h6 class="w3-opacity">Сообщение для группы</h6>
-                            <form action="/sendGroupMessage" name="group" method="get">
-                                <input type="hidden" name="groupId" value="${group.id}">
+                            <form action="/sendCommunityMessage" name="group" method="get">
+                                <input type="hidden" name="groupId" value="${community.id}">
                                 <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
                                 <button type="button" class="w3-button w3-theme" onclick="submitMessageForm(this)">
                                     <i class="fa fa-pencil"></i>
@@ -103,24 +105,25 @@
             <br>
             <!-- End Wall message form -->
             <!-- Wall messages -->
-            <c:if test="${not empty groupMessages}">
-                <c:forEach var="message" items="${groupMessages}">
+            <c:if test="${not empty communityMessages}">
+                <c:forEach var="message" items="${communityMessages}">
                     <div class="w3-row-padding">
                         <div class="w3-col m12">
                             <div class="w3-card w3-round w3-white">
                                 <div class="w3-container w3-padding"><br>
-                                    <img src="/getImage?type=account&id=${message.author}" alt="Avatar"
+                                    <img src="/getImage?type=account&id=${message.authorId}" alt="Avatar"
                                          class="w3-left w3-circle w3-margin-right" style="height:55px;width:55px">
                                     <span class="w3-right w3-opacity"><fmt:formatDate pattern="dd.MM.yyyy hh.mm"
                                                                                       value="${message.createDate}"/></span>
-                                    <c:import charEncoding="utf-8" var="userName" url="/getUserName?id=${message.author}"></c:import>
+                                    <c:import charEncoding="utf-8" var="userName"
+                                              url="/getAccountFullName?id=${message.authorId}"></c:import>
                                     <h5>
                                         <c:out value="${userName}"/>
                                     </h5>
                                     <hr class="w3-clear">
                                     <p><c:out value="${message.text}"></c:out></p>
                                     <c:if test="${edit}">
-                                        <a href="/deleteMessage?type=group&messageId=${message.id}&returnId=${group.id}"
+                                        <a href="/deleteCommunityMessage?messageId=${message.id}&returnId=${community.id}"
                                            class="w3-button w3-theme-d1 w3-margin-bottom">Удалить</a>
                                     </c:if>
                                 </div>

@@ -1,134 +1,100 @@
 package com.getjavajob.simplenet.service;
 
-import com.getjavajob.simplenet.common.entity.Account;
-import com.getjavajob.simplenet.common.entity.Phone;
+import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.dao.AccountDAO;
-import com.getjavajob.simplenet.dao.dao.AccountGroupDAO;
-import com.getjavajob.simplenet.dao.dao.PhoneDAO;
-import com.getjavajob.simplenet.dao.dao.RelationshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
+import static com.getjavajob.simplenet.common.entity.Role.USER;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
+import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
+import static java.lang.System.currentTimeMillis;
 
 @Service
+@Transactional
 public class AccountService {
 
-    @Autowired
+    private static final boolean ACCEPTED_FRIENDSHIP = true;
+    private static final boolean ALREADY_REQUESTED_FRIENSHIP = false;
+
     private AccountDAO accountDAO;
-    @Autowired
-    private PhoneDAO phoneDAO;
-    @Autowired
-    private RelationshipDAO relationshipDAO;
-    @Autowired
-    private AccountGroupDAO accountGroupDAO;
 
-    @Transactional
+    @Autowired
+    public AccountService(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
     public void addAccount(Account account) {
-        int userId = accountDAO.add(account);
-        List<Phone> phones = account.getPhones();
-        if (phones != null) {
-            for (Phone phone : phones) {
-                phone.setOwner(userId);
-                phoneDAO.add(phone);
-            }
-        }
+        account.setRole(USER);
+        account.setPassword(genHash(account.getPassword()));
+        account.setRegDate(new Date(currentTimeMillis()));
+        accountDAO.add(account);
     }
 
-    @Transactional
     public void updateAccount(Account account) {
-        int userId = account.getId();
-        Account accountInDb = accountDAO.getById(userId);
-        if (account.getPhoto() == null && accountInDb.getPhoto() != null) {
-            account.setPhoto(accountInDb.getPhoto());
-        }
-        accountDAO.update(account);
-        phoneDAO.deleteByOwnerId(userId);
-        List<Phone> phones = account.getPhones();
-        if (phones != null) {
-            for (Phone phone : phones) {
-                phone.setOwner(userId);
-                phoneDAO.add(phone);
-            }
-        }
+        accountDAO.get(account.getId()).updateAccount(account);
     }
 
-    @Transactional
-    public void deleteAccount(int id) {
-        phoneDAO.deleteByOwnerId(id);
-        accountDAO.delete(id);
-        relationshipDAO.deleteUser(id);
-        accountGroupDAO.deleteUser(id);
+    public void deleteAccount(Long id) {
+        accountDAO.deleteById(id);
     }
 
-    @Transactional
-    public void sendFriendRequest(int fromUserId, int toUserId) {
-        relationshipDAO.sendFriendRequest(fromUserId, toUserId);
+    public List<Account> getAllAccounts() {
+        return accountDAO.getAll();
     }
 
-    @Transactional
-    public void acceptFriendRequest(int whoAcceptsId, int whoAcceptedId) {
-        relationshipDAO.acceptFriend(whoAcceptsId, whoAcceptedId);
+    public void sendFriendRequest(long fromId, long toId) {
+        Account from = accountDAO.get(fromId);
+        FriendRequest friendRequest = new FriendRequest();
+        friendRequest.setFrom(from);
+        friendRequest.setTo(accountDAO.get(toId));
+        from.addFriendRequest(friendRequest);
     }
 
-    @Transactional
-    public void deleteFriend(int userOneId, int userTwoId) {
-        relationshipDAO.deleteFriend(userOneId, userTwoId);
+    //
+//    @Transactional
+//    public void acceptFriendRequest(int whoAcceptsId, int whoAcceptedId) {
+//        relationshipDAO.acceptFriend(whoAcceptsId, whoAcceptedId);
+//    }
+//
+//    @Transactional
+//    public void deleteFriend(int userOneId, int userTwoId) {
+//        relationshipDAO.deleteFriend(userOneId, userTwoId);
+//    }
+//
+    public void updateAccountRole(Long accountId, Role role) {
+        accountDAO.get(accountId).setRole(role);
     }
 
-    @Transactional
-    public void updateUserRole(int userId, int role) {
-        accountDAO.updateUserRole(userId, role);
+    public List<Account> getFriends(Long accountId) {
+        return accountDAO.getFriends(accountId);
     }
 
-    public List<Account> getFriends(int userId) {
-        List<Integer> friendsIds = relationshipDAO.getAllAccepted(userId);
-        return makeAccountList(friendsIds);
+    public List<Account> getRequestedFriends(long accountId) {
+        return accountDAO.getRequestedFriends(accountId);
     }
 
-    public List<Account> getRequestedFriends(int userId) {
-        List<Integer> requestedIds = relationshipDAO.getAllRequested(userId);
-        return makeAccountList(requestedIds);
+    public List<Account> getRequestFromFriends(long accountId) {
+        return accountDAO.getRequestFromFriends(accountId);
     }
 
-    public List<Account> getRequestFromFriends(int userId) {
-        List<Integer> requestIds = relationshipDAO.getAllRequest(userId);
-        return makeAccountList(requestIds);
-    }
-
-    private List<Account> makeAccountList(List<Integer> ids) {
-        List<Account> friends = new ArrayList<>();
-        for (Integer id : ids) {
-            friends.add(accountDAO.getById(id));
-        }
-        return friends;
-    }
-
-    public List<Account> getAllUsers() {
-        List<Account> accounts = accountDAO.getAll();
-        for (Account account : accounts) {
-            int accountId = account.getId();
-            List<Phone> phones = phoneDAO.getPhonesByOwnerId(accountId);
-            account.setPhones(phones);
-        }
-        return accounts;
-    }
-
-    public Account getUserByEmail(String email) {
+    public Account getAccountByEmail(String email) {
         return accountDAO.getByEmail(email);
     }
 
-    public Account getUserById(int id) {
-        Account account = accountDAO.getById(id);
-        List<Phone> phones = phoneDAO.getPhonesByOwnerId(id);
-        if (!phones.isEmpty()) {
-            account.setPhones(phones);
+    public Account getAccountById(Long id) {
+        Account account = accountDAO.get(id);
+        if (account == null) {
+            return null;
         }
+        account.getPhones().size();
         return account;
     }
 
@@ -146,23 +112,66 @@ public class AccountService {
         }
     }
 
-    public boolean ifAdmin(int userId) {
-        Account account = accountDAO.getById(userId);
-        int roleId = account.getRole();
-        return roleId == ADMINISTRATOR;
+    public boolean ifAdmin(Long userId) {
+        Account account = accountDAO.get(userId);
+        Role role = account.getRole();
+        return role == ADMINISTRATOR;
     }
 
-    public boolean ifFriend(int userOneId, int userTwoId) {
-        List<Account> friends = getFriends(userOneId);
-        for (Account account : friends) {
-            if (account.getId() == userTwoId) {
-                return true;
-            }
-        }
-        return false;
+    public boolean ifFriend(Long firstAccountId, Long secondAccountId) {
+        return accountDAO.getFriendship(firstAccountId, secondAccountId, ACCEPTED_FRIENDSHIP) != null;
     }
 
-    public boolean ifAlreadyRequested(int userId, int requestedUserId) {
-        return relationshipDAO.checkRequestToOtherUser(userId, requestedUserId);
+    public boolean ifAlreadyRequested(Long firstAccountId, Long secondAccountId) {
+        return accountDAO.getFriendship(firstAccountId, secondAccountId, ALREADY_REQUESTED_FRIENSHIP) != null;
+    }
+
+    public byte[] getImage(Long id) {
+        Account account = accountDAO.get(id);
+        return account == null ? null : account.getPhoto();
+    }
+
+    public List<WallMessage> getWallMessages(Long id) {
+        List<WallMessage> wallMessages = accountDAO.get(id).getWallMessages();
+        Collections.sort(wallMessages);
+        return wallMessages;
+    }
+
+    public void sendWallMessage(long accountId, String message) {
+        accountDAO.get(accountId).addWallMessage(message);
+    }
+
+    public void deleteWallMessage(long messageId, long accountId) {
+        accountDAO.get(accountId).removeWallMessage(messageId);
+    }
+
+    public Set<Long> getTalkersId(long accountId) {
+        return accountDAO.getTalkersId(accountId);
+    }
+
+    public void exitFromCommunity(long accountId, long communityId) {
+        accountDAO.deleteFromCommunity(accountId, communityId);
+    }
+
+    public void deleteFriend(long firstAccountId, long secondAccountId) {
+        accountDAO.deleteFriend(firstAccountId, secondAccountId);
+    }
+
+    public void acceptFriendRequest(long whoAcceptsId, long whoAcceptedId) {
+        accountDAO.acceptFriend(whoAcceptsId, whoAcceptedId);
+    }
+
+    public List<PersonalMessage> getChatMessages(long firstAccountId, long secondAccountId) {
+        return accountDAO.getPersonalMessages(firstAccountId, secondAccountId);
+    }
+
+    public void sendPersonalMessage(long accountId, long secondTalkerId, String message) {
+        Account account = accountDAO.get(accountId);
+        PersonalMessage personalMessage = new PersonalMessage();
+        personalMessage.setFrom(account);
+        personalMessage.setTo(accountDAO.get(secondTalkerId));
+        personalMessage.setText(message);
+        personalMessage.setCreateDate(new Date(currentTimeMillis()));
+        account.addPersonalMessage(personalMessage);
     }
 }

@@ -32,7 +32,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         String loginURI = "/login";
         boolean loggedIn = session != null && session.getAttribute("userId") != null;
         boolean allowedRequest = allowedPath.contains(requestPath) || requestPath.contains("/js/") ||
-                requestPath.contains("/pic/") || requestPath.contains("/css/");
+                requestPath.contains("/images/") || requestPath.contains("/css/");
         if (loggedIn) {
             Long lastExecutionTime = (Long) session.getAttribute("lastExecutionTime");
             Long currentTime = System.currentTimeMillis();

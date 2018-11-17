@@ -1,44 +1,27 @@
 package com.getjavajob.simplenet.common.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "phone")
 public class Phone extends BaseEntity {
 
-    public static final int HOME = 1;
-    public static final int WORK = 2;
-
+    @Getter
+    @Setter
+    @Column(nullable = false)
     private String number;
-    private int type;
-    private int owner;
 
-    public String getNumber() {
-        return number;
-    }
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PhoneType type;
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getOwner() {
-        return owner;
-    }
-
-    public void setOwner(int owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Phone{" +
-                "number='" + number + '\'' +
-                ", type=" + type +
-                ", owner=" + owner +
-                '}';
-    }
+    @Getter
+    @Setter
+    @ManyToOne
+    private Account phoneOwner;
 }

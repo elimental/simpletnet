@@ -54,21 +54,21 @@
             <div class="w3-container w3-padding">
                 <p class="w3-center"><label>Группы</label></p>
                 <hr>
-                <c:if test="${groupPageQty == 0}">
+                <c:if test="${communityPageQty == 0}">
                     <p class="w3-center">Не найдено</p>
                 </c:if>
-                <c:if test="${groupPageQty != 0}">
-                    <div id="groupSearch">
-                        <c:forEach var="searchEntity" items="${groupSearchEntities}">
+                <c:if test="${communityPageQty != 0}">
+                    <div id="communitySearch">
+                        <c:forEach var="searchEntity" items="${communitySearchEntities}">
                             <div class="w3-row">
                                 <div class="w3-col m3">
-                                    <a href="/group?id=${searchEntity.id}"><img
-                                            src="/getImage?type=group&id=${searchEntity.id}"
+                                    <a href="/community?id=${searchEntity.id}"><img
+                                            src="/getImage?type=community&id=${searchEntity.id}"
                                             alt="Avatar" class="w3-circle"
                                             style="height:30px;width:30px"></a>
                                 </div>
                                 <div class="w3-col m6">
-                                    <a href="/group?id=${searchEntity.id}" style="text-decoration: none">
+                                    <a href="/community?id=${searchEntity.id}" style="text-decoration: none">
                                         <c:out value="${searchEntity.name}"></c:out>
                                     </a>
                                 </div>
@@ -76,11 +76,11 @@
                             <br>
                         </c:forEach>
                     </div>
-                    <c:if test="${groupPageQty > 1}">
+                    <c:if test="${communityPageQty > 1}">
                         <hr>
                         <div class="w3-center">
-                            <c:forEach var="index" begin="1" end="${groupPageQty}">
-                                <label type="group" class="page">
+                            <c:forEach var="index" begin="1" end="${communityPageQty}">
+                                <label type="community" class="page">
                                     <a type="button" class="w3-theme" name="${index}">&nbsp;${index}&nbsp;</a></label>
                                 &nbsp;
                             </c:forEach>
@@ -93,6 +93,6 @@
 </div>
 <div id="pattern" hidden>${pattern}</div>
 <div id="accountPageQty" hidden>${accountPageQty}</div>
-<div id="groupPageQty" hidden>${groupPageQty}</div>
+<div id="communityPageQty" hidden>${communityPageQty}</div>
 </body>
 </html>

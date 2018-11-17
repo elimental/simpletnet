@@ -154,7 +154,7 @@
                                     </h5>
                                     <hr class="w3-clear">
                                     <p><c:out value="${message.text}"></c:out></p>
-                                    <a href="/deleteMessage?type=wall&messageId=${message.id}&returnId=${account.id}"
+                                    <a href="/deleteWallMessage?messageId=${message.id}&returnId=${account.id}"
                                        class="w3-button w3-theme-d1 w3-margin-bottom">Удалить</a>
                                 </div>
                             </div>

@@ -6,15 +6,6 @@ function goBack() {
     window.history.back();
 }
 
-function confirmEdit(object) {
-    var form = object.parentNode;
-    if (confirm("Сохранить изменения?")) {
-        form.submit();
-    } else {
-        return false;
-    }
-}
-
 function submitMessageForm(object) {
     var form = object.parentNode;
     var message = document.getElementById("message").innerHTML;
@@ -168,7 +159,7 @@ $(function () {
 });
 
 /*
-    Create group form validation
+    Create community form validation
  */
 
 $(function () {
@@ -227,7 +218,7 @@ $(function () {
     Picture size validation
  */
 $(function () {
-    $("#img5mb").change(function () {
+    $("#img5mb").on('change', function () {
         if (this.files[0].size > 5242880) {
             this.value = "";
             $("#imageDialog").dialog({
@@ -251,8 +242,11 @@ $(function () {
 $(function () {
     var i = 1;
     var template = jQuery.validator.format($.trim($("#addPhoneChild").html()));
-    $("#addPhoneBtn").click(function (e) {
+    $("#addPhoneBtn").on('click', function (e) {
         $(template(i++)).appendTo("#phones");
+        $('.delPhoneLine').on('click', function () {
+            $(this).parent().parent().remove();
+        });
         $(".phone").each(function () {
             $(this).rules("add", {
                 required: true,
@@ -297,7 +291,7 @@ $(function () {
     Confirmation dialog
  */
 $(function () {
-    $("#confirmEdit").click(function () {
+    $("#confirmEdit").on('click', function () {
         $("#confirmDialog").dialog({
             resizable: false,
             height: "auto",
@@ -317,3 +311,8 @@ $(function () {
     })
 });
 
+$(function () {
+    $('.delPhoneLine').on('click', function () {
+        $(this).parent().parent().remove();
+    })
+});

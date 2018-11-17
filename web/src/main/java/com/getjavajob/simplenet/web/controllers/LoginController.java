@@ -19,16 +19,23 @@ import static com.getjavajob.simplenet.web.util.WebUtils.deleteCookie;
 @Controller
 public class LoginController {
 
+    private final AccountService accountService;
+
     @Autowired
-    AccountService accountService;
+    public LoginController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @GetMapping({"/", "/login"})
     public String showLoginPage(HttpSession session, HttpServletRequest request) {
-        Integer userIdInSession = (Integer) session.getAttribute("userId");
+        Long userIdInSession = (Long) session.getAttribute("userId");
         if (userIdInSession != null) {
             return "redirect:/userProfile?id=" + userIdInSession;
         }
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return "login/login";
+        }
         Map<String, String> cookiesMap = new HashMap<>();
         for (Cookie cookie : cookies) {
             cookiesMap.put(cookie.getName(), cookie.getValue());
@@ -61,8 +68,8 @@ public class LoginController {
     }
 
     private String loginProcessRedirect(String email, HttpSession session) {
-        Account account = accountService.getUserByEmail(email);
-        int userId = account.getId();
+        Account account = accountService.getAccountByEmail(email);
+        Long userId = account.getId();
         session.setAttribute("userId", account.getId());
         session.setAttribute("userName", account.getFirstName());
         return "redirect:/userProfile?id=" + userId;
