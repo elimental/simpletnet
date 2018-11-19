@@ -19,7 +19,7 @@ public class CommunityDAO extends AbstractDAO<Community> {
     }
 
     public CommunityRequest getRequest(long accountId, long communityId, boolean accepted) {
-        return (CommunityRequest) sessionFactory.getCurrentSession().createQuery(
+        List requests = entityManager.createQuery(
                 "select cr " +
                         "from CommunityRequest  cr " +
                         "where cr.from.id = :accountId " +
@@ -28,12 +28,13 @@ public class CommunityDAO extends AbstractDAO<Community> {
                 .setParameter("accountId", accountId)
                 .setParameter("communityId", communityId)
                 .setParameter("accepted", accepted)
-                .uniqueResult();
+                .getResultList();
+        return requests.isEmpty() ? null : (CommunityRequest) requests.get(0);
     }
 
 
     public Account checkCommunityRole(long accountId, long communityId, Role role) {
-        return (Account) sessionFactory.getCurrentSession().createQuery(
+        List accounts = entityManager.createQuery(
                 "select cr.from " +
                         "from CommunityRequest cr " +
                         "where cr.from.id = :accountId " +
@@ -42,21 +43,22 @@ public class CommunityDAO extends AbstractDAO<Community> {
         ).setParameter("accountId", accountId)
                 .setParameter("role", role)
                 .setParameter("communityId", communityId)
-                .uniqueResult();
+                .getResultList();
+        return accounts.isEmpty() ? null : (Account) accounts.get(0);
     }
 
     public List<Account> getRoleMembers(long communityId, Role role) {
-        return sessionFactory.getCurrentSession().createQuery(
+        return entityManager.createQuery(
                 "select cr.from " +
                         "from CommunityRequest cr " +
                         "where cr.community.id = :communityId " +
                         "and cr.role = :role", Account.class
         ).setParameter("communityId", communityId)
-                .setParameter("role", role).list();
+                .setParameter("role", role).getResultList();
     }
 
     public void acceptCommunityRequest(long accountId, long communityId) {
-        sessionFactory.getCurrentSession().createQuery(
+        entityManager.createQuery(
                 "update CommunityRequest cr " +
                         "set cr.accepted = true, " +
                         "cr.role = :role " +
@@ -69,7 +71,7 @@ public class CommunityDAO extends AbstractDAO<Community> {
     }
 
     public void makeModerator(long accountId, long communityId) {
-        sessionFactory.getCurrentSession().createQuery(
+        entityManager.createQuery(
                 "update CommunityRequest cr " +
                         "set cr.role = :role " +
                         "where cr.from.id = :accountId " +

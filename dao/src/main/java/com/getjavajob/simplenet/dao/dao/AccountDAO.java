@@ -18,15 +18,16 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     public Account getByEmail(String email) {
-        return (Account) sessionFactory.getCurrentSession().createQuery(
+        List accounts = entityManager.createQuery(
                 "select a " +
                         "from Account a " +
                         "where a.email like :email")
-                .setParameter("email", email).uniqueResult();
+                .setParameter("email", email).getResultList();
+        return accounts.isEmpty() ? null : (Account) accounts.get(0);
     }
 
     public FriendRequest getFriendship(Long firstAccountId, Long secondAccountId, boolean accepted) {
-        return (FriendRequest) sessionFactory.getCurrentSession().createQuery(
+        List requests = entityManager.createQuery(
                 "select f " +
                         "from FriendRequest f " +
                         "where f.from.id = :firstId " +
@@ -38,38 +39,39 @@ public class AccountDAO extends AbstractDAO<Account> {
                         "and f.accepted = :accepted"
         ).setParameter("firstId", firstAccountId).
                 setParameter("secondId", secondAccountId).
-                setParameter("accepted", accepted).uniqueResult();
+                setParameter("accepted", accepted).getResultList();
+        return requests.isEmpty() ? null : (FriendRequest) requests.get(0);
     }
 
     public Set<Long> getTalkersId(Long accountId) {
         Set<Long> talkers = new HashSet<>();
-        talkers.addAll(sessionFactory.getCurrentSession().createQuery(
+        talkers.addAll(entityManager.createQuery(
                 "select distinct pm.to.id " +
                         "from PersonalMessage pm " +
                         "where pm.from.id = :account", Long.class
-        ).setParameter("account", accountId).list());
-        talkers.addAll(sessionFactory.getCurrentSession().createQuery(
+        ).setParameter("account", accountId).getResultList());
+        talkers.addAll(entityManager.createQuery(
                 "select distinct pm.from.id " +
                         "from PersonalMessage pm " +
                         "where pm.to.id = :account", Long.class
-        ).setParameter("account", accountId).list());
+        ).setParameter("account", accountId).getResultList());
         return talkers;
     }
 
     public List<Community> getCommunities(Long accountId, boolean accepted) {
-        return sessionFactory.getCurrentSession().createQuery(
+        return entityManager.createQuery(
                 "select cr.community " +
                         "from CommunityRequest cr " +
                         "where cr.from.id = :accountId " +
                         "and cr.accepted = :accepted", Community.class
         ).setParameter("accountId", accountId)
                 .setParameter("accepted", accepted)
-                .list();
+                .getResultList();
     }
 
     public void deleteFromCommunity(Long accountId, Long communityId) {
-        sessionFactory.getCurrentSession().createQuery(
-                "delete CommunityRequest cr " +
+        entityManager.createQuery(
+                "delete from CommunityRequest cr " +
                         "where cr.from.id = :accountId " +
                         "and cr.community.id = :communityId"
         ).setParameter("accountId", accountId)
@@ -77,42 +79,42 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     public List<Account> getFriends(Long accountId) {
-        List<Account> friends = sessionFactory.getCurrentSession().createQuery(
+        List<Account> friends = entityManager.createQuery(
                 "select fr.to " +
                         "from FriendRequest fr " +
                         "where fr.from.id = :accountId " +
                         "and fr.accepted = true", Account.class
-        ).setParameter("accountId", accountId).list();
-        friends.addAll(sessionFactory.getCurrentSession().createQuery(
+        ).setParameter("accountId", accountId).getResultList();
+        friends.addAll(entityManager.createQuery(
                 "select fr.from " +
                         "from FriendRequest fr " +
                         "where fr.to.id = :accountId " +
                         "and fr.accepted = true", Account.class
-        ).setParameter("accountId", accountId).list());
+        ).setParameter("accountId", accountId).getResultList());
         return friends;
     }
 
     public List<Account> getRequestedFriends(long accountId) {
-        return sessionFactory.getCurrentSession().createQuery(
+        return entityManager.createQuery(
                 "select fr.to " +
                         "from FriendRequest fr " +
                         "where fr.from.id = :accountId " +
                         "and fr.accepted = false ", Account.class
-        ).setParameter("accountId", accountId).list();
+        ).setParameter("accountId", accountId).getResultList();
     }
 
     public List<Account> getRequestFromFriends(long accountId) {
-        return sessionFactory.getCurrentSession().createQuery(
+        return entityManager.createQuery(
                 "select fr.from " +
                         "from FriendRequest fr " +
                         "where fr.to.id = :accountId " +
                         "and fr.accepted = false", Account.class
-        ).setParameter("accountId", accountId).list();
+        ).setParameter("accountId", accountId).getResultList();
     }
 
     public void deleteFriend(long firstAccountId, long secondAccountId) {
-        sessionFactory.getCurrentSession().createQuery(
-                "delete FriendRequest fr " +
+        entityManager.createQuery(
+                "delete from FriendRequest fr " +
                         "where fr.from.id = :firstAccount " +
                         "and fr.to.id = :secondAccount " +
                         "or " +
@@ -124,7 +126,7 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     public void acceptFriend(long whoAcceptsId, long whoAcceptedId) {
-        sessionFactory.getCurrentSession().createQuery(
+        entityManager.createQuery(
                 "update FriendRequest fr " +
                         "set fr.accepted = true " +
                         "where fr.from.id = :whoAccepted " +
@@ -135,7 +137,7 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     public List<PersonalMessage> getPersonalMessages(long firstAccountId, long secondAccountId) {
-        return sessionFactory.getCurrentSession().createQuery(
+        return entityManager.createQuery(
                 "select pm " +
                         "from PersonalMessage pm " +
                         "where pm.from.id = :firstAccount " +
@@ -145,6 +147,6 @@ public class AccountDAO extends AbstractDAO<Account> {
                         "and pm.from.id = :secondAccount", PersonalMessage.class
         ).setParameter("firstAccount", firstAccountId)
                 .setParameter("secondAccount", secondAccountId)
-                .list();
+                .getResultList();
     }
 }
