@@ -45,13 +45,12 @@ public class CommunityDAO extends AbstractDAO<Community> {
                 .uniqueResult();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Account> getRoleMembers(long communityId, Role role) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select cr.from " +
                         "from CommunityRequest cr " +
                         "where cr.community.id = :communityId " +
-                        "and cr.role = :role"
+                        "and cr.role = :role", Account.class
         ).setParameter("communityId", communityId)
                 .setParameter("role", role).list();
     }

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
@@ -91,9 +92,6 @@ public class AccountController {
             account.setPhones(removeNullNumbers(phones));
             setPhoneOwner(account.getPhones(), account);
         }
-        // todo  sql date ??    done
-        // todo  hotkey idea    done
-        // todo js deprecated   done
         accountService.addAccount(account);
         return "userprofile/registrationAccept";
     }

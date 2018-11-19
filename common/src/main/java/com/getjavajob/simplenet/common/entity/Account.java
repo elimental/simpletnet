@@ -15,53 +15,66 @@ public class Account extends BaseEntity {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CommunityRequest> communityRequests;
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String firstName;
+
     @Getter
     @Setter
     private String lastName;
+
     @Getter
     @Setter
     @Temporal(TemporalType.DATE)
     private Date birthDay;
+
     @Getter
     @Setter
     @Temporal(TemporalType.DATE)
     private Date regDate;
+
     @Getter
     @Setter
     @Column(nullable = false)
     private String email;
+
     @Getter
     @Setter
     @Column(nullable = false)
     private String password;
+
     @Getter
     @Setter
     private String icq;
+
     @Getter
     @Setter
     private String skype;
+
     @Getter
     @Setter
     private String additionalInfo;
+
     @Getter
     @Setter
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
+
     @Getter
     @Setter
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Getter
     @Setter
     @OneToMany(mappedBy = "phoneOwner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<CommunityRequest> communityRequests;
+
     @Getter
     @Setter
     @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)

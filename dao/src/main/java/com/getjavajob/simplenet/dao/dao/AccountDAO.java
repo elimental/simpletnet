@@ -41,29 +41,27 @@ public class AccountDAO extends AbstractDAO<Account> {
                 setParameter("accepted", accepted).uniqueResult();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public Set<Long> getTalkersId(Long accountId) {
         Set<Long> talkers = new HashSet<>();
         talkers.addAll(sessionFactory.getCurrentSession().createQuery(
                 "select distinct pm.to.id " +
                         "from PersonalMessage pm " +
-                        "where pm.from.id = :account"
+                        "where pm.from.id = :account", Long.class
         ).setParameter("account", accountId).list());
         talkers.addAll(sessionFactory.getCurrentSession().createQuery(
                 "select distinct pm.from.id " +
                         "from PersonalMessage pm " +
-                        "where pm.to.id = :account"
+                        "where pm.to.id = :account", Long.class
         ).setParameter("account", accountId).list());
         return talkers;
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Community> getCommunities(Long accountId, boolean accepted) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select cr.community " +
                         "from CommunityRequest cr " +
                         "where cr.from.id = :accountId " +
-                        "and cr.accepted = :accepted"
+                        "and cr.accepted = :accepted", Community.class
         ).setParameter("accountId", accountId)
                 .setParameter("accepted", accepted)
                 .list();
@@ -78,40 +76,37 @@ public class AccountDAO extends AbstractDAO<Account> {
                 .setParameter("communityId", communityId).executeUpdate();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Account> getFriends(Long accountId) {
         List<Account> friends = sessionFactory.getCurrentSession().createQuery(
                 "select fr.to " +
                         "from FriendRequest fr " +
                         "where fr.from.id = :accountId " +
-                        "and fr.accepted = true"
+                        "and fr.accepted = true", Account.class
         ).setParameter("accountId", accountId).list();
         friends.addAll(sessionFactory.getCurrentSession().createQuery(
                 "select fr.from " +
                         "from FriendRequest fr " +
                         "where fr.to.id = :accountId " +
-                        "and fr.accepted = true"
+                        "and fr.accepted = true", Account.class
         ).setParameter("accountId", accountId).list());
         return friends;
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Account> getRequestedFriends(long accountId) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select fr.to " +
                         "from FriendRequest fr " +
                         "where fr.from.id = :accountId " +
-                        "and fr.accepted = false "
+                        "and fr.accepted = false ", Account.class
         ).setParameter("accountId", accountId).list();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Account> getRequestFromFriends(long accountId) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select fr.from " +
                         "from FriendRequest fr " +
                         "where fr.to.id = :accountId " +
-                        "and fr.accepted = false"
+                        "and fr.accepted = false", Account.class
         ).setParameter("accountId", accountId).list();
     }
 
@@ -139,7 +134,6 @@ public class AccountDAO extends AbstractDAO<Account> {
                 .executeUpdate();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<PersonalMessage> getPersonalMessages(long firstAccountId, long secondAccountId) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select pm " +
@@ -148,7 +142,7 @@ public class AccountDAO extends AbstractDAO<Account> {
                         "and pm.to.id = :secondAccount " +
                         "or " +
                         "pm.to.id = :firstAccount " +
-                        "and pm.from.id = :secondAccount"
+                        "and pm.from.id = :secondAccount", PersonalMessage.class
         ).setParameter("firstAccount", firstAccountId)
                 .setParameter("secondAccount", secondAccountId)
                 .list();

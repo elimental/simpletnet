@@ -12,7 +12,7 @@ public class PersonalMessage extends BaseEntity implements Comparable<PersonalMe
 
     @Getter
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2500)
     private String text;
 
     @Getter

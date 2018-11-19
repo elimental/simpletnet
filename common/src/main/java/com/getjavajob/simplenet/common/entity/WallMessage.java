@@ -12,7 +12,7 @@ public class WallMessage extends BaseEntity implements Comparable<WallMessage> {
 
     @Getter
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2500)
     private String text;
 
     @Getter

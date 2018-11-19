@@ -1,20 +1,23 @@
 package com.getjavajob.simplenet.dao.dao;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class AbstractDAO<T> implements Serializable {
+public class AbstractDAO<T extends Serializable> {
+    // todo serializable
+    // todo hot keys !!!
 
     @Autowired
     protected SessionFactory sessionFactory;
-    private Class<T> clazz;
 
-    void setClazz(Class<T> clazz) {
-        this.clazz = clazz;
-    }
+    @Getter
+    @Setter
+    private Class<T> clazz;
 
     public void add(T t) {
         sessionFactory.getCurrentSession().save(t);
@@ -37,8 +40,7 @@ public class AbstractDAO<T> implements Serializable {
         delete(t);
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<T> getAll() {
-        return sessionFactory.getCurrentSession().createQuery("from " + clazz.getName()).list();
+        return sessionFactory.getCurrentSession().createQuery("from " + clazz.getName(), clazz).list();
     }
 }

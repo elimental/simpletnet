@@ -12,7 +12,7 @@ public class CommunityMessage extends BaseEntity implements Comparable<Community
 
     @Getter
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2500)
     private String text;
 
     @Getter
