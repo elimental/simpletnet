@@ -32,6 +32,7 @@
         <jackson-databind.ver>2.9.7</jackson-databind.ver>
         <hibernate.ver>5.3.7.Final</hibernate.ver>
         <lombok.ver>1.18.4</lombok.ver>
+        <log4j-slf4j18-impl.ver>2.11.1</log4j-slf4j18-impl.ver>
     </properties>
 
     <dependencies>
@@ -81,13 +82,21 @@
 
         <!-- Lombok -->
 
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.ver}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Logging -->
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j18-impl</artifactId>
+            <version>${log4j-slf4j18-impl.ver}</version>
+        </dependency>
+
 
 
     </dependencies>

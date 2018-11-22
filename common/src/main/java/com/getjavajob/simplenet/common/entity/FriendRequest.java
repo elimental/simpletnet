@@ -24,4 +24,14 @@ public class FriendRequest extends BaseEntity {
     @Getter
     @Setter
     private Boolean accepted = false;
+
+    @Override
+    public String toString() {
+        return "FriendRequest{" +
+                "from=" + from.getId() +
+                ", to=" + to.getId() +
+                ", accepted=" + accepted +
+                ", id=" + id +
+                '}';
+    }
 }

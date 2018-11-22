@@ -58,17 +58,6 @@ public class AccountService {
         from.addFriendRequest(friendRequest);
     }
 
-    //
-//    @Transactional
-//    public void acceptFriendRequest(int whoAcceptsId, int whoAcceptedId) {
-//        relationshipDAO.acceptFriend(whoAcceptsId, whoAcceptedId);
-//    }
-//
-//    @Transactional
-//    public void deleteFriend(int userOneId, int userTwoId) {
-//        relationshipDAO.deleteFriend(userOneId, userTwoId);
-//    }
-//
     public void updateAccountRole(Long accountId, Role role) {
         accountDAO.get(accountId).setRole(role);
     }

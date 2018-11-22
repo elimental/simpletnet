@@ -4,6 +4,8 @@ import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Community;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.CommunityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.List;
 @Controller
 @SessionAttributes("userId")
 public class SearchController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     private static final int PAGE_SIZE = 3;
 
@@ -30,6 +34,7 @@ public class SearchController {
     @GetMapping("/search")
     public ModelAndView search(@SessionAttribute("userId") int userIdInSession,
                                @RequestParam("search") String pattern) {
+        logger.trace("User(id={}) is searching pattern: {}", userIdInSession, pattern);
         ModelAndView modelAndView = new ModelAndView("searchResult");
         pattern = pattern.toLowerCase();
         int accountPageQty = getPageQty(accountSearch(pattern, userIdInSession));

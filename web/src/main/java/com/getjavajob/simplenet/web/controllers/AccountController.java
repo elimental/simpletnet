@@ -4,6 +4,8 @@ import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.common.entity.WallMessage;
 import com.getjavajob.simplenet.service.AccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
@@ -25,6 +26,8 @@ import static com.getjavajob.simplenet.web.util.WebUtils.*;
 @Controller
 @SessionAttributes("userId")
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final AccountService accountService;
 
@@ -35,8 +38,10 @@ public class AccountController {
 
     @GetMapping("/userProfile")
     public ModelAndView showUserProfile(@SessionAttribute("userId") long userIdInSession, long id) {
+        logger.trace("User(id={}) is going to user profile id={}", userIdInSession, id);
         Account account = accountService.getAccountById(id);
         if (account == null) {
+            logger.error("User(id={}) is trying to get nonexistent user profile id={}", userIdInSession, id);
             return new ModelAndView("userprofile/unknownAccount");
         }
         ModelAndView modelAndView = new ModelAndView("userprofile/userProfile");
@@ -82,6 +87,7 @@ public class AccountController {
                                     @ModelAttribute Account account) throws IOException {
         String email = account.getEmail();
         if (accountService.ifEmailAlreadyPresented(email)) {
+            logger.error("Registration error. Email address {} is already exist", email);
             return "userprofile/registrationError";
         }
         if (!img.isEmpty()) {
@@ -93,11 +99,13 @@ public class AccountController {
             setPhoneOwner(account.getPhones(), account);
         }
         accountService.addAccount(account);
+        logger.trace("Registration accepted. {}", email);
         return "userprofile/registrationAccept";
     }
 
     @GetMapping("/editUserProfile")
-    public ModelAndView editUserProfile(long id) {
+    public ModelAndView editUserProfile(@SessionAttribute("userId") long userIdInSession, long id) {
+        logger.trace("User(id={}) is going to edit user profile id={}", userIdInSession, id);
         ModelAndView modelAndView = new ModelAndView("userprofile/editUserProfile");
         Account account = accountService.getAccountById(id);
         List<Phone> phones = account.getPhones();
@@ -127,11 +135,13 @@ public class AccountController {
             session.setAttribute("userName", account.getFirstName());
         }
         accountService.updateAccount(account);
+        logger.trace("User(id={}) changed user profile id={}", userIdInSession, id);
         return "redirect:/userProfile?id=" + id;
     }
 
     @GetMapping("/confirmDeleteUserProfile")
-    public String confirmDeleteUserProfile(int id, Model model) {
+    public String confirmDeleteUserProfile(@SessionAttribute("userId") long userIdInSession, int id, Model model) {
+        logger.trace("User(id={}) is trying to delete user profile id={}", userIdInSession, id);
         model.addAttribute("id", id);
         return "userprofile/confirmDeleteUserProfile";
     }
@@ -143,6 +153,8 @@ public class AccountController {
         boolean owner = id == userIdInSession;
         boolean allowDeleteUser = admin || owner;
         if (!allowDeleteUser) {
+            logger.error("Illegal operation. User(id={}) is not allowed to delete user profile id={}",
+                    userIdInSession, id);
             return "accessDenied";
         } else {
             accountService.deleteAccount(id);
@@ -151,6 +163,7 @@ public class AccountController {
                 deleteCookie(response, "email", "password");
                 session.invalidate();
             }
+            logger.trace("User(id={}) deleted user profile id={}", userIdInSession, id);
             return "userprofile/profileDeleted";
         }
     }
@@ -165,9 +178,12 @@ public class AccountController {
     public String makeAdmin(@SessionAttribute("userId") long userIdInSession, long id) {
         boolean admin = accountService.ifAdmin(userIdInSession);
         if (!admin) {
+            logger.error("Illegal operation. User(id={}) is not allowed to give administration role to user profile id={}",
+                    userIdInSession, id);
             return "accessDenied";
         }
         accountService.updateAccountRole(id, ADMINISTRATOR);
+        logger.trace("User(id={}) gave administration role to user profile id={}", userIdInSession, id);
         return "redirect:/userProfile?id=" + id;
     }
 }

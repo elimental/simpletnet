@@ -2,6 +2,8 @@ package com.getjavajob.simplenet.web.controllers;
 
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.service.AccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,8 @@ import static com.getjavajob.simplenet.web.util.WebUtils.deleteCookie;
 
 @Controller
 public class LoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private final AccountService accountService;
 
@@ -44,8 +48,10 @@ public class LoginController {
         String passwordCookie = cookiesMap.get("password");
         if (emailCookie != null && passwordCookie != null) {
             if (accountService.checkLogin(emailCookie, passwordCookie)) {
+                logger.trace("Login (cookie) successful. Email: {}", emailCookie);
                 return loginProcessRedirect(emailCookie, session);
             } else {
+                logger.error("Login (cookie) error. Email: {}", emailCookie);
                 return "login/loginError";
             }
         } else {
@@ -61,8 +67,10 @@ public class LoginController {
                 response.addCookie(new Cookie("email", email));
                 response.addCookie(new Cookie("password", password));
             }
+            logger.trace("Login successful. Email: {}", email);
             return loginProcessRedirect(email, session);
         } else {
+            logger.error("Login error. Email: {}", email);
             return "login/loginError";
         }
     }
@@ -77,6 +85,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletResponse response) {
+        logger.trace("User(id={}) logged out", session.getAttribute("userId"));
         deleteCookie(response, "email", "pasword");
         session.invalidate();
         return "redirect:/login";

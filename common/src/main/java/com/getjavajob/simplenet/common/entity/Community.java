@@ -22,6 +22,7 @@ public class Community extends BaseEntity {
 
     @Getter
     @Setter
+    @Column(nullable = false)
     private Long creatorId;
 
     @Getter

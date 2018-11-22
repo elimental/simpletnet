@@ -1,174 +1,138 @@
-//package com.getjavajob.simplenet.dao.dao;
-//
-//import com.getjavajob.simplenet.common.entity.Account;
-//import com.getjavajob.simplenet.dao.config.DAOConfig;
-//import com.getjavajob.simplenet.dao.config.DAOTestConfig;
-//import org.junit.Ignore;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.jdbc.Sql;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//
-//import java.sql.Date;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertNull;
-//import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
-//
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = {DAOConfig.class, DAOTestConfig.class})
-//@Sql(value = {"classpath:drop_db.sql", "classpath:create_db.sql", "classpath:populate_db.sql"},
-//        executionPhase = BEFORE_TEST_METHOD)
-//public class AccountDAOTest {
-//
-//    @Autowired
-//    private AccountDAO accountDAO;
-//
-//    @Ignore
-//    @Test
-//    public void getAll() {
-//        List<Account> expectedAccounts = new ArrayList<>();
-//        Account expected = new Account();
-//        expected.setId(1);
-//        expected.setFirstName("Dima");
-//        expected.setLastName("Andreev");
-//        expected.setBirthDay(Date.valueOf("1978-02-13"));
-//        expected.setEmail("elimental@bk.ru");
-//        expected.setIcq("49224940");
-//        expected.setSkype("elimental13");
-//        expected.setAdditionalInfo("adfasdfasdf");
-//        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
-//        expected.setRegDate(Date.valueOf("2018-01-01"));
-//        expected.setRole(2);
-//        expectedAccounts.add(expected);
-//
-//        Account expected2 = new Account();
-//        expected2.setId(2);
-//        expected2.setFirstName("Vasya");
-//        expected2.setLastName("Petrov");
-//        expected2.setBirthDay(Date.valueOf("1980-05-12"));
-//        expected2.setEmail("vasya@bk.ru");
-//        expected2.setIcq("12345678");
-//        expected2.setSkype("vasiliy44");
-//        expected2.setAdditionalInfo("agfsdgfdgfds");
-//        expected2.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
-//        expected2.setRegDate(Date.valueOf("2018-02-02"));
-//        expected2.setRole(1);
-//        expectedAccounts.add(expected2);
-//        List<Account> actual = accountDAO.getAll();
-//        assertEquals(expectedAccounts, actual);
-//    }
-//
-//    @Test
-//    public void getById() {
-//        Account expected = new Account();
-//        expected.setId(2);
-//        expected.setFirstName("Vasya");
-//        expected.setLastName("Petrov");
-//        expected.setPatronymicName("Alekseevich");
-//        expected.setBirthDay(Date.valueOf("1980-05-12"));
-//        expected.setEmail("vasya@bk.ru");
-//        expected.setIcq("12345678");
-//        expected.setSkype("vasiliy44");
-//        expected.setAdditionalInfo("agfsdgfdgfds");
-//        expected.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
-//        expected.setRegDate(Date.valueOf("2018-02-02"));
-//        expected.setRole(1);
-//        Account actual = accountDAO.getById(2);
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void add() {
-//        Account expectedAccount = new Account();
-//        expectedAccount.setId(3);
-//        expectedAccount.setFirstName("Masha");
-//        expectedAccount.setLastName("Ivanova");
-//        expectedAccount.setPatronymicName("Sergeevna");
-//        expectedAccount.setBirthDay(Date.valueOf("1980-05-12"));
-//        expectedAccount.setEmail("masha@bk.ru");
-//        expectedAccount.setIcq("12345678");
-//        expectedAccount.setSkype("manya33");
-//        expectedAccount.setAdditionalInfo("agfsdgfdgfds");
-//        expectedAccount.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
-//        expectedAccount.setRegDate(Date.valueOf("2018-02-02"));
-//        expectedAccount.setRole(1);
-//        Integer expectedId = 3;
-//        Integer actualId = accountDAO.add(expectedAccount);
-//        Account actualAccount = accountDAO.getById(3);
-//        assertEquals(expectedId, actualId);
-//        assertEquals(expectedAccount, actualAccount);
-//    }
-//
-//    @Test
-//    public void delete() {
-//        accountDAO.delete(1);
-//        Account account = accountDAO.getById(1);
-//        assertNull(account);
-//    }
-//
-//    @Test
-//    public void update() {
-//        Account expected = new Account();
-//        expected.setId(1);
-//        expected.setFirstName("Dmitriy");
-//        expected.setLastName("Andreev");
-//        expected.setPatronymicName("Borisovich");
-//        expected.setBirthDay(Date.valueOf("1978-02-13"));
-//        expected.setEmail("elimental@mail.ru");
-//        expected.setIcq("49224940");
-//        expected.setSkype("elimental13");
-//        expected.setAdditionalInfo("just human");
-//        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
-//        expected.setRegDate(Date.valueOf("2018-01-01"));
-//        expected.setRole(2);
-//        accountDAO.update(expected);
-//        Account actual = accountDAO.getById(expected.getId());
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void getByEmail() {
-//        Account expected = new Account();
-//        expected.setId(2);
-//        expected.setFirstName("Vasya");
-//        expected.setLastName("Petrov");
-//        expected.setPatronymicName("Alekseevich");
-//        expected.setBirthDay(Date.valueOf("1980-05-12"));
-//        expected.setEmail("vasya@bk.ru");
-//        expected.setIcq("12345678");
-//        expected.setSkype("vasiliy44");
-//        expected.setAdditionalInfo("agfsdgfdgfds");
-//        expected.setPassword("WTRWE%$#@$%GWERGWEGWEGWEGRWE");
-//        expected.setRegDate(Date.valueOf("2018-02-02"));
-//        expected.setRole(1);
-//        Account actual = accountDAO.getByEmail("vasya@bk.ru");
-//        Account nonexistent = accountDAO.getByEmail("nobody@mail.ru");
-//        assertEquals(expected, actual);
-//        assertNull(nonexistent);
-//    }
-//
-//    @Test
-//    public void updateUserRole() {
-//        Account expected = new Account();
-//        expected.setId(1);
-//        expected.setFirstName("Dima");
-//        expected.setLastName("Andreev");
-//        expected.setPatronymicName("Borisovich");
-//        expected.setBirthDay(Date.valueOf("1978-02-13"));
-//        expected.setEmail("elimental@bk.ru");
-//        expected.setIcq("49224940");
-//        expected.setSkype("elimental13");
-//        expected.setAdditionalInfo("adfasdfasdf");
-//        expected.setPassword("DSFGDSGFDSGFDSGFDSGFSASFASDF");
-//        expected.setRegDate(Date.valueOf("2018-01-01"));
-//        expected.setRole(1);
-//        accountDAO.updateUserRole(expected.getId(), expected.getRole());
-//        Account actual = accountDAO.getById(expected.getId());
-//        assertEquals(expected, actual);
-//    }
-//}
+package com.getjavajob.simplenet.dao.dao;
+
+import com.getjavajob.simplenet.common.entity.Account;
+import com.getjavajob.simplenet.common.entity.Community;
+import com.getjavajob.simplenet.common.entity.FriendRequest;
+import com.getjavajob.simplenet.common.entity.PersonalMessage;
+import com.getjavajob.simplenet.dao.config.DAOConfig;
+import com.getjavajob.simplenet.dao.config.DAOTestConfig;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DAOConfig.class, DAOTestConfig.class})
+@Sql(value = {"classpath:ddl.sql", "classpath:populate_db.sql"}, executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = {"classpath:drop.sql"}, executionPhase = AFTER_TEST_METHOD)
+public class AccountDAOTest {
+
+    @Autowired
+    private AccountDAO accountDAO;
+
+    @Test
+    public void getByEmail() {
+        assertNull(accountDAO.getByEmail("unknown@mail.ru"));
+        assertNotNull(accountDAO.getByEmail("elimental@bk.ru"));
+    }
+
+    @Test
+    public void getFriendship() {
+        FriendRequest actual = accountDAO.getFriendship(1L, 2L, true);
+        assertEquals(1L, (long) actual.getFrom().getId());
+        assertEquals(2L, (long) actual.getTo().getId());
+        assertTrue(actual.getAccepted());
+        assertNull(accountDAO.getFriendship(1L, 3L, true));
+        assertNull(accountDAO.getFriendship(1L, 5L, true));
+    }
+
+    @Test
+    public void getTalkersId() {
+        Set<Long> except = new HashSet<>();
+        except.add(2L);
+        Set<Long> actual = accountDAO.getTalkersId(1L);
+        assertEquals(except, actual);
+    }
+
+    @Test
+    public void getCommunities() {
+        List<Community> actual = accountDAO.getCommunities(1L, true);
+        Community expected = actual.get(0);
+        assertEquals((long) expected.getId(), 2L);
+        assertEquals(expected.getName(), "group2");
+        assertEquals((long) expected.getCreatorId(), 6L);
+    }
+
+    @Test
+    @Transactional
+    public void deleteFromCommunity() {
+        assertFalse(accountDAO.getCommunities(1L, true).isEmpty());
+        accountDAO.deleteFromCommunity(1L, 2L);
+        assertTrue(accountDAO.getCommunities(1L, true).isEmpty());
+    }
+
+    @Test
+    public void getFriends() {
+        List<Account> expected = new ArrayList<>();
+        Account friend1 = new Account();
+        friend1.setId(2L);
+        Account friend2 = new Account();
+        friend2.setId(4L);
+        expected.add(friend1);
+        expected.add(friend2);
+        List<Account> actual = accountDAO.getFriends(1L);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void getRequestedFriends() {
+        List<Account> expected = new ArrayList<>();
+        Account requestedFriend = new Account();
+        requestedFriend.setId(3L);
+        expected.add(requestedFriend);
+        List<Account> actual = accountDAO.getRequestedFriends(1L);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRequestFromFriends() {
+        List<Account> expected = new ArrayList<>();
+        Account requestFromFriend = new Account();
+        requestFromFriend.setId(5L);
+        expected.add(requestFromFriend);
+        List<Account> actual = accountDAO.getRequestFromFriends(1L);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    public void deleteFriend() {
+        assertNotNull(accountDAO.getFriendship(1L, 2L, true));
+        accountDAO.deleteFriend(1L, 2L);
+        assertNull(accountDAO.getFriendship(1L, 2L, true));
+    }
+
+    @Test
+    @Transactional
+    public void acceptFriend() {
+        assertNull(accountDAO.getFriendship(5L, 1L, true));
+        accountDAO.acceptFriend(1L, 5L);
+        assertNotNull(accountDAO.getFriendship(5L, 1L, true));
+    }
+
+    @Test
+    public void getPersonalMessages() {
+        List<PersonalMessage> expected = new ArrayList<>();
+        PersonalMessage message1 = new PersonalMessage();
+        message1.setId(1L);
+        PersonalMessage message2 = new PersonalMessage();
+        message2.setId(2L);
+        expected.add(message1);
+        expected.add(message2);
+        List<PersonalMessage> actual = accountDAO.getPersonalMessages(1L, 2L);
+        assertEquals(expected, actual);
+    }
+}

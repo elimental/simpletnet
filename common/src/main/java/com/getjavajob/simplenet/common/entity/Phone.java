@@ -24,4 +24,12 @@ public class Phone extends BaseEntity {
     @Setter
     @ManyToOne
     private Account phoneOwner;
+
+    @Override
+    public String toString() {
+        return "Phone{" +
+                "number='" + number + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

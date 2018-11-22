@@ -21,7 +21,7 @@
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(classes = {DAOConfig.class, DAOTestConfig.class})
-//@Sql(value = {"classpath:drop_db.sql", "classpath:create_db.sql", "classpath:populate_db.sql"},
+//@Sql(value = {"classpath:drop.sql", "classpath:create_db.sql", "classpath:populate_db.sql"},
 //        executionPhase = BEFORE_TEST_METHOD)
 //public class GroupDAOTest {
 //

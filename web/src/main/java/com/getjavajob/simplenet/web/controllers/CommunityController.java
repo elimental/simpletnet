@@ -5,6 +5,8 @@ import com.getjavajob.simplenet.common.entity.Community;
 import com.getjavajob.simplenet.common.entity.CommunityMessage;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.CommunityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import java.util.List;
 @SessionAttributes("userId")
 public class CommunityController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommunityController.class);
+
     private final CommunityService communityService;
     private final AccountService accountService;
 
@@ -30,6 +34,7 @@ public class CommunityController {
 
     @GetMapping("/communities")
     public ModelAndView showUserCommunities(@SessionAttribute("userId") long userIdInSession) {
+        logger.trace("User(id={}) is going to community list", userIdInSession);
         ModelAndView modelAndView = new ModelAndView("community/accountCommunities");
         List<Community> communities = communityService.getAccountCommunities(userIdInSession);
         List<Community> requestedCommunities = communityService.getRequestedCommunities(userIdInSession);
@@ -40,8 +45,10 @@ public class CommunityController {
 
     @GetMapping("/community")
     public ModelAndView showGroupPage(@SessionAttribute("userId") long userIdInSession, long id) {
+        logger.trace("User(id={}) is going to community id={}", userIdInSession, id);
         Community community = communityService.getCommunityById(id);
         if (community == null) {
+            logger.error("User(id={}) is trying to get nonexistent community id={}", userIdInSession, id);
             return new ModelAndView("community/unknownCommunity");
         }
         ModelAndView modelAndView = new ModelAndView("community/community");
@@ -77,6 +84,7 @@ public class CommunityController {
 
     @GetMapping("/communityMembers")
     public ModelAndView showGroupMembers(@SessionAttribute("userId") long userIdInSession, long id) {
+        logger.trace("User(id={}) is going to community's id={} member list", userIdInSession, id);
         ModelAndView modelAndView = new ModelAndView("community/communityMembers");
         boolean admin = accountService.ifAdmin(userIdInSession);
         boolean moderator = communityService.ifCommunityModerator(userIdInSession, id);
@@ -110,29 +118,34 @@ public class CommunityController {
             community.setPicture(img.getBytes());
         }
         communityService.addCommunity(community, userIdInSession);
+        logger.trace("User(id={}) created community {}", userIdInSession, community.getName());
         return "redirect:/communities";
     }
 
     @GetMapping("/editCommunity")
-    public ModelAndView editGroup(long id) {
+    public ModelAndView editGroup(@SessionAttribute("userId") long userIdInSession, long id) {
+        logger.trace("User(id={}) is trying to edit community id={}", userIdInSession, id);
         ModelAndView modelAndView = new ModelAndView("community/editCommunity");
         modelAndView.addObject("community", communityService.getCommunityById(id));
         return modelAndView;
     }
 
     @PostMapping("/checkCommunityEdit")
-    public String checkEditGroup(@RequestParam("img") MultipartFile img,
+    public String checkEditGroup(@SessionAttribute("userId") long userIdInSession,
+                                 @RequestParam("img") MultipartFile img,
                                  @ModelAttribute Community community) throws IOException {
         if (!img.isEmpty()) {
             community.setPicture(img.getBytes());
         }
         communityService.updateCommunity(community);
+        logger.trace("User(id={}) edited community id={}", userIdInSession, community.getId());
         return "redirect:/community?id=" + community.getId();
     }
 
     @GetMapping("/confirmDeleteCommunity")
-    public String confirmDeleteUserProfile(long id, Model model) {
+    public String confirmDeleteUserProfile(@SessionAttribute("userId") long userIdInSession, long id, Model model) {
         model.addAttribute("id", id);
+        logger.trace("User(id={}) is trying to delete community id={}", userIdInSession, id);
         return "community/confirmDeleteCommunity";
     }
 
@@ -142,6 +155,8 @@ public class CommunityController {
         boolean moderator = communityService.ifCommunityModerator(userIdInSession, id);
         boolean allowDeleteGroup = moderator || admin;
         if (!allowDeleteGroup) {
+            logger.error("Illegal operation. User(id={}) is not allowed to delete community id={}",
+                    userIdInSession, id);
             return "accessDenied";
         } else {
             communityService.deleteCommunity(id);
@@ -152,24 +167,28 @@ public class CommunityController {
     @GetMapping("/exitFromCommunity")
     public String exitFromGroup(@SessionAttribute("userId") long userIdInSession, long id) {
         accountService.exitFromCommunity(userIdInSession, id);
+        logger.trace("User(id={}) is going out from cummunity id={}", userIdInSession, id);
         return "redirect:/communities";
     }
 
     @GetMapping("/deleteFromCommunity")
-    public String deleteFromCommunity(long userId, long communityId) {
+    public String deleteFromCommunity(@SessionAttribute("userId") long userIdInSession, long userId, long communityId) {
         accountService.exitFromCommunity(userId, communityId);
+        logger.trace("User(id={}) deleted user id={} from community id={}", userIdInSession, userId, communityId);
         return "redirect:/communityMembers?id=" + communityId;
     }
 
     @GetMapping("/acceptCommunityRequest")
-    public String acceptGroupRequest(long userId, long communityId) {
+    public String acceptGroupRequest(@SessionAttribute("userId") long userIdInSession, long userId, long communityId) {
         communityService.acceptCommunityRequest(userId, communityId);
+        logger.trace("User(id={}) accepted user's id={} request to community id={}", userIdInSession, userId, communityId);
         return "redirect:/communityMembers?id=" + communityId;
     }
 
     @GetMapping("/communityRequest")
-    public String sendRequestToGroup(@SessionAttribute("userId") long userIdInSession, long groupId) {
-        communityService.sendCommunityRequest(userIdInSession, groupId);
+    public String sendRequestToGroup(@SessionAttribute("userId") long userIdInSession, long communityId) {
+        communityService.sendCommunityRequest(userIdInSession, communityId);
+        logger.trace("User(id={}) sent request to community id={}", userIdInSession, communityId);
         return "redirect:/communities";
     }
 
@@ -178,16 +197,21 @@ public class CommunityController {
         boolean admin = accountService.ifAdmin(adminOrModeratorId);
         boolean moderator = communityService.ifCommunityModerator(adminOrModeratorId, communityId);
         if (!admin && !moderator) {
+            logger.error("Illegal operation. User(id={}) is not allowed to give to user" +
+                    " id={} moderator role community id={}", adminOrModeratorId, userId, communityId);
             return "accessDenied";
         } else {
             communityService.makeModerator(userId, communityId);
+            logger.trace("User(id={}) gave to user id={} moderator role in community id={}",
+                    adminOrModeratorId, userId, communityId);
             return "redirect:/communityMembers?id=" + communityId;
         }
     }
 
     @GetMapping("/rejectCommunityRequest")
-    public String rejectGroupRequest(long userId, long communityId) {
+    public String rejectGroupRequest(@SessionAttribute("userId") long userIdInSession, long userId, long communityId) {
         communityService.rejectCommunityRequest(userId, communityId);
+        logger.trace("User(id={}) rejected request from user id={} to community id={}", userId, userId, communityId);
         return "redirect:/communityMembers?id=" + communityId;
     }
 }

@@ -149,4 +149,12 @@ public class Account extends BaseEntity {
     public void addPersonalMessage(PersonalMessage personalMessage) {
         this.fromAccount.add(personalMessage);
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "firstName='" + firstName + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
