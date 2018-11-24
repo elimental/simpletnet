@@ -33,6 +33,7 @@
         <hibernate.ver>5.3.7.Final</hibernate.ver>
         <lombok.ver>1.18.4</lombok.ver>
         <log4j-slf4j18-impl.ver>2.11.1</log4j-slf4j18-impl.ver>
+        <xstream.ver>1.4.10</xstream.ver>
     </properties>
 
     <dependencies>
@@ -97,7 +98,19 @@
             <version>${log4j-slf4j18-impl.ver}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>${xstream.ver}</version>
+        </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream-hibernate -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream-hibernate</artifactId>
+            <version>${xstream.ver}</version>
+        </dependency>
 
     </dependencies>
 

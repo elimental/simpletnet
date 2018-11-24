@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +110,7 @@ public class AccountController {
         logger.trace("User(id={}) is going to edit user profile id={}", userIdInSession, id);
         ModelAndView modelAndView = new ModelAndView("userprofile/editUserProfile");
         Account account = accountService.getAccountById(id);
+        boolean owner = id == userIdInSession;
         List<Phone> phones = account.getPhones();
         List<Phone> homePhones = new ArrayList<>();
         List<Phone> workPhones = new ArrayList<>();
@@ -115,6 +118,7 @@ public class AccountController {
         modelAndView.addObject("account", account);
         modelAndView.addObject("homePhones", homePhones);
         modelAndView.addObject("workPhones", workPhones);
+        modelAndView.addObject("owner", owner);
         return modelAndView;
     }
 
@@ -178,7 +182,8 @@ public class AccountController {
     public String makeAdmin(@SessionAttribute("userId") long userIdInSession, long id) {
         boolean admin = accountService.ifAdmin(userIdInSession);
         if (!admin) {
-            logger.error("Illegal operation. User(id={}) is not allowed to give administration role to user profile id={}",
+            logger.error("Illegal operation. User(id={}) is not allowed" +
+                            " to give administration role to user profile id={}",
                     userIdInSession, id);
             return "accessDenied";
         }

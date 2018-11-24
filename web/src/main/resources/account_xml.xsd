@@ -1,0 +1,28 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="account">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="firstName"/>
+                <xs:element type="xs:string" name="lastName" minOccurs="0"/>
+                <xs:element type="xs:date" name="birthDay" minOccurs="0"/>
+                <xs:element type="xs:string" name="icq" minOccurs="0"/>
+                <xs:element type="xs:string" name="skype" minOccurs="0"/>
+                <xs:element type="xs:string" name="additionalInfo" minOccurs="0"/>
+                <xs:element name="phones">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="phone" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="phoneNumber"/>
+                                        <xs:element type="xs:string" name="phoneType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

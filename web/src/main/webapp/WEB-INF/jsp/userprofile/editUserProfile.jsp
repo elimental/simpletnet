@@ -24,7 +24,7 @@
                     </div>
                     <br>
                     <label><b>Фото</b></label>
-                    <input type="hidden" name="id" value="${account.id}">
+                    <input type="hidden" name="id" id="accountId" value="${account.id}">
                     <input class="w3-input w3-border" type="file" name="img" accept="image/jpeg" id="img5mb"
                            onchange="uploadPhoto()">
                     <label><b>Имя</b></label>
@@ -100,6 +100,24 @@
                 </form>
             </div>
         </div>
+        <br>
+        <c:if test="${owner}">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                    <label>Импорт/экспорт</label>
+                    <form action="/importAccountXML" enctype="multipart/form-data" method="post">
+                        <input class="w3-input w3-border" type="file" name="xmlFile" accept="application/xml">
+                        <p>
+                            <button class="w3-button w3-theme" type="submit" style="width: 50%">Импорт из XML</button>
+                        <p>
+                    </form>
+                    <a href="/exportAccountXML?id=${account.id}" download class="w3-button w3-theme" style="width: 50%">
+                        Экспорт в XML</a>
+                    <p>
+                </div>
+            </div>
+            <br>
+        </c:if>
     </div>
 </div>
 </body>

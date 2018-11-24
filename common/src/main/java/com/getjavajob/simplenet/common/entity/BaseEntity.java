@@ -1,5 +1,6 @@
 package com.getjavajob.simplenet.common.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
+    @XStreamOmitField
     protected Long id;
 
     @Override

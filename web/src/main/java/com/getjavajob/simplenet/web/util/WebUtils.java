@@ -2,9 +2,18 @@ package com.getjavajob.simplenet.web.util;
 
 import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,5 +56,13 @@ public class WebUtils {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
+    }
+
+    public static void validateXML(String xsdFile, InputStream xmlInputStream) throws SAXException, IOException {
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Source xsd = new StreamSource(WebUtils.class.getClassLoader().getResourceAsStream(xsdFile));
+        Schema schema = factory.newSchema(xsd);
+        Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(xmlInputStream));
     }
 }

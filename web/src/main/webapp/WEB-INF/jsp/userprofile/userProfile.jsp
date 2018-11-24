@@ -43,11 +43,6 @@
                 <div class="w3-container">
                     <p class="w3-center"><label>Мои контакты</label></p>
                     <hr>
-                    <c:if test="${not empty account.birthDay}">
-                        <p><i class="fa fa-birthday-cake w3-margin-right w3-text-theme"></i>
-                            <fmt:formatDate pattern="dd MMM yyyy" value="${account.birthDay}"/></p>
-                    </c:if>
-
                     <c:if test="${not empty account.skype}">
                         <p><img src="/images/skype_icon.jpeg" style="height: 19px;width: 19px">&#160&#160&#160&#160
                             <c:out value="${account.skype}"/></p>
@@ -76,6 +71,12 @@
                     <c:if test="${not empty account.additionalInfo}">
                     <p class="w3-center"><label><b>Обо мне</b></label></p>
                     <hr>
+                    <c:if test="${not empty account.birthDay}">
+                        <p><i class="fa fa-birthday-cake w3-margin-right w3-text-theme"></i>
+                            <fmt:formatDate pattern="dd MMM yyyy" value="${account.birthDay}"/></p>
+                        <hr>
+                    </c:if>
+
                     <c:out value="${account.additionalInfo}"/>
                     <p>
                         </c:if>

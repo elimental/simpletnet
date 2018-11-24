@@ -1,7 +1,17 @@
 package com.getjavajob.simplenet.web.config;
 
+import com.getjavajob.simplenet.common.entity.Account;
+import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.web.converters.DateFormatter;
 import com.getjavajob.simplenet.web.interceptors.SecurityInterceptor;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.hibernate.converter.*;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +32,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 
 @Configuration
