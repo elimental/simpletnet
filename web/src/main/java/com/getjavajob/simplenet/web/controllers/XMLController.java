@@ -89,6 +89,7 @@ public class XMLController {
             modelAndView.addObject("homePhones", homePhones);
             modelAndView.addObject("workPhones", workPhones);
         }
+        modelAndView.addObject("owner", true);
         modelAndView.addObject("account", account);
         return modelAndView;
     }

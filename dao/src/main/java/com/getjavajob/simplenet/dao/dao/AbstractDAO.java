@@ -12,7 +12,6 @@ import java.util.List;
 
 public class AbstractDAO<T extends Serializable> {
     // todo serializable
-    // todo hot keys !!!
 
     @PersistenceContext
     EntityManager entityManager;

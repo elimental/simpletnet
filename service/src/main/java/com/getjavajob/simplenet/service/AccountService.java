@@ -2,20 +2,19 @@ package com.getjavajob.simplenet.service;
 
 import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.dao.AccountDAO;
+import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
 import static com.getjavajob.simplenet.common.entity.Role.USER;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
 
 @Service
 @Transactional
@@ -25,61 +24,67 @@ public class AccountService {
     private static final boolean ALREADY_REQUESTED_FRIENSHIP = false;
 
     private AccountDAO accountDAO;
+    private AccountRepository accountRepository;
 
     @Autowired
-    public AccountService(AccountDAO accountDAO) {
+    public AccountService(AccountDAO accountDAO, AccountRepository accountRepository) {
         this.accountDAO = accountDAO;
+        this.accountRepository = accountRepository;
     }
 
     public void addAccount(Account account) {
         account.setRole(USER);
         account.setPassword(genHash(account.getPassword()));
         account.setRegDate(new Date(currentTimeMillis()));
-        accountDAO.add(account);
+        accountRepository.save(account);
     }
 
     public void updateAccount(Account account) {
-        accountDAO.get(account.getId()).updateAccount(account);
+        accountRepository.findById(account.getId()).get().updateAccount(account);
     }
 
-    public void deleteAccount(Long id) {
-        accountDAO.deleteById(id);
+    public void deleteAccount(long id) {
+        accountRepository.deleteById(id);
     }
 
     public List<Account> getAllAccounts() {
-        return accountDAO.getAll();
+        List<Account> accounts = new ArrayList<>();
+        accountRepository.findAll().forEach(accounts::add);
+        return accounts;
     }
 
     public void sendFriendRequest(long fromId, long toId) {
-        Account from = accountDAO.get(fromId);
+        Account from = accountRepository.findById(fromId).get();
         FriendRequest friendRequest = new FriendRequest();
         friendRequest.setFrom(from);
-        friendRequest.setTo(accountDAO.get(toId));
+        friendRequest.setTo(accountRepository.findById(toId).get());
         from.addFriendRequest(friendRequest);
     }
 
-    public void updateAccountRole(Long accountId, Role role) {
-        accountDAO.get(accountId).setRole(role);
+    public void updateAccountRole(long id, Role role) {
+        accountRepository.findById(id).get().setRole(role);
     }
 
-    public List<Account> getFriends(Long accountId) {
-        return accountDAO.getFriends(accountId);
+    public List<Account> getFriends(long accountId) {
+        List<Account> friends = accountRepository.getFriendsFrom(accountId);
+        friends.addAll(accountRepository.getFriendsTo(accountId));
+        return friends;
     }
 
     public List<Account> getRequestedFriends(long accountId) {
-        return accountDAO.getRequestedFriends(accountId);
+        return accountRepository.getRequestedFriends(accountId);
     }
 
     public List<Account> getRequestFromFriends(long accountId) {
-        return accountDAO.getRequestFromFriends(accountId);
+        return accountRepository.getRequestFromFriends(accountId);
     }
 
     public Account getAccountByEmail(String email) {
-        return accountDAO.getByEmail(email);
+        return accountRepository.findByEmail(email);
     }
 
-    public Account getAccountById(Long id) {
-        Account account = accountDAO.get(id);
+    public Account getAccountById(long id) {
+        Account account = accountRepository.findById(id).orElse(null);
         if (account == null) {
             return null;
         }
@@ -88,11 +93,11 @@ public class AccountService {
     }
 
     public boolean ifEmailAlreadyPresented(String email) {
-        return accountDAO.getByEmail(email) != null;
+        return accountRepository.findByEmail(email) != null;
     }
 
     public boolean checkLogin(String email, String password) {
-        Account account = accountDAO.getByEmail(email);
+        Account account = accountRepository.findByEmail(email);
         if (account == null) {
             return false;
         } else {
@@ -101,64 +106,66 @@ public class AccountService {
         }
     }
 
-    public boolean ifAdmin(Long userId) {
-        Account account = accountDAO.get(userId);
+    public boolean ifAdmin(long id) {
+        Account account = accountRepository.findById(id).get();
         Role role = account.getRole();
         return role == ADMINISTRATOR;
     }
 
-    public boolean ifFriend(Long firstAccountId, Long secondAccountId) {
-        return accountDAO.getFriendship(firstAccountId, secondAccountId, ACCEPTED_FRIENDSHIP) != null;
+    public boolean ifFriend(long firstAccountId, long secondAccountId) {
+        return !accountRepository.getFriendship(firstAccountId, secondAccountId, ACCEPTED_FRIENDSHIP).isEmpty();
     }
 
-    public boolean ifAlreadyRequested(Long firstAccountId, Long secondAccountId) {
-        return accountDAO.getFriendship(firstAccountId, secondAccountId, ALREADY_REQUESTED_FRIENSHIP) != null;
+    public boolean ifAlreadyRequested(long firstAccountId, long secondAccountId) {
+        return !accountRepository.getFriendship(firstAccountId, secondAccountId, ALREADY_REQUESTED_FRIENSHIP).isEmpty();
     }
 
-    public byte[] getImage(Long id) {
-        Account account = accountDAO.get(id);
+    public byte[] getImage(long id) {
+        Account account = accountRepository.findById(id).orElse(null);
         return account == null ? null : account.getPhoto();
     }
 
-    public List<WallMessage> getWallMessages(Long id) {
-        List<WallMessage> wallMessages = accountDAO.get(id).getWallMessages();
+    public List<WallMessage> getWallMessages(long id) {
+        List<WallMessage> wallMessages = accountRepository.findById(id).get().getWallMessages();
         Collections.sort(wallMessages);
         return wallMessages;
     }
 
     public void sendWallMessage(long accountId, String message) {
-        accountDAO.get(accountId).addWallMessage(message);
+        accountRepository.findById(accountId).get().addWallMessage(message);
     }
 
     public void deleteWallMessage(long messageId, long accountId) {
-        accountDAO.get(accountId).removeWallMessage(messageId);
+        accountRepository.findById(accountId).get().removeWallMessage(messageId);
     }
 
     public Set<Long> getTalkersId(long accountId) {
-        return accountDAO.getTalkersId(accountId);
+        Set<Long> talkers = accountRepository.getTalkersIdFrom(accountId);
+        talkers.addAll(accountRepository.getTalkersIdTo(accountId));
+        return talkers;
     }
 
     public void exitFromCommunity(long accountId, long communityId) {
-        accountDAO.deleteFromCommunity(accountId, communityId);
+        accountRepository.deleteFromCommunity(accountId, communityId);
     }
 
     public void deleteFriend(long firstAccountId, long secondAccountId) {
-        accountDAO.deleteFriend(firstAccountId, secondAccountId);
+        accountRepository.deleteFriend(firstAccountId, secondAccountId);
     }
 
     public void acceptFriendRequest(long whoAcceptsId, long whoAcceptedId) {
-        accountDAO.acceptFriend(whoAcceptsId, whoAcceptedId);
+        accountRepository.acceptFriend(whoAcceptsId, whoAcceptedId);
     }
 
     public List<PersonalMessage> getChatMessages(long firstAccountId, long secondAccountId) {
-        return accountDAO.getPersonalMessages(firstAccountId, secondAccountId);
+        return accountRepository.getPersonalMessages(firstAccountId, secondAccountId);
     }
 
     public void sendPersonalMessage(long accountId, long secondTalkerId, String message) {
-        Account account = accountDAO.get(accountId);
+        Account account = accountRepository.findById(accountId).get();
         PersonalMessage personalMessage = new PersonalMessage();
         personalMessage.setFrom(account);
-        personalMessage.setTo(accountDAO.get(secondTalkerId));
+        personalMessage.setTo(accountRepository.findById(secondTalkerId).get());
         personalMessage.setText(message);
         personalMessage.setCreateDate(new Date(currentTimeMillis()));
         account.addPersonalMessage(personalMessage);

@@ -34,6 +34,7 @@
         <lombok.ver>1.18.4</lombok.ver>
         <log4j-slf4j18-impl.ver>2.11.1</log4j-slf4j18-impl.ver>
         <xstream.ver>1.4.10</xstream.ver>
+        <spring-data-jpa.ver>2.1.2.RELEASE</spring-data-jpa.ver>
     </properties>
 
     <dependencies>

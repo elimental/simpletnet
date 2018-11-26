@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,6 +21,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.getjavajob.simplenet.dao.dao")
 @PropertySource(value = {"classpath:dao.properties"})
+@EnableJpaRepositories("com.getjavajob.simplenet.dao.repositories")
 public class DAOConfig {
 
     private final Environment environment;

@@ -91,7 +91,7 @@
                         <div class="w3-container w3-padding">
                             <h6 class="w3-opacity">Сообщение для группы</h6>
                             <form action="/sendCommunityMessage" name="group" method="get">
-                                <input type="hidden" name="groupId" value="${community.id}">
+                                <input type="hidden" name="communityId" value="${community.id}">
                                 <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
                                 <button type="button" class="w3-button w3-theme" onclick="submitMessageForm(this)">
                                     <i class="fa fa-pencil"></i>

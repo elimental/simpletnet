@@ -75,7 +75,8 @@ public class MessageController {
     }
 
     @GetMapping("/sendCommunityMessage")
-    public String sendCommunityMessage(@SessionAttribute("userId") long userIdInSession, long communityId, String message) {
+    public String sendCommunityMessage(@SessionAttribute("userId") long userIdInSession,
+                                       long communityId, String message) {
         communityService.addCommunityMessage(communityId, userIdInSession, message);
         logger.trace("User(id={}) sent message to community id={}", userIdInSession, communityId);
         return "redirect:/community?id=" + communityId;
