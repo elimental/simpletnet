@@ -68,13 +68,15 @@
             <!-- Additional information -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <c:if test="${not empty account.additionalInfo}">
+                    <c:if test="${not empty account.additionalInfo or not empty account.birthDay}">
                     <p class="w3-center"><label><b>Обо мне</b></label></p>
                     <hr>
                     <c:if test="${not empty account.birthDay}">
                         <p><i class="fa fa-birthday-cake w3-margin-right w3-text-theme"></i>
                             <fmt:formatDate pattern="dd MMM yyyy" value="${account.birthDay}"/></p>
-                        <hr>
+                        <c:if test="${not empty account.additionalInfo}">
+                            <hr>
+                        </c:if>
                     </c:if>
 
                     <c:out value="${account.additionalInfo}"/>

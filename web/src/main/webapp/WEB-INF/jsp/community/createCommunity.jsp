@@ -11,7 +11,8 @@
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-                <form action="/checkCreateGroup" id="groupForm" name="createGroup" enctype="multipart/form-data"
+                <form action="/checkCreateGroup?${_csrf.parameterName}=${_csrf.token}" id="groupForm" name="createGroup"
+                      enctype="multipart/form-data"
                       method="post">
 
                     <label>Название группы</label>

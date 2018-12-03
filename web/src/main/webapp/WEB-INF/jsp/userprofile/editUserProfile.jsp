@@ -14,7 +14,8 @@
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-                <form action="/checkEditUserProfile" id="accountForm" name="register" id="register"
+                <form action="/checkEditUserProfile?${_csrf.parameterName}=${_csrf.token}" id="accountForm"
+                      name="register" id="register"
                       enctype="multipart/form-data"
                       method="post">
                     <p>

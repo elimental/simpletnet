@@ -11,7 +11,8 @@
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-                <form action="/checkRegistration" id="accountForm" enctype="multipart/form-data" method="post">
+                <form action="/checkRegistration?${_csrf.parameterName}=${_csrf.token}" id="accountForm"
+                      enctype="multipart/form-data" method="post">
                     <label><b>E-mail адрес</b></label>
                     <input class="w3-input w3-border" type="email" name="email" required>
                     <label><b>Пароль</b></label>

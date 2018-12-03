@@ -14,7 +14,10 @@
                     <label>Вход в сеть</label>
                 </div>
                 <hr>
-                <form action="/checkLogin" id="loginForm" method="post">
+                <form action="/login" id="loginForm" method="post">
+                    <c:if test="${error}">
+                        <p class="w3-text-red">Неверное имя пользователя или пароль</p>
+                    </c:if>
                     <label>E-mail адрес</label>
                     <input class="w3-input w3-border" type="email" name="email" required>
                     <label>Пароль</label>
@@ -29,6 +32,9 @@
                         запомнить меня
                         <hr>
                         <a href="/registration" class="w3-text-green">регистрация</a>
+                        <input type="hidden"
+                               name="${_csrf.parameterName}"
+                               value="${_csrf.token}"/>
                     </div>
                 </form>
             </div>

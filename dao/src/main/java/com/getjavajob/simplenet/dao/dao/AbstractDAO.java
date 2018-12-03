@@ -2,8 +2,6 @@ package com.getjavajob.simplenet.dao.dao;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

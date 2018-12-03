@@ -70,7 +70,9 @@
                         аккаунт</a>
                     <a href="/confirmDeleteUserProfile?id=${sessionScope.userId}" class="w3-bar-item w3-button">Удалить
                         аккаунт</a>
-                    <a href="/logout" class="w3-bar-item w3-button">Выход</a>
+                    <form action="/logout?${_csrf.parameterName}=${_csrf.token}" method="post">
+                        <button type="submit" class="w3-bar-item w3-button">Выход</button>
+                    </form>
                 </c:if>
             </div>
         </div>

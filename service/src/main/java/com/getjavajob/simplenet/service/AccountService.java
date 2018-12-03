@@ -1,7 +1,6 @@
 package com.getjavajob.simplenet.service;
 
 import com.getjavajob.simplenet.common.entity.*;
-import com.getjavajob.simplenet.dao.dao.AccountDAO;
 import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,12 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
+import static com.getjavajob.simplenet.common.entity.Role.ADMIN;
 import static com.getjavajob.simplenet.common.entity.Role.USER;
 import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
-import static com.getjavajob.simplenet.service.PasswordEncryptService.genHash;
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.nanoTime;
 
 @Service
 @Transactional
@@ -23,18 +20,15 @@ public class AccountService {
     private static final boolean ACCEPTED_FRIENDSHIP = true;
     private static final boolean ALREADY_REQUESTED_FRIENSHIP = false;
 
-    private AccountDAO accountDAO;
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public AccountService(AccountDAO accountDAO, AccountRepository accountRepository) {
-        this.accountDAO = accountDAO;
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     public void addAccount(Account account) {
         account.setRole(USER);
-        account.setPassword(genHash(account.getPassword()));
         account.setRegDate(new Date(currentTimeMillis()));
         accountRepository.save(account);
     }
@@ -109,7 +103,7 @@ public class AccountService {
     public boolean ifAdmin(long id) {
         Account account = accountRepository.findById(id).get();
         Role role = account.getRole();
-        return role == ADMINISTRATOR;
+        return role == ADMIN;
     }
 
     public boolean ifFriend(long firstAccountId, long secondAccountId) {

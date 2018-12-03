@@ -12,7 +12,8 @@
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-                <form action="/checkCommunityEdit" name="register" id="groupForm" enctype="multipart/form-data"
+                <form action="/checkCommunityEdit?${_csrf.parameterName}=${_csrf.token}" name="register" id="groupForm"
+                      enctype="multipart/form-data"
                       method="post">
                     <p>
                     <div class="w3-container w3-content" style="width: 190px">

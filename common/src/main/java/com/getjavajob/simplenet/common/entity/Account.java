@@ -18,78 +18,65 @@ public class Account extends BaseEntity {
 
     @Getter
     @Setter
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
+    @XStreamOmitField
+    List<CommunityRequest> communityRequests;
+    @Getter
+    @Setter
     @Column(nullable = false)
     @XStreamAlias("firstName")
     private String firstName;
-
     @Getter
     @Setter
     @XStreamAlias("lastName")
     private String lastName;
-
     @Getter
     @Setter
     @Temporal(TemporalType.DATE)
     private Date birthDay;
-
     @Getter
     @Setter
     @Temporal(TemporalType.DATE)
     @XStreamOmitField
     private Date regDate;
-
     @Getter
     @Setter
     @Column(nullable = false)
     @XStreamOmitField
     private String email;
-
     @Getter
     @Setter
     @Column(nullable = false)
     @XStreamOmitField
     private String password;
-
     @Getter
     @Setter
     @XStreamAlias("icq")
     private String icq;
-
     @Getter
     @Setter
     @XStreamAlias("skype")
     private String skype;
-
     @Getter
     @Setter
     @XStreamAlias("additionalInfo")
     private String additionalInfo;
-
     @Getter
     @Setter
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @XStreamOmitField
     private byte[] photo;
-
     @Getter
     @Setter
     @Enumerated(EnumType.STRING)
     @XStreamOmitField
     private Role role;
-
     @Getter
     @Setter
     @OneToMany(mappedBy = "phoneOwner", cascade = CascadeType.ALL, orphanRemoval = true)
     @XStreamAlias("phones")
     private List<Phone> phones;
-
-    @Getter
-    @Setter
-    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL, orphanRemoval = true)
-    @XStreamOmitField
-    List<CommunityRequest> communityRequests;
-
     @Getter
     @Setter
     @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)

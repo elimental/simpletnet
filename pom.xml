@@ -35,6 +35,7 @@
         <log4j-slf4j18-impl.ver>2.11.1</log4j-slf4j18-impl.ver>
         <xstream.ver>1.4.10</xstream.ver>
         <spring-data-jpa.ver>2.1.2.RELEASE</spring-data-jpa.ver>
+        <spring-security.ver>5.1.1.RELEASE</spring-security.ver>
     </properties>
 
     <dependencies>
@@ -111,6 +112,17 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream-hibernate</artifactId>
             <version>${xstream.ver}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.ver}</version>
         </dependency>
 
     </dependencies>

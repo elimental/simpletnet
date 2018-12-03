@@ -7,6 +7,7 @@ import com.getjavajob.simplenet.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.simplenet.common.entity.Role.ADMINISTRATOR;
+import static com.getjavajob.simplenet.common.entity.Role.ADMIN;
 import static com.getjavajob.simplenet.web.util.WebUtils.*;
 
 @Controller
@@ -30,10 +31,12 @@ public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final AccountService accountService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, PasswordEncoder passwordEncoder) {
         this.accountService = accountService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/userProfile")
@@ -98,6 +101,7 @@ public class AccountController {
             account.setPhones(removeNullNumbers(phones));
             setPhoneOwner(account.getPhones(), account);
         }
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         accountService.addAccount(account);
         logger.trace("Registration accepted. {}", email);
         return "userprofile/registrationAccept";
@@ -185,7 +189,7 @@ public class AccountController {
                     userIdInSession, id);
             return "accessDenied";
         }
-        accountService.updateAccountRole(id, ADMINISTRATOR);
+        accountService.updateAccountRole(id, ADMIN);
         logger.trace("User(id={}) gave administration role to user profile id={}", userIdInSession, id);
         return "redirect:/userProfile?id=" + id;
     }

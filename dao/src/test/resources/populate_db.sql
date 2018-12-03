@@ -1,7 +1,7 @@
 insert into account (firstName, email, password, role) values
 ('Dima', 'elimental@bk.ru', 'qwerty', 'USER'),
 ('Vasya', 'vasya@bk.ru', 'qwerty', 'USER'),
-('Petya', 'petya@bk.ru', 'qwerty', 'ADMINISTRATOR'),
+('Petya', 'petya@bk.ru', 'qwerty', 'ADMIN'),
 ('Masha', 'masha@bk.ru', 'qwerty', 'USER'),
 ('Kolya', 'Kolya@bk.ru', 'qwerty', 'USER');
 

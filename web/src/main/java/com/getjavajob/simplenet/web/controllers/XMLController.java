@@ -4,7 +4,6 @@ import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.common.entity.Phone;
 import com.getjavajob.simplenet.service.AccountService;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.hibernate.converter.*;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.io.xml.DomDriver;
