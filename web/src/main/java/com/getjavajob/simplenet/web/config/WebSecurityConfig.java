@@ -50,6 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .successHandler(authenticationSuccessHandler())
                 .and()
+                .rememberMe()
+                .rememberMeParameter("rememberMe")
+                .key("super_unique_key")
+                .rememberMeCookieName("simplenet_auth")
+                .and()
                 .logout()
                 .invalidateHttpSession(true);
     }

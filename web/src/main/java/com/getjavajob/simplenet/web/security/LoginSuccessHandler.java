@@ -20,13 +20,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException, ServletException {
         HttpSession session = httpServletRequest.getSession();
-        if (authentication != null) {
-            Long userIdInSession = (Long) session.getAttribute("userId");
-            if (userIdInSession == null) {
-                userIdInSession = accountService.getAccountByEmail(authentication.getName()).getId();
-                session.setAttribute("userId", userIdInSession);
-            }
-            httpServletResponse.sendRedirect("/userProfile?id=" + userIdInSession);
+        Long userIdInSession = (Long) session.getAttribute("userId");
+        if (userIdInSession == null) {
+            userIdInSession = accountService.getAccountByEmail(authentication.getName()).getId();
+            session.setAttribute("userId", userIdInSession);
         }
+        httpServletResponse.sendRedirect("/userProfile?id=" + userIdInSession);
     }
 }
