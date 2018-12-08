@@ -3,6 +3,7 @@ package com.getjavajob.simplenet.service;
 import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,9 @@ import java.util.*;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMIN;
 import static com.getjavajob.simplenet.common.entity.Role.USER;
-import static com.getjavajob.simplenet.service.PasswordEncryptService.checkPass;
 import static java.lang.System.currentTimeMillis;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
 @Transactional
 public class AccountService {
@@ -37,6 +38,11 @@ public class AccountService {
         accountRepository.findById(account.getId()).get().updateAccount(account);
     }
 
+    public void deleteSelfAccount(long id) {
+        accountRepository.deleteById(id);
+    }
+
+    @Secured(value = "ROLE_ADMIN")
     public void deleteAccount(long id) {
         accountRepository.deleteById(id);
     }
@@ -55,6 +61,7 @@ public class AccountService {
         from.addFriendRequest(friendRequest);
     }
 
+    @Secured(value = "ROLE_ADMIN")
     public void updateAccountRole(long id, Role role) {
         accountRepository.findById(id).get().setRole(role);
     }
@@ -88,16 +95,6 @@ public class AccountService {
 
     public boolean ifEmailAlreadyPresented(String email) {
         return accountRepository.findByEmail(email) != null;
-    }
-
-    public boolean checkLogin(String email, String password) {
-        Account account = accountRepository.findByEmail(email);
-        if (account == null) {
-            return false;
-        } else {
-            String passHash = account.getPassword();
-            return checkPass(password, passHash);
-        }
     }
 
     public boolean ifAdmin(long id) {

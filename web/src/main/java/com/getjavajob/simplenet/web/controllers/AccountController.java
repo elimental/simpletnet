@@ -15,7 +15,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -153,25 +154,19 @@ public class AccountController {
     }
 
     @GetMapping("/deleteUserProfile")
-    public String deleteUserProfile(@SessionAttribute("userId") long userIdInSession, long id, HttpSession session,
-                                    HttpServletResponse response, SessionStatus status) {
-        boolean admin = accountService.ifAdmin(userIdInSession);
+    public String deleteUserProfile(@SessionAttribute("userId") long userIdInSession, long id,
+                                    HttpServletRequest request, SessionStatus status) throws ServletException {
         boolean owner = id == userIdInSession;
-        boolean allowDeleteUser = admin || owner;
-        if (!allowDeleteUser) {
-            logger.error("Illegal operation. User(id={}) is not allowed to delete user profile id={}",
-                    userIdInSession, id);
-            return "accessDenied";
+        if (owner) {
+            accountService.deleteSelfAccount(id);
+            logger.trace("User(id={}) deleted selfaccount", id);
+            status.setComplete();
+            request.logout();
         } else {
             accountService.deleteAccount(id);
-            if (owner) {
-                status.setComplete();
-                deleteCookie(response, "email", "password");
-                session.invalidate();
-            }
             logger.trace("User(id={}) deleted user profile id={}", userIdInSession, id);
-            return "userprofile/profileDeleted";
         }
+        return "userprofile/profileDeleted";
     }
 
     @GetMapping("/getAccountFullName")
@@ -182,15 +177,13 @@ public class AccountController {
 
     @GetMapping("/makeAdmin")
     public String makeAdmin(@SessionAttribute("userId") long userIdInSession, long id) {
-        boolean admin = accountService.ifAdmin(userIdInSession);
-        if (!admin) {
-            logger.error("Illegal operation. User(id={}) is not allowed" +
-                            " to give administration role to user profile id={}",
-                    userIdInSession, id);
-            return "accessDenied";
-        }
         accountService.updateAccountRole(id, ADMIN);
         logger.trace("User(id={}) gave administration role to user profile id={}", userIdInSession, id);
         return "redirect:/userProfile?id=" + id;
+    }
+
+    @GetMapping("/accessDenied")
+    public String accessDenied() {
+        return "accessDenied";
     }
 }

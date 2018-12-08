@@ -58,8 +58,8 @@
 ////    }
 ////
 ////    @Test
-////    public void deleteAccount() {
-////        accountService.deleteAccount(1);
+////    public void deleteSelfAccount() {
+////        accountService.deleteSelfAccount(1);
 ////        verify(phoneDAO).deleteByOwnerId(1);
 ////        verify(accountDAO).delete(1);
 ////        verify(relationshipDAO).deleteUser(1);
