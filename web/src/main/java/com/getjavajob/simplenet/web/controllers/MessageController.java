@@ -1,11 +1,14 @@
 package com.getjavajob.simplenet.web.controllers;
 
+import com.getjavajob.simplenet.common.entity.ChatMessage;
 import com.getjavajob.simplenet.common.entity.PersonalMessage;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.CommunityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -45,19 +49,20 @@ public class MessageController {
         ModelAndView modelAndView = new ModelAndView("messages/chat");
         List<PersonalMessage> chatMessages = accountService.getChatMessages(userIdInSession, id);
         Collections.sort(chatMessages);
+        modelAndView.addObject("userId", userIdInSession);
         modelAndView.addObject("secondTalkerId", id);
         modelAndView.addObject("chatMessages", chatMessages);
         return modelAndView;
     }
 
 
-    @GetMapping("/sendPersonalMessage")
-    public String sendPersonalMessage(@SessionAttribute("userId") long userIdInSession, String message,
-                                      long secondTalkerId) {
-        accountService.sendPersonalMessage(userIdInSession, secondTalkerId, message);
-        logger.trace("User(id={}) sent personal message to user id={}", userIdInSession, secondTalkerId);
-        return "redirect:/chat?id=" + secondTalkerId;
-    }
+//    @GetMapping("/sendPersonalMessage")
+//    public String sendPersonalMessage(@SessionAttribute("userId") long userIdInSession, String message,
+//                                      long secondTalkerId) {
+//        accountService.sendPersonalMessage(userIdInSession, secondTalkerId, message);
+//        logger.trace("User(id={}) sent personal message to user id={}", userIdInSession, secondTalkerId);
+//        return "redirect:/chat?id=" + secondTalkerId;
+//    }
 
     @GetMapping("/sendWallMessage")
     public String sendWallMessage(@SessionAttribute("userId") long userIdInSession, String message) {
@@ -88,5 +93,14 @@ public class MessageController {
         communityService.deleteCommunityMessage(messageId, communityId);
         logger.trace("User(id={}) deleted message from community id={}", userIdInSession, communityId);
         return "redirect:/community?id=" + communityId;
+    }
+
+    @MessageMapping("/accountChat/{from}/{to}")
+    @SendTo("/topic/{from}/{to}")
+    public ChatMessage sendPersonalMessage(ChatMessage chatMessage) {
+        accountService.sendPersonalMessage(chatMessage.getFrom(), chatMessage.getTo(), chatMessage.getText());
+        chatMessage.setDate(new Date(System.currentTimeMillis()));
+        chatMessage.setFromName(accountService.getAccountById(chatMessage.getFrom()).getAccountFullName());
+        return chatMessage;
     }
 }

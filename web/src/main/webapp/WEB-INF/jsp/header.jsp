@@ -36,9 +36,6 @@
 
 <link rel="stylesheet" href="/css/common.css">
 <script src="/js/script.js"></script>
-<style>
-
-</style>
 <body class="w3-theme-l5">
 
 <!-- Navbar -->

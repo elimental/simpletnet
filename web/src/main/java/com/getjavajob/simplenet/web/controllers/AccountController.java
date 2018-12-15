@@ -157,6 +157,7 @@ public class AccountController {
     public String deleteUserProfile(@SessionAttribute("userId") long userIdInSession, long id,
                                     HttpServletRequest request, SessionStatus status) throws ServletException {
         boolean owner = id == userIdInSession;
+        // todo to service (userIdInSession, id)
         if (owner) {
             accountService.deleteSelfAccount(id);
             logger.trace("User(id={}) deleted selfaccount", id);

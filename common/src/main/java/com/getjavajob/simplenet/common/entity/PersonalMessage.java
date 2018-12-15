@@ -33,6 +33,6 @@ public class PersonalMessage extends BaseEntity implements Comparable<PersonalMe
 
     @Override
     public int compareTo(PersonalMessage o) {
-        return -createDate.compareTo(o.getCreateDate());
+        return createDate.compareTo(o.getCreateDate());
     }
 }

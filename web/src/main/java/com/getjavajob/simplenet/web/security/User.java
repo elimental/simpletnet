@@ -19,6 +19,7 @@ class User implements UserDetails {
     private boolean enabled = true;
 
     static UserDetails getUser(Account account) {
+        // todo rename method
         User user = new User();
         List<Authority> authorities = new ArrayList<>();
         authorities.add(new Authority(account.getRole()));

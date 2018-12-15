@@ -4,6 +4,7 @@ import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.dao.CommunityDAO;
 import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

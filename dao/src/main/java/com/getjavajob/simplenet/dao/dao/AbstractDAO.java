@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class AbstractDAO<T extends Serializable> {
-    // todo serializable
 
     @PersistenceContext
     EntityManager entityManager;
