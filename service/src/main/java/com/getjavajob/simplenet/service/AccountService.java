@@ -3,15 +3,22 @@ package com.getjavajob.simplenet.service;
 import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMIN;
 import static com.getjavajob.simplenet.common.entity.Role.USER;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.setOut;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
@@ -38,13 +45,19 @@ public class AccountService {
         accountRepository.findById(account.getId()).get().updateAccount(account);
     }
 
-    public void deleteSelfAccount(long id) {
-        accountRepository.deleteById(id);
-    }
-
-    @Secured(value = "ROLE_ADMIN")
-    public void deleteAccount(long id) {
-        accountRepository.deleteById(id);
+    public void deleteAccount(long userIdInSession, long id) {
+        if (userIdInSession == id) {
+            accountRepository.deleteById(id);
+        } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean hasAdminRole = authentication.getAuthorities().stream()
+                    .anyMatch(r -> r.getAuthority().equals("ADMIN"));
+            if (hasAdminRole) {
+                accountRepository.deleteById(id);
+            } else {
+                throw new AccessDeniedException("delete operation is not permitted");
+            }
+        }
     }
 
     public List<Account> getAllAccounts() {

@@ -18,8 +18,7 @@ class User implements UserDetails {
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
 
-    static UserDetails getUser(Account account) {
-        // todo rename method
+    static UserDetails makeUserDetails(Account account) {
         User user = new User();
         List<Authority> authorities = new ArrayList<>();
         authorities.add(new Authority(account.getRole()));

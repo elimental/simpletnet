@@ -43,6 +43,7 @@
                         <div class="w3-cell w3-container">
                             <button class="w3-button w3-theme" type="submit" id="sendMessage">Отправить</button>
                         </div>
+                        <br>
                     </div>
                 </div>
             </div>

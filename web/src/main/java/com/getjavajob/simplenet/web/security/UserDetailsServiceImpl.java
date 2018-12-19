@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import static com.getjavajob.simplenet.web.security.User.getUser;
+import static com.getjavajob.simplenet.web.security.User.makeUserDetails;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -32,6 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             logger.error(message);
             throw new UsernameNotFoundException(message);
         }
-        return getUser(account);
+        return makeUserDetails(account);
     }
 }
