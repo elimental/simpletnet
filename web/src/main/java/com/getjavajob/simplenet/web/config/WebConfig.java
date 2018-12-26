@@ -25,7 +25,6 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.getjavajob.simplenet.web")
-@Import(ServiceConfig.class)
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean

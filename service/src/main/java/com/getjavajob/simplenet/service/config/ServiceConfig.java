@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("com.getjavajob.simplenet.service")
-@Import(DAOConfig.class)
 @EnableTransactionManagement
 public class ServiceConfig {
 }

@@ -1,12 +1,10 @@
 package com.getjavajob.simplenet.dao.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -20,24 +18,40 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.getjavajob.simplenet.dao.dao")
-@PropertySource(value = {"classpath:dao.properties"})
 @EnableJpaRepositories("com.getjavajob.simplenet.dao.repositories")
 public class DAOConfig {
 
-    private final Environment environment;
+    @Value("${db.driver_class_name}")
+    private String dbDriverCalssName;
 
-    @Autowired
-    public DAOConfig(Environment environment) {
-        this.environment = environment;
-    }
+    @Value("${db.url}")
+    private String dbUrl;
+
+    @Value("${db.username}")
+    private String dbUserName;
+
+    @Value("${db.password}")
+    private String dbPassword;
+
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hibernateHbm2ddlAuto;
+
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+
+    @Value("${hibernate.show_sql}")
+    private String hibernateShowSQL;
+
+    @Value("${hibernate.format_sql}")
+    private String hibernateFormatSQL;
 
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("db.driver_class_name"));
-        dataSource.setUrl(environment.getRequiredProperty("db.url"));
-        dataSource.setUsername(environment.getRequiredProperty("db.username"));
-        dataSource.setPassword(environment.getRequiredProperty("db.password"));
+        dataSource.setDriverClassName(dbDriverCalssName);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUserName);
+        dataSource.setPassword(dbPassword);
         return dataSource;
     }
 
@@ -61,10 +75,10 @@ public class DAOConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
-        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
+        properties.put("hibernate.dialect", hibernateDialect);
+        properties.put("hibernate.show_sql", hibernateShowSQL);
+        properties.put("hibernate.format_sql", hibernateFormatSQL);
         return properties;
     }
 }
