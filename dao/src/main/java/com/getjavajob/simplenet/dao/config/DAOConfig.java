@@ -1,5 +1,6 @@
 package com.getjavajob.simplenet.dao.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -47,9 +48,9 @@ public class DAOConfig {
 
     @Bean
     public DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName(dbDriverCalssName);
-        dataSource.setUrl(dbUrl);
+        dataSource.setJdbcUrl(dbUrl);
         dataSource.setUsername(dbUserName);
         dataSource.setPassword(dbPassword);
         return dataSource;
