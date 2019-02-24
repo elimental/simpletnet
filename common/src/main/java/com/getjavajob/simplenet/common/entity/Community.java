@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.getjavajob.simplenet.common.entity.Role.GROUP_CANDIDATE;
 import static java.lang.System.currentTimeMillis;
@@ -81,5 +82,19 @@ public class Community extends BaseEntity {
         communityRequest.setCommunity(this);
         communityRequest.setRole(GROUP_CANDIDATE);
         requests.add(communityRequest);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Community community = (Community) o;
+        return name.equals(community.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name);
     }
 }

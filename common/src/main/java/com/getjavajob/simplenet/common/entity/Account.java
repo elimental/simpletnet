@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -161,7 +162,21 @@ public class Account extends BaseEntity {
     public String toString() {
         return "Account{" +
                 "firstName='" + firstName + '\'' +
+                ", email=" + email +
                 ", id=" + id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return email.equals(account.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), email);
     }
 }

@@ -22,27 +22,6 @@ function submitMessageForm(object) {
     }
 }
 
-function submitPersonalMessageForm(object, num) {
-    var form = object.parentNode;
-    var message = document.getElementById("message").innerHTML;
-    message = message.replaceAll("&nbsp;", " ").trim();
-    if (message.length !== 0) {
-        var hiddenInputMessage = document.createElement("input");
-        hiddenInputMessage.type = "hidden";
-        hiddenInputMessage.name = "message";
-        hiddenInputMessage.value = message;
-        form.appendChild(hiddenInputMessage);
-        var hiddenInputSecondTalkerId = document.createElement("input");
-        hiddenInputSecondTalkerId.type = "hidden";
-        hiddenInputSecondTalkerId.name = "secondTalkerId";
-        hiddenInputSecondTalkerId.value = num;
-        form.appendChild(hiddenInputSecondTalkerId);
-        form.submit();
-    } else {
-        return false;
-    }
-}
-
 String.prototype.replaceAll = function (target, replacement) {
     return this.split(target).join(replacement);
 };

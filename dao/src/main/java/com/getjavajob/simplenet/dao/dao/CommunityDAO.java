@@ -32,7 +32,6 @@ public class CommunityDAO extends AbstractDAO<Community> {
         return requests.isEmpty() ? null : (CommunityRequest) requests.get(0);
     }
 
-
     public Account checkCommunityRole(long accountId, long communityId, Role role) {
         List accounts = entityManager.createQuery(
                 "select cr.from " +

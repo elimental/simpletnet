@@ -28,4 +28,8 @@ public class ChatMessage {
     public void setDate(Date date) {
         this.date = df.format(date);
     }
+
+    public JMSChatMessage getJMSMessage() {
+        return new JMSChatMessage(from, to, date, text);
+    }
 }

@@ -2,14 +2,12 @@ package com.getjavajob.simplenet.common.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@NoArgsConstructor
 @MappedSuperclass
 public class BaseEntity implements Serializable {
 

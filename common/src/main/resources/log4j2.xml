@@ -19,6 +19,8 @@
         </Root>
         <Logger name="com.getjavajob.simplenet" level="trace" additivity="false">
             <AppenderRef ref="RollingFile"/>
+        </Logger><Logger name="org.springframework.security" level="error">
+            <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>
 </Configuration>

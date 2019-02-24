@@ -1,6 +1,7 @@
 package com.getjavajob.simplenet.web;
 
 import com.getjavajob.simplenet.dao.config.DAOConfig;
+import com.getjavajob.simplenet.service.config.JMSConfig;
 import com.getjavajob.simplenet.service.config.ServiceConfig;
 import com.getjavajob.simplenet.web.config.WebConfig;
 import com.getjavajob.simplenet.web.config.WebSecurityConfig;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Import;
         WebSecurityConfig.class,
         WebSocketConfig.class,
         ServiceConfig.class,
-        DAOConfig.class})
+        DAOConfig.class,
+        JMSConfig.class})
 public class Simplenet extends SpringBootServletInitializer {
 }

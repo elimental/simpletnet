@@ -1,7 +1,6 @@
 package com.getjavajob.simplenet.dao.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,16 +21,16 @@ import java.util.Properties;
 @EnableJpaRepositories("com.getjavajob.simplenet.dao.repositories")
 public class DAOConfig {
 
-    @Value("${db.driver_class_name}")
-    private String dbDriverCalssName;
+    @Value("${datasource.driver_class_name}")
+    private String dbDriverClassName;
 
-    @Value("${db.url}")
+    @Value("${datasource.url}")
     private String dbUrl;
 
-    @Value("${db.username}")
+    @Value("${datasource.username}")
     private String dbUserName;
 
-    @Value("${db.password}")
+    @Value("${datasource.password}")
     private String dbPassword;
 
     @Value("${hibernate.hbm2ddl.auto}")
@@ -49,7 +48,7 @@ public class DAOConfig {
     @Bean
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setDriverClassName(dbDriverCalssName);
+        dataSource.setDriverClassName(dbDriverClassName);
         dataSource.setJdbcUrl(dbUrl);
         dataSource.setUsername(dbUserName);
         dataSource.setPassword(dbPassword);

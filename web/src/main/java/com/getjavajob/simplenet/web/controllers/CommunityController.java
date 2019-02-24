@@ -81,7 +81,6 @@ public class CommunityController {
         return modelAndView;
     }
 
-
     @GetMapping("/communityMembers")
     public ModelAndView showGroupMembers(@SessionAttribute("userId") long userIdInSession, long id) {
         logger.trace("User(id={}) is going to community's id={} member list", userIdInSession, id);

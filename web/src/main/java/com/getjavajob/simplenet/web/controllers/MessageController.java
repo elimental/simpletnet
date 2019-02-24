@@ -4,6 +4,7 @@ import com.getjavajob.simplenet.common.entity.ChatMessage;
 import com.getjavajob.simplenet.common.entity.PersonalMessage;
 import com.getjavajob.simplenet.service.AccountService;
 import com.getjavajob.simplenet.service.CommunityService;
+import com.getjavajob.simplenet.service.JMSSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,14 @@ public class MessageController {
 
     private final AccountService accountService;
     private final CommunityService communityService;
+    private final JMSSenderService jmsSenderService;
 
     @Autowired
-    public MessageController(AccountService accountService, CommunityService communityService) {
+    public MessageController(AccountService accountService, CommunityService communityService,
+                             JMSSenderService jmsSenderService) {
         this.accountService = accountService;
         this.communityService = communityService;
+        this.jmsSenderService = jmsSenderService;
     }
 
     @GetMapping("/messages")
@@ -54,15 +58,6 @@ public class MessageController {
         modelAndView.addObject("chatMessages", chatMessages);
         return modelAndView;
     }
-
-
-//    @GetMapping("/sendPersonalMessage")
-//    public String sendPersonalMessage(@SessionAttribute("userId") long userIdInSession, String message,
-//                                      long secondTalkerId) {
-//        accountService.sendPersonalMessage(userIdInSession, secondTalkerId, message);
-//        logger.trace("User(id={}) sent personal message to user id={}", userIdInSession, secondTalkerId);
-//        return "redirect:/chat?id=" + secondTalkerId;
-//    }
 
     @GetMapping("/sendWallMessage")
     public String sendWallMessage(@SessionAttribute("userId") long userIdInSession, String message) {
@@ -101,6 +96,7 @@ public class MessageController {
         accountService.sendPersonalMessage(chatMessage.getFrom(), chatMessage.getTo(), chatMessage.getText());
         chatMessage.setDate(new Date(System.currentTimeMillis()));
         chatMessage.setFromName(accountService.getAccountById(chatMessage.getFrom()).getAccountFullName());
+        jmsSenderService.sendMessage(chatMessage.getJMSMessage());
         return chatMessage;
     }
 }

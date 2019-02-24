@@ -4,21 +4,17 @@ import com.getjavajob.simplenet.common.entity.*;
 import com.getjavajob.simplenet.dao.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.getjavajob.simplenet.common.entity.Role.ADMIN;
 import static com.getjavajob.simplenet.common.entity.Role.USER;
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.setOut;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
