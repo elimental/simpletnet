@@ -92,8 +92,8 @@
                             <h6 class="w3-opacity">Сообщение для группы</h6>
                             <form action="/sendCommunityMessage" name="group" method="get">
                                 <input type="hidden" name="communityId" value="${community.id}">
-                                <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
-                                <button type="button" class="w3-button w3-theme" onclick="submitMessageForm(this)">
+                                <input class="w3-input w3-border" type="text" name="message"><br>
+                                <button type="submit" class="w3-button w3-theme">
                                     <i class="fa fa-pencil"></i>
                                      Отправить
                                 </button>

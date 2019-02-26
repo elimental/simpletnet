@@ -127,8 +127,8 @@
                             <div class="w3-container w3-padding">
                                 <h6 class="w3-opacity">Чё ваще происходит?</h6>
                                 <form action="/sendWallMessage" name="wall" method="get">
-                                    <p contenteditable="true" class="w3-border w3-padding" id="message"></p>
-                                    <button type="button" class="w3-button w3-theme" onclick="submitMessageForm(this)">
+                                    <input class="w3-input w3-border" type="text" name="message"><br>
+                                    <button type="submit" class="w3-button w3-theme">
                                         <i class="fa fa-pencil"></i>
                                          Отправить
                                     </button>
