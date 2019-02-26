@@ -55,11 +55,11 @@
         <a href="/communities" class="w3-bar-item w3-button w3-padding-large w3-hover-green" title="Группы"><i
                 class="fa fa-globe"></i></a>
         <div class="w3-dropdown-hover w3-hide-small w3-right" style="float:right">
-            <button class="w3-button w3-padding-large w3-hover-green" title="My Account"><img
-                    src="/images/avatar_small.png" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
+            <button class="w3-button w3-padding-large w3-hover-green" title="My Account">
                 <c:if test="${not empty sessionScope.userName}">
                     <c:out value="${sessionScope.userName}"/>
                 </c:if>
+                <img src="/images/avatar_small.png" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
             </button>
             <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="right:0">
                 <c:if test="${not empty sessionScope.userId}">

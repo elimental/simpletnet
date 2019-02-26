@@ -1,5 +1,6 @@
 package com.getjavajob.simplenet.web.security;
 
+import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,8 +23,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = httpServletRequest.getSession();
         Long userIdInSession = (Long) session.getAttribute("userId");
         if (userIdInSession == null) {
-            userIdInSession = accountService.getAccountByEmail(authentication.getName()).getId();
+            Account account = accountService.getAccountByEmail(authentication.getName());
+            userIdInSession = account.getId();
             session.setAttribute("userId", userIdInSession);
+            session.setAttribute("userName", account.getFirstName());
         }
         httpServletResponse.sendRedirect("/userProfile?id=" + userIdInSession);
     }

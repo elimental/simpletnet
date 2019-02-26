@@ -1,5 +1,6 @@
 package com.getjavajob.simplenet.web.controllers;
 
+import com.getjavajob.simplenet.common.entity.Account;
 import com.getjavajob.simplenet.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,8 +27,10 @@ public class LoginController {
         if (authentication != null) {
             Long userIdInSession = (Long) session.getAttribute("userId");
             if (userIdInSession == null) {
-                userIdInSession = accountService.getAccountByEmail(authentication.getName()).getId();
+                Account account = accountService.getAccountByEmail(authentication.getName());
+                userIdInSession = account.getId();
                 session.setAttribute("userId", userIdInSession);
+                session.setAttribute("userName", account.getFirstName());
             }
             return "redirect:/userProfile?id=" + userIdInSession;
         }
